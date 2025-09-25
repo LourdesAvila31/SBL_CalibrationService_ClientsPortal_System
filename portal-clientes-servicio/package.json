@@ -1,11 +1,11 @@
 {
-  "name": "sistema-computarizado-iso-17025",
+  "name": "portal-clientes-servicio-iso17025",
   "version": "1.0.0",
-  "description": "Sistema computarizado de gestión de calibraciones bajo la norma ISO 17025 con frontend HTML5/Bootstrap y backend PHP.",
+  "description": "Portal de clientes y servicios para laboratorio de calibraciones ISO 17025 - Interfaces tenant y service con frontend HTML5/Bootstrap y backend PHP.",
   "main": "public/index.php",
   "scripts": {
     "start": "npm run serve",
-    "serve": "php -S localhost:8000 -t public",
+    "serve": "php -S localhost:8001 -t public",
     "dev": "concurrently \"npm run serve\" \"lite-server\"",
     "test": "node --test --test-concurrency=1 tests/js/*.test.js tests/validation/*.test.js",
     "test:server": "node tools/scripts/test-server.js",
