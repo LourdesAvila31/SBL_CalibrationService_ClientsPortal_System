@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <title>Reportes de calibraciones</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Bootstrap, FontAwesome, Montserrat -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        :root {
+            --report-primary: #0c8c98;
+            --report-primary-dark: #0d575a;
+            --report-accent: #217b9b;
+            --report-accent-soft: rgba(12, 140, 152, 0.1);
+            --report-accent-strong: rgba(12, 140, 152, 0.18);
+            --report-text: #1f2937;
+            --report-muted: #64748b;
+            --report-surface: #ffffff;
+            --report-border: rgba(12, 140, 152, 0.28);
+        }
+
+        .reports-section {
+            padding: clamp(24px, 4vw, 36px);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(24px, 4vw, 32px);
+            width: min(1120px, 100%);
+            margin: 0 auto clamp(42px, 6vw, 64px);
+        }
+
+        .reports-hero {
+            background: linear-gradient(135deg, rgba(33, 123, 155, 0.12) 0%, rgba(12, 140, 152, 0.16) 100%);
+            border-radius: 18px;
+            box-shadow: 0 12px 32px rgba(12, 140, 152, 0.18);
+            padding: clamp(22px, 4vw, 36px);
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: clamp(18px, 4vw, 40px);
+            align-items: center;
+        }
+
+        .reports-hero-icon {
+            width: clamp(64px, 9vw, 96px);
+            height: clamp(64px, 9vw, 96px);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.55);
+            display: grid;
+            place-items: center;
+            color: var(--report-primary-dark);
+            font-size: clamp(1.9rem, 4vw, 2.6rem);
+        }
+
+        .reports-hero-content {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(12px, 2vw, 20px);
+        }
+
+        .reports-hero-title {
+            font-size: clamp(1.4rem, 3.2vw, 2rem);
+            font-weight: 700;
+            color: var(--report-primary-dark);
+            margin: 0;
+        }
+
+        .reports-hero-text {
+            font-size: clamp(0.95rem, 2.2vw, 1.08rem);
+            line-height: 1.6;
+            color: var(--report-text);
+            margin: 0;
+            max-width: 680px;
+        }
+
+        .reports-hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .reports-hero-badge {
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid var(--report-border);
+            color: var(--report-primary);
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 7px 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .reports-hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .reports-hero-action {
+            background: var(--report-primary);
+            color: #fff;
+            border-radius: 999px;
+            padding: 10px 22px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .reports-hero-action.secondary {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(12, 140, 152, 0.35);
+            color: var(--report-primary-dark);
+        }
+
+        .reports-hero-action:hover {
+            background: #217b9b;
+            color: #fff;
+            box-shadow: 0 8px 22px rgba(33, 123, 155, 0.3);
+        }
+
+        .reports-hero-action.secondary:hover {
+            background: var(--report-primary-dark);
+            color: #fff;
+        }
+
+        .reports-block {
+            background: var(--report-surface);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(33, 123, 155, 0.14);
+            padding: clamp(22px, 3vw, 30px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scroll-margin-top: 90px;
+        }
+
+
+        .reports-block-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .reports-block-title {
+            font-size: clamp(1.15rem, 2.4vw, 1.32rem);
+            font-weight: 700;
+            color: var(--report-accent);
+            margin: 0;
+        }
+
+        .reports-block-heading {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-width: 720px;
+        }
+
+        .reports-block-description {
+            margin: 0;
+            color: var(--report-text);
+            font-size: 0.98rem;
+            line-height: 1.55;
+        }
+
+        .reports-block-hint {
+            margin: 0;
+            color: var(--report-muted);
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .reports-builder-actions,
+        .reports-builder .export-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .reports-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .report-link {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background: linear-gradient(135deg, #ffffff 0%, #f7fcfe 100%);
+            border: 1px solid rgba(224, 242, 248, 0.9);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: left;
+            color: inherit;
+            text-decoration: none;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .report-link:focus-visible {
+            outline: 2px solid var(--report-primary);
+            outline-offset: 4px;
+        }
+
+        .report-link:hover {
+            transform: translateY(-2px);
+            border-color: rgba(12, 140, 152, 0.45);
+            box-shadow: 0 16px 34px rgba(33, 123, 155, 0.18);
+        }
+
+        .report-link-button {
+            background: none;
+            border: none;
+            padding: 0;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .report-link-button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .report-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: var(--report-accent-soft);
+            display: grid;
+            place-items: center;
+            color: var(--report-primary-dark);
+            font-size: 1.18rem;
+            flex-shrink: 0;
+        }
+
+        .report-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .report-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--report-primary-dark);
+        }
+
+        .report-description {
+            font-size: 0.9rem;
+            color: var(--report-text);
+            line-height: 1.45;
+        }
+
+        .report-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .report-tag {
+            background: rgba(57, 164, 216, 0.16);
+            color: var(--report-primary);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .report-cta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            color: var(--report-accent);
+            transition: transform 0.2s ease;
+        }
+
+        .report-link:hover .report-cta i {
+            transform: translateX(4px);
+        }
+
+        .reports-builder {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .reports-builder .table-container {
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid rgba(224, 242, 248, 0.9);
+        }
+
+        .builder-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--report-surface);
+        }
+
+        .builder-table thead {
+            background: rgba(12, 140, 152, 0.08);
+        }
+
+        .builder-table th,
+        .builder-table td {
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 0.92rem;
+        }
+
+        .builder-table th {
+            font-weight: 600;
+            color: var(--report-primary-dark);
+            letter-spacing: 0.3px;
+        }
+
+        .builder-table td {
+            border-top: 1px solid rgba(226, 232, 240, 0.8);
+            color: var(--report-text);
+        }
+
+        .builder-table tbody tr:hover {
+            background: rgba(12, 140, 152, 0.06);
+        }
+
+        .builder-table .empty-row {
+            text-align: center;
+            color: var(--report-muted);
+            padding: 22px 18px;
+        }
+
+        .builder-table td.actions-col {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .builder-table td.actions-col select {
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            font-size: 0.9rem;
+            background: #fff;
+        }
+
+        .btn-run-report {
+            background: var(--report-primary);
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn-run-report:hover {
+            background: #0c8c98;
+            transform: translateY(-1px);
+        }
+
+        .btn-add {
+            background: #39a4d8;
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: 8px 22px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.18s ease, box-shadow 0.18s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-add:hover {
+            background: #217b9b;
+            box-shadow: 0 12px 24px rgba(33, 123, 155, 0.22);
+        }
+
+        .pagination-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .pagination-bar .btn {
+            background: var(--report-accent);
+            color: #fff;
+            border: none;
+            border-radius: 18px;
+            padding: 6px 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.18s ease;
+        }
+
+        .pagination-bar .btn:disabled {
+            background: #cbd5f5;
+            cursor: not-allowed;
+        }
+
+        .pagination-bar input,
+        .pagination-bar select {
+            font-size: 0.95rem;
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+        }
+
+        .reset-btn {
+            background: #fff;
+            color: var(--report-accent);
+            border: 1px solid var(--report-accent);
+            padding: 6px 16px;
+            border-radius: 18px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.18s ease, color 0.18s ease;
+        }
+
+        .reset-btn:hover {
+            background: var(--report-accent);
+            color: #fff;
+        }
+
+        .export-actions .btn-export {
+            background: var(--report-accent);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .export-actions .btn-export.pdf {
+            background: #d9534f;
+        }
+
+        .export-actions .btn-export.excel {
+            background: #28a745;
+        }
+
+        .export-actions .btn-export:hover {
+            background: #08536a;
+        }
+
+        .export-actions .btn-export.pdf:hover {
+            background: #b52b27;
+        }
+
+        .export-actions .btn-export.excel:hover {
+            background: #1e7e34;
+        }
+
+        @media (max-width: 1024px) {
+            .reports-grid {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            }
+        }
+
+        @media (max-width: 900px) {
+            .reports-section {
+                padding: 24px 18px 36px;
+            }
+
+            .reports-hero {
+                grid-template-columns: 1fr;
+                align-items: flex-start;
+            }
+
+            .reports-block {
+                padding: 22px 20px;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .builder-table,
+            .builder-table tbody,
+            .builder-table tr,
+            .builder-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .builder-table thead {
+                display: none;
+            }
+
+            .builder-table tbody tr {
+                background: linear-gradient(135deg, #ffffff 0%, #f7fcfe 100%);
+                border: 1px solid rgba(224, 242, 248, 0.9);
+                border-radius: 16px;
+                margin-bottom: 16px;
+                box-shadow: 0 8px 20px rgba(33, 123, 155, 0.16);
+                overflow: hidden;
+            }
+
+            .builder-table tbody td {
+                border: none;
+                border-bottom: 1px solid rgba(224, 242, 248, 0.6);
+                padding: 14px 18px;
+                display: flex;
+                justify-content: space-between;
+                gap: 12px;
+                font-size: 0.9rem;
+            }
+
+            .builder-table tbody td:last-child {
+                border-bottom: none;
+            }
+
+            .builder-table tbody td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--report-primary-dark);
+                letter-spacing: 0.4px;
+            }
+
+            .builder-table tbody td[colspan] {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .reports-hero-actions,
+            .reports-hero-meta {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .reports-hero {
+                padding: 20px;
+            }
+
+            .reports-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .report-link {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .report-cta {
+                width: 100%;
+                justify-content: space-between;
+                padding-top: 10px;
+                border-top: 1px dashed rgba(33, 123, 155, 0.32);
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- SIDEBAR -->
+        <aside id="sidebar" class="sidebar">
+        <!-- SIDEBAR CONTENT -->
+        <style>
+            .sidebar-nav {
+                gap: 12px;
+            }
+        
+            .sidebar-nav .nav-link {
+                width: 90%;
+                padding: 16px 0 10px 0;
+                font-size: 1.02rem;
+                letter-spacing: 0.5px;
+            }
+        
+            .sidebar-nav .nav-link i {
+                font-size: 1.7rem;
+                margin-bottom: 6px;
+            }
+        
+            @media (max-width: 900px) {
+                .sidebar-nav .nav-link {
+                    width: 92%;
+                }
+            }
+        </style>
+        <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+        <div class="sidebar-logo">
+            <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" href="apps/internal/index.html" data-section="menu">
+                <i class="fa fa-tachometer-alt"></i>
+                <span>MENÚ</span>
+            </a>
+            <a class="nav-link" href="apps/internal/instrumentos/list_gages.html" data-section="instrumentos">
+                <i class="fa fa-boxes-stacked"></i>
+                <span>INSTRUMENTOS</span>
+            </a>
+            <a class="nav-link" href="apps/internal/planeacion/list_planning.html" data-section="planeacion">
+                <i class="fa fa-calendar-alt"></i>
+                <span>PLANEACIÓN</span>
+            </a>
+            <a class="nav-link" href="apps/internal/calibraciones/list_calibrations.html" data-section="calibraciones">
+                <i class="fa fa-balance-scale"></i>
+                <span>CALIBRACIONES</span>
+            </a>
+            <a class="nav-link active" href="apps/internal/reportes/reports.html" data-section="reportes">
+                <i class="fa fa-file-alt"></i>
+                <span>REPORTES</span>
+            </a>
+            <a class="nav-link" href="apps/internal/configuracion/api_tokens.html" data-section="configuracion" data-requires-api-tokens="manage">
+                <i class="fa fa-key"></i>
+                <span>TOKENS API</span>
+            </a>
+            <a class="nav-link" href="apps/internal/ayuda/help_center.html" data-section="ayuda">
+                <i class="fa fa-circle-question"></i>
+                <span>AYUDA</span>
+            </a>
+            <a class="nav-link" href="apps/internal/calidad/index.html" data-section="calidad">
+                <i class="fa fa-award"></i>
+                <span>CALIDAD</span>
+            </a>
+        </nav>
+        </aside>
+ <!-- FIN SIDEBAR -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+        <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Reportes de calibraciones</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/internal/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <section class="reports-section">
+            <div class="reports-hero" data-topbar-search-target="button.report-link">
+                <div class="reports-hero-icon" aria-hidden="true">
+                    <i class="fa fa-diagram-project"></i>
+                </div>
+                <div class="reports-hero-content">
+                    <h1 class="reports-hero-title">Centro de reportes</h1>
+                    <p class="reports-hero-text">Consulta métricas clave, descarga plantillas compartidas por el laboratorio y conserva tus reportes personalizados siempre listos.</p>
+                    <div class="reports-hero-meta">
+                        <span class="reports-hero-badge"><i class="fa fa-handshake-angle"></i> Información compartida</span>
+                        <span class="reports-hero-badge"><i class="fa fa-clock-rotate-left"></i> Históricos disponibles</span>
+                        <span class="reports-hero-badge"><i class="fa fa-mobile-screen-button"></i> Experiencia responsiva</span>
+                    </div>
+                    <div class="reports-hero-actions">
+                        <a class="reports-hero-action" href="#reportsDownloads"><i class="fa fa-cloud-arrow-down"></i> Plantillas listas</a>
+                        <a class="reports-hero-action secondary" href="#customReports"><i class="fa fa-pen-to-square"></i> Crear reporte</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="reports-block reports-downloads" id="reportsDownloads">
+                <div class="reports-block-header">
+                    <div class="reports-block-heading">
+                        <div class="reports-block-title">Reportes descargables</div>
+                        <p class="reports-block-description">Consulta los reportes disponibles para tu organización y genera los documentos necesarios en segundos.</p>
+                    </div>
+                    <p class="reports-block-hint"><i class="fa fa-mouse-pointer"></i> Selecciona un reporte para generar el archivo.</p>
+                </div>
+                <div class="reports-list reports-grid" data-topbar-search-target="button.report-link">
+                    <button type="button" class="report-link report-link-button" data-template-id="gages_due">
+                        <span class="report-icon"><i class="fa fa-file-csv"></i></span>
+                        <span class="report-content">
+                            <span class="report-title">Instrumentos por fecha de vencimiento</span>
+                            <span class="report-description">Listado de instrumentos próximos a vencer su calibración para anticipar la planeación.</span>
+                            <span class="report-tags">
+                                <span class="report-tag">Excel</span>
+                                <span class="report-tag">PDF</span>
+                                <span class="report-tag">CSV</span>
+                            </span>
+                        </span>
+                        <span class="report-cta">
+                            <span>Generar</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+                    <button type="button" class="report-link report-link-button" data-template-id="calibration_due">
+                        <span class="report-icon"><i class="fa fa-file-excel"></i></span>
+                        <span class="report-content">
+                            <span class="report-title">Lista de vencimiento de calibración</span>
+                            <span class="report-description">Reporte de calibraciones próximas a vencer con opciones de exportación en diferentes formatos.</span>
+                            <span class="report-tags">
+                                <span class="report-tag">Excel</span>
+                                <span class="report-tag">PDF</span>
+                                <span class="report-tag">CSV</span>
+                            </span>
+                        </span>
+                        <span class="report-cta">
+                            <span>Generar</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+                    <button type="button" class="report-link report-link-button" data-template-id="performance">
+                        <span class="report-icon"><i class="fa fa-chart-line"></i></span>
+                        <span class="report-content">
+                            <span class="report-title">Desempeño de calibración</span>
+                            <span class="report-description">Métricas de desempeño de las calibraciones realizadas por cada instrumento.</span>
+                            <span class="report-tags">
+                                <span class="report-tag">Excel</span>
+                                <span class="report-tag">PDF</span>
+                                <span class="report-tag">CSV</span>
+                            </span>
+                        </span>
+                        <span class="report-cta">
+                            <span>Generar</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+                    <button type="button" class="report-link report-link-button" data-template-id="activity">
+                        <span class="report-icon"><i class="fa fa-clipboard-list"></i></span>
+                        <span class="report-content">
+                            <span class="report-title">Seguimiento de actividad de instrumentos</span>
+                            <span class="report-description">Detalle de actividad, planes y resultados recientes registrados para cada instrumento.</span>
+                            <span class="report-tags">
+                                <span class="report-tag">Excel</span>
+                                <span class="report-tag">PDF</span>
+                                <span class="report-tag">CSV</span>
+                            </span>
+                        </span>
+                        <span class="report-cta">
+                            <span>Generar</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+                    <button type="button" class="report-link report-link-button" data-template-id="details">
+                        <span class="report-icon"><i class="fa fa-file-lines"></i></span>
+                        <span class="report-content">
+                            <span class="report-title">Informe de detalles de calibración</span>
+                            <span class="report-description">Resumen de calibraciones realizadas con información de proveedor y observaciones.</span>
+                            <span class="report-tags">
+                                <span class="report-tag">Excel</span>
+                                <span class="report-tag">PDF</span>
+                                <span class="report-tag">CSV</span>
+                            </span>
+                        </span>
+                        <span class="report-cta">
+                            <span>Generar</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+                    <button type="button" class="report-link report-link-button" data-template-id="count">
+                        <span class="report-icon"><i class="fa fa-layer-group"></i></span>
+                        <span class="report-content">
+                            <span class="report-title">Informe de conteo de calibración</span>
+                            <span class="report-description">Cantidad de calibraciones realizadas por periodo y su porcentaje de aprobación.</span>
+                            <span class="report-tags">
+                                <span class="report-tag">Excel</span>
+                                <span class="report-tag">PDF</span>
+                                <span class="report-tag">CSV</span>
+                            </span>
+                        </span>
+                        <span class="report-cta">
+                            <span>Generar</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+                    <button type="button" class="report-link report-link-button" data-template-id="work_orders">
+                        <span class="report-icon"><i class="fa fa-briefcase"></i></span>
+                        <span class="report-content">
+                            <span class="report-title">Órdenes de trabajo de calibración</span>
+                            <span class="report-description">Órdenes programadas de calibración con técnico asignado, estado, fechas clave y observaciones.</span>
+                            <span class="report-tags">
+                                <span class="report-tag">Excel</span>
+                                <span class="report-tag">PDF</span>
+                                <span class="report-tag">CSV</span>
+                            </span>
+                        </span>
+                        <span class="report-cta">
+                            <span>Generar</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+                    <button type="button" class="report-link report-link-button" data-template-id="standards">
+                        <span class="report-icon"><i class="fa fa-list"></i></span>
+                        <span class="report-content">
+                            <span class="report-title">Calibraciones por estándar de referencia</span>
+                            <span class="report-description">Listado de calibraciones agrupadas por el estándar de referencia utilizado.</span>
+                            <span class="report-tags">
+                                <span class="report-tag">Listado</span>
+                                <span class="report-tag">Excel</span>
+                                <span class="report-tag">PDF</span>
+                                <span class="report-tag">CSV</span>
+                            </span>
+                        </span>
+                        <span class="report-cta">
+                            <span>Generar</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+                    <button type="button" class="report-link report-link-button" data-template-id="ontime">
+                        <span class="report-icon"><i class="fa fa-clock"></i></span>
+                        <span class="report-content">
+                            <span class="report-title">Calibración puntual</span>
+                            <span class="report-description">Reporte del cumplimiento de las fechas de calibración comprometidas por el laboratorio.</span>
+                            <span class="report-tags">
+                                <span class="report-tag">Excel</span>
+                                <span class="report-tag">PDF</span>
+                                <span class="report-tag">CSV</span>
+                            </span>
+                        </span>
+                        <span class="report-cta">
+                            <span>Generar</span>
+                            <i class="fa fa-arrow-right"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="reports-block reports-builder" id="customReports">
+                <div class="reports-block-header">
+                    <div class="reports-block-heading">
+                        <div class="reports-block-title">Creador de reportes</div>
+                        <p class="reports-block-description">Administra tus reportes personalizados y compártelos con tu equipo de trabajo o con tus clientes.</p>
+                    </div>
+                    <div class="reports-builder-actions">
+                        <button type="button" class="btn-add" id="btnAddReport" onclick="window.location.href = BASE_URL + '/apps/internal/reportes/add_report.html'">
+                            <span aria-hidden="true" class="btn-icon">
+                                <i class="fa fa-file-csv"></i>
+                                <i class="fa fa-plus"></i>
+                            </span>
+                            <span class="btn-label">Añadir</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="builder-table">
+                        <thead>
+                            <tr>
+                                <th>Instrumento</th>
+                                <th>Nombre del Reporte</th>
+                                <th class="date-col">Fecha de Creación</th>
+                                <th>Creado Por</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportBuilderBody">
+                            <tr>
+                                <td colspan="4" class="empty-row">Sin filas para mostrar.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-bar">
+                    <button class="btn" id="btnFirst">&#60;&#60;</button>
+                    <button class="btn" id="btnPrev">&#60;</button>
+                    <span>Página <input type="number" id="currentPage" value="1" min="1" class="pagination-input" /> de <span id="totalPages">1</span></span>
+                    <button class="btn" id="btnNext">&#62;</button>
+                    <button class="btn" id="btnLast">&#62;&#62;</button>
+                    <select id="selectPerPage">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100" selected>100</option>
+                    </select>
+                    <span>por página</span>
+                    <button class="reset-btn" type="button" onclick="window.location.reload()">RESTABLECER VISTA</button>
+                </div>
+                <div class="export-actions">
+                    <button class="btn-export excel" id="exportReportsExcel"><i class="fa fa-file-excel"></i> Exportar a Excel</button>
+                    <button class="btn-export pdf" id="exportReportsPdf"><i class="fa fa-file-pdf"></i> Exportar a PDF</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/F54q9WlH0I1GtIsfRSAxEPPGjBJOCa/MEGLjm+rXhN3kLBXjg5eQof8I4eAbOeXtfLOcAfeUOLVN2y5kqL/hg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <div class="modal fade" id="documentExportModal" tabindex="-1" aria-labelledby="documentExportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="documentExportModalLabel">Generar documento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-description text-muted"></p>
+                    <form id="documentExportModalForm" autocomplete="off">
+                        <div class="mb-3">
+                            <label for="exportTemplateFormat" class="form-label">Formato</label>
+                            <select id="exportTemplateFormat" name="format" class="form-select"></select>
+                            <div class="form-text" data-format-help></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exportTemplateYear" class="form-label">Año</label>
+                            <input type="number" class="form-control" id="exportTemplateYear" name="year" min="2000" max="9999" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exportTemplateSignatures" class="form-label">Firmas</label>
+                            <input type="text" class="form-control" id="exportTemplateSignatures" name="signatures" placeholder="Responsables a firmar el documento">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exportTemplateRevision" class="form-label">Número de revisión</label>
+                            <input type="number" class="form-control" id="exportTemplateRevision" name="revision" min="0" step="1">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmDocumentExport">Generar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/scripts/exports.js"></script>
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script>
+    (function(){
+        const reportesExportColumns = [
+            { key: 'instrumento', label: 'Instrumento' },
+            { key: 'nombre', label: 'Nombre del Reporte' },
+            { key: 'fecha_creacion', label: 'Fecha de Creación' },
+            { key: 'creado_por', label: 'Creado Por' }
+        ];
+
+        function getReportesExportData(){
+            const data = Array.isArray(window.reportesPersonalizados) ? window.reportesPersonalizados : [];
+            return data.map(function(rep){
+                return {
+                    instrumento: formatNA(rep.dataset_label || rep.instrumento),
+                    nombre: formatNA(rep.nombre),
+                    fecha_creacion: rep.fecha_creacion ? formatFechaCorta(rep.fecha_creacion) : 'NA',
+                    creado_por: formatNA(rep.creado_por)
+                };
+            });
+        }
+
+        function updateExportButtonsState(){
+            const excelBtn = document.getElementById('exportReportsExcel');
+            const pdfBtn = document.getElementById('exportReportsPdf');
+            const hasData = Array.isArray(window.reportesPersonalizados) && window.reportesPersonalizados.length > 0;
+            if(excelBtn) excelBtn.disabled = !hasData;
+            if(pdfBtn) pdfBtn.disabled = !hasData;
+        }
+
+        function attachExportEvents(){
+            const excelBtn = document.getElementById('exportReportsExcel');
+            const pdfBtn = document.getElementById('exportReportsPdf');
+            if(excelBtn){
+                excelBtn.addEventListener('click', function(){
+                    const data = getReportesExportData();
+                    if(data.length){
+                        exportToExcel(data, reportesExportColumns, 'reportes_personalizados');
+                    }
+                });
+            }
+            if(pdfBtn){
+                pdfBtn.addEventListener('click', function(){
+                    const data = getReportesExportData();
+                    if(data.length){
+                        exportToPDF(data, reportesExportColumns, 'reportes_personalizados');
+                    }
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function(){
+            attachExportEvents();
+            updateExportButtonsState();
+        });
+
+        document.addEventListener('reportesPersonalizadosActualizados', function(){
+            updateExportButtonsState();
+        });
+    })();
+    </script>
+    <!-- Topbar dinámico centralizado en topbar.js -->
+</body>
+</html>
+
+
+
+
+
+
+

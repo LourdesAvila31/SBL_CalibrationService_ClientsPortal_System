@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = (base === '/') ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <title>Centro de ayuda | Portal de clientes</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img {
+            width: 140px;
+            margin-bottom: 22px;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-nav .nav-link {
+            width: 92%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0 8px 0;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s;
+            position: relative;
+        }
+        .sidebar-nav .nav-link:hover,
+        .sidebar-nav .nav-link.active {
+            background: #0c8c98;
+            color: #fff;
+        }
+        .sidebar-nav .nav-link i {
+            font-size: 1.85rem;
+            margin-bottom: 8px;
+        }
+        .main-content {
+            margin-left: 200px;
+            min-height: 100vh;
+            width: calc(100% - 200px);
+            display: flex;
+            flex-direction: column;
+        }
+        .topbar {
+            background: #fff;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px 0 28px;
+            box-shadow: 0 1px 8px #0001;
+        }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+        .topbar-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #217b9b;
+            letter-spacing: 1px;
+        }
+        .content-wrapper {
+            padding: 32px 28px;
+            flex: 1;
+        }
+        .help-hero {
+            background: #0d575a;
+            color: #fff;
+            padding: 28px;
+            border-radius: 12px;
+            margin-bottom: 28px;
+            box-shadow: 0 3px 12px #0002;
+        }
+        .help-hero h1 {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+        .help-hero p {
+            margin-bottom: 0;
+            font-size: 1.05rem;
+        }
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
+        }
+        .help-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 22px;
+            box-shadow: 0 2px 10px #0001;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .help-card h2 {
+            font-size: 1.2rem;
+            color: #0d575a;
+            margin: 0;
+        }
+        .help-card p {
+            margin: 0;
+            color: #455a64;
+            line-height: 1.5;
+        }
+        .help-card a.btn-link {
+            align-self: flex-start;
+            background: #0c8c98;
+            color: #fff;
+            border-radius: 6px;
+            padding: 10px 18px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s ease-in-out;
+        }
+        .help-card a.btn-link:hover {
+            background: #217b9b;
+        }
+        .faq-section {
+            background: #fff;
+            border-radius: 10px;
+            padding: 24px 28px;
+            box-shadow: 0 2px 10px #0001;
+            margin-bottom: 24px;
+        }
+        .faq-section h2 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            color: #0d575a;
+        }
+        .faq-item + .faq-item {
+            margin-top: 18px;
+        }
+        .faq-item h3 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            color: #0d575a;
+        }
+        .faq-item p {
+            margin: 0;
+            color: #455a64;
+            line-height: 1.5;
+        }
+        .contact-box {
+            background: #e0f2f1;
+            border-radius: 10px;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            color: #0d575a;
+        }
+        @media (max-width: 900px) {
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: center;
+                padding: 18px 0;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .sidebar-nav .nav-link {
+                width: auto;
+                padding: 10px 18px;
+                font-size: 1rem;
+            }
+            .content-wrapper {
+                padding: 24px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link" href="apps/tenant/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+            <i class="fa fa-user-shield"></i>
+            <span>ROLES</span>
+        </a>
+        <a class="nav-link active" href="apps/tenant/ayuda/help_center.html" data-section="ayuda">
+            <i class="fa fa-circle-question"></i>
+            <span>AYUDA</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+            <i class="fa fa-circle-question"></i>
+            <span>TUTORIAL</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </aside>
+    <div class="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+                <i class="fa fa-circle-question"></i>
+                <span class="topbar-title">Centro de ayuda</span>
+            </div>
+        </div>
+        <div class="content-wrapper">
+            <section class="help-hero">
+                <h1>Resuelve tus dudas del portal de clientes</h1>
+                <p>Encuentra guías rápidas y recomendaciones para operar el sistema de calibraciones conforme a ISO/IEC 17025 y la NOM-059.</p>
+            </section>
+            <div class="help-grid">
+                <article class="help-card">
+                    <h2><i class="fa fa-route"></i> Primeros pasos</h2>
+                    <p>Recorre el tutorial interactivo y valida el checklist de configuración inicial antes de cargar información sensible.</p>
+                    <a class="btn-link" href="apps/tenant/tutorial/index.html">Abrir tutorial</a>
+                </article>
+                <article class="help-card">
+                    <h2><i class="fa fa-boxes-stacked"></i> Control de instrumentos</h2>
+                    <p>Consulta las guías para importar lotes, clasificar activos y mantener la trazabilidad documental durante todo el ciclo de vida.</p>
+                    <a class="btn-link" href="apps/tenant/instrumentos/list_gages.html">Ir al módulo</a>
+                </article>
+                <article class="help-card">
+                    <h2><i class="fa fa-balance-scale"></i> Calibraciones</h2>
+                    <p>Aprende cómo solicitar servicios, adjuntar certificados y verificar el estatus de cada calibración en tiempo real.</p>
+                    <a class="btn-link" href="apps/tenant/calibraciones/list_calibrations.html">Ver calibraciones</a>
+                </article>
+                <article class="help-card">
+                    <h2><i class="fa fa-file-signature"></i> Evidencia para auditorías</h2>
+                    <p>Genera reportes con sellos de tiempo y resguardos electrónicos compatibles con los requisitos de calidad.</p>
+                    <a class="btn-link" href="apps/tenant/reportes/reports.html">Generar reportes</a>
+                </article>
+            </div>
+            <section class="faq-section">
+                <h2>Preguntas frecuentes</h2>
+                <div class="faq-item">
+                    <h3>¿Cómo valido que mi empresa esté correctamente configurada?</h3>
+                    <p>Utiliza el checklist del tutorial y confirma que la información de tu laboratorio esté vinculada con <code>obtenerEmpresaId()</code>. Si detectas inconsistencias, solicita al responsable de calidad que revise los permisos asignados.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>¿Qué debo considerar al subir certificados?</h3>
+                    <p>Asegúrate de que los archivos estén firmados y con metadatos completos. El sistema valida la vigencia, pero es responsabilidad del usuario confirmar que el proveedor esté acreditado.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>¿Cómo recibo alertas de vencimiento?</h3>
+                    <p>Activa las notificaciones desde <strong>Gestiones rápidas &gt; Alertas</strong>. El sistema enviará recordatorios automáticos 30, 60 y 90 días antes del vencimiento.</p>
+                </div>
+            </section>
+            <section class="faq-section">
+                <h2>Recursos adicionales</h2>
+                <div class="faq-item">
+                    <h3>Flujo de calibraciones</h3>
+                    <p>Consulta el mapa de procesos para clientes y verifica cada hito requerido por ISO/IEC 17025 en el documento <a href="docs/tenant_calibraciones_flujo.md" target="_blank" rel="noopener">Flujo de calibraciones</a>.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Capacitación</h3>
+                    <p>Solicita sesiones de capacitación presenciales o virtuales a través del módulo de <a href="apps/tenant/feedback/feedback_externos.html">feedback</a>. Nuestro equipo asignará un especialista para resolver tus dudas puntuales.</p>
+                </div>
+            </section>
+            <div class="contact-box">
+                <strong><i class="fa fa-life-ring"></i> ¿Necesitas más ayuda?</strong>
+                <span>Escríbenos a <a href="mailto:soporte@sbl-pharma.example" class="text-decoration-none">soporte@sbl-pharma.example</a> o abre un ticket desde el módulo de feedback. Tiempo de respuesta máximo: 24 horas hábiles.</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

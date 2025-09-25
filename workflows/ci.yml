@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      ENABLE_TEST_REPORTS: 'false'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Generate test report (optional)
+        if: env.ENABLE_TEST_REPORTS == 'true'
+        run: |
+          mkdir -p reports
+          npm test -- --test-reporter=junit --test-reporter-destination=reports/junit.xml
+
+      - name: Upload test report artifact (optional)
+        if: env.ENABLE_TEST_REPORTS == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-test-report
+          path: reports/junit.xml
+          if-no-files-found: ignore

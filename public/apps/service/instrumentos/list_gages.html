@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Instrumentos de clientes | Portal de servicio</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <base id="app-base" href="/">
+    <script>
+        (function () {
+            var baseTag = document.getElementById('app-base');
+            if (!baseTag) {
+                return;
+            }
+            var pathname = window.location && typeof window.location.pathname === 'string'
+                ? window.location.pathname
+                : '';
+            var baseHref = '';
+            var publicIndex = pathname.indexOf('/public/');
+            if (publicIndex !== -1) {
+                baseHref = pathname.slice(0, publicIndex + 7);
+            } else if (pathname.endsWith('/public')) {
+                baseHref = pathname;
+            } else {
+                baseHref = '/public';
+            }
+            if (!baseHref) {
+                baseHref = '/public';
+            }
+            if (!baseHref.endsWith('/')) {
+                baseHref += '/';
+            }
+            baseTag.setAttribute('href', baseHref);
+            var globalBase = baseHref.replace(/\/+$/, '');
+            if (!globalBase) {
+                globalBase = '/public';
+            }
+            window.BASE_URL = globalBase;
+            window.AppUrl = window.AppUrl || {};
+            if (typeof window.AppUrl.BASE_URL !== 'string' || !window.AppUrl.BASE_URL) {
+                window.AppUrl.BASE_URL = globalBase;
+            }
+        })();
+    </script>
+    <script src="assets/scripts/base-url.js" defer></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            var baseTag = document.getElementById('app-base');
+            if (!baseTag) {
+                return;
+            }
+            var href = (typeof window.BASE_URL === 'string' && window.BASE_URL) ? window.BASE_URL : '/public';
+            if (!href.endsWith('/')) {
+                href += '/';
+            }
+            baseTag.setAttribute('href', href);
+        });
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/service.css">
+    <link rel="stylesheet" href="assets/styles/service-portal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        body {
+            background: #f0f5f5;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease-in-out;
+        }
+        .main-content {
+            margin-left: 200px;
+            min-height: 100vh;
+            padding: 0;
+            width: calc(100% - 200px);
+            display: flex;
+            flex-direction: column;
+        }
+        .page-header {
+            padding: 28px 28px 16px;
+            border-bottom: 1px solid #d6e4e4;
+            background: #ffffff;
+        }
+        .page-header h1 {
+            font-size: 1.75rem;
+            color: #0d575a;
+            margin-bottom: 8px;
+        }
+        .page-header p {
+            margin: 0;
+            color: #496064;
+        }
+        .actions-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 28px;
+            background: #ffffff;
+            border-bottom: 1px solid #d6e4e4;
+        }
+        .actions-bar .btn {
+            background: #0c8c98;
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .actions-bar .btn.secondary {
+            background: #e1f3f4;
+            color: #0d575a;
+        }
+        .actions-bar .btn:disabled {
+            background: #a5c9ca;
+            cursor: not-allowed;
+        }
+        .table-wrapper {
+            flex: 1;
+            padding: 0 28px 28px;
+        }
+        .table-responsive {
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 12px 30px rgba(13, 87, 90, 0.12);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead {
+            background: #0d575a;
+            color: #fff;
+        }
+        th, td {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+        tbody tr:nth-child(even) {
+            background: #f7fbfb;
+        }
+        tbody tr:hover {
+            background: #e9f3f3;
+        }
+        th:first-child,
+        td:first-child {
+            width: 44px;
+            text-align: center;
+        }
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e1f3f4;
+            color: #0c8c98;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+        }
+        .status-pill .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+        .empty-row td {
+            text-align: center;
+            padding: 40px 16px;
+            color: #496064;
+        }
+        .helper-text {
+            padding: 12px 28px 0;
+            color: #496064;
+            font-size: 0.9rem;
+        }
+        .helper-text span {
+            font-weight: 600;
+            color: #0d575a;
+        }
+        #instrumentStatus {
+            margin: 18px 28px;
+            font-size: 0.9rem;
+            color: #0d575a;
+        }
+        #instrumentStatus.error {
+            color: #c53030;
+        }
+        @media (max-width: 900px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                padding: 12px 18px;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding-top: 72px;
+            }
+            .page-header,
+            .actions-bar,
+            .table-wrapper {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
+    </style>
+</head>
+<body class="service-portal" data-active-section="instrumentos">
+    <aside id="sidebar" class="sidebar" aria-label="Menú lateral"></aside>
+    <div class="main-content">
+        <div id="topbarContainer"></div>
+        <header class="page-header">
+            <h1>Inventario de instrumentos</h1>
+            <p>Consulta el inventario entregado por tus clientes y genera etiquetas con código QR cuando lo necesites.</p>
+        </header>
+        <div class="actions-bar">
+            <button class="btn secondary" id="btnRefresh"><i class="fa fa-rotate"></i> Actualizar</button>
+            <button class="btn" id="btnPrintLabel" disabled><i class="fa fa-print"></i> Imprimir etiqueta</button>
+        </div>
+        <div class="helper-text">Selecciona un registro para habilitar la impresión de etiquetas. <span>Requiere permisos de lectura de instrumentos.</span></div>
+        <div id="instrumentStatus" class="helper-text" hidden></div>
+        <div class="table-wrapper">
+            <div class="table-responsive">
+                <table id="tablaInstrumentos">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" aria-label="Seleccionar todos"></th>
+                            <th>Instrumento</th>
+                            <th>Código</th>
+                            <th>Serie</th>
+                            <th>Departamento</th>
+                            <th>Ubicación</th>
+                            <th>Próxima calibración</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="empty-row"><td colspan="8">Cargando inventario…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="assets/scripts/scripts-service.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script src="assets/scripts/service-layout.js"></script>
+    <script>
+    (function () {
+        const table = document.getElementById('tablaInstrumentos');
+        const tbody = table ? table.querySelector('tbody') : null;
+        const headerCheckbox = table ? table.querySelector('thead input[type="checkbox"]') : null;
+        const btnRefresh = document.getElementById('btnRefresh');
+        const btnPrintLabel = document.getElementById('btnPrintLabel');
+        const statusMessage = document.getElementById('instrumentStatus');
+        const selectedRows = new Map();
+        const dateFormatter = new Intl.DateTimeFormat('es-MX', { year: 'numeric', month: 'short', day: '2-digit' });
+        let instrumentos = [];
+
+        function setStatus(message, isError) {
+            if (!statusMessage) return;
+            if (!message) {
+                statusMessage.hidden = true;
+                statusMessage.textContent = '';
+                statusMessage.classList.remove('error');
+                return;
+            }
+            statusMessage.hidden = false;
+            statusMessage.textContent = message;
+            statusMessage.classList.toggle('error', Boolean(isError));
+        }
+
+        function formatDate(value) {
+            if (!value) return 'Sin programar';
+            try {
+                const date = new Date(value);
+                if (Number.isNaN(date.getTime())) {
+                    return value;
+                }
+                return dateFormatter.format(date).replace('.', '');
+            } catch (err) {
+                return value;
+            }
+        }
+
+        function normalizeText(value) {
+            if (value === null || value === undefined || value === '') {
+                return '—';
+            }
+            return String(value);
+        }
+
+        function renderStatusPill(registro) {
+            const wrapper = document.createElement('span');
+            wrapper.className = 'status-pill';
+
+            const dot = document.createElement('span');
+            dot.className = 'dot';
+            wrapper.appendChild(dot);
+
+            const raw = (registro && registro.estado) ? registro.estado.toString().trim() : '';
+            let estado = 'Sin estado';
+            if (raw) {
+                estado = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+            }
+
+            wrapper.appendChild(document.createTextNode(estado));
+            return wrapper;
+        }
+
+        function clearSelection() {
+            selectedRows.clear();
+            if (headerCheckbox) {
+                headerCheckbox.checked = false;
+                headerCheckbox.indeterminate = false;
+            }
+            updateActions();
+        }
+
+        function updateActions() {
+            if (btnPrintLabel) {
+                const valid = Array.from(selectedRows.values()).filter(item => Number.isInteger(item.instrumentId) && item.instrumentId > 0);
+                btnPrintLabel.disabled = valid.length !== 1;
+                if (valid.length === 1) {
+                    btnPrintLabel.dataset.instrumentId = String(valid[0].instrumentId);
+                    btnPrintLabel.dataset.instrumentName = valid[0].instrumentName || '';
+                } else {
+                    btnPrintLabel.dataset.instrumentId = '';
+                    btnPrintLabel.dataset.instrumentName = '';
+                }
+            }
+            if (headerCheckbox && tbody) {
+                const checkboxes = Array.from(tbody.querySelectorAll('input[type="checkbox"]'));
+                const total = checkboxes.length;
+                const checked = checkboxes.filter(cb => cb.checked).length;
+                headerCheckbox.indeterminate = checked > 0 && checked < total;
+                headerCheckbox.checked = total > 0 && checked === total;
+            }
+        }
+
+        function renderTable() {
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            if (!Array.isArray(instrumentos) || instrumentos.length === 0) {
+                const row = document.createElement('tr');
+                row.className = 'empty-row';
+                const cell = document.createElement('td');
+                cell.colSpan = 8;
+                cell.textContent = 'No hay instrumentos registrados.';
+                row.appendChild(cell);
+                tbody.appendChild(row);
+                clearSelection();
+                return;
+            }
+            clearSelection();
+            instrumentos.forEach((inst, index) => {
+                const row = document.createElement('tr');
+
+                const checkboxCell = document.createElement('td');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.setAttribute('aria-label', 'Seleccionar instrumento');
+                checkboxCell.appendChild(checkbox);
+                row.appendChild(checkboxCell);
+
+                const nombreCell = document.createElement('td');
+                nombreCell.textContent = normalizeText(inst.nombre);
+                row.appendChild(nombreCell);
+
+                const codigoCell = document.createElement('td');
+                codigoCell.textContent = normalizeText(inst.codigo);
+                row.appendChild(codigoCell);
+
+                const serieCell = document.createElement('td');
+                serieCell.textContent = normalizeText(inst.serie);
+                row.appendChild(serieCell);
+
+                const departamentoCell = document.createElement('td');
+                departamentoCell.textContent = normalizeText(inst.departamento);
+                row.appendChild(departamentoCell);
+
+                const ubicacionCell = document.createElement('td');
+                ubicacionCell.textContent = normalizeText(inst.ubicacion);
+                row.appendChild(ubicacionCell);
+
+                const proximaCalibracionCell = document.createElement('td');
+                proximaCalibracionCell.textContent = formatDate(inst.proxima_calibracion);
+                row.appendChild(proximaCalibracionCell);
+
+                const estadoCell = document.createElement('td');
+                estadoCell.appendChild(renderStatusPill(inst));
+                row.appendChild(estadoCell);
+                if (checkbox) {
+                    checkbox.dataset.rowIndex = String(index);
+                    checkbox.dataset.instrumentId = inst.id ? String(inst.id) : '';
+                    checkbox.dataset.instrumentName = inst.nombre ? String(inst.nombre) : '';
+                }
+                tbody.appendChild(row);
+            });
+            updateActions();
+        }
+
+        function handleRowSelection(event) {
+            const checkbox = event.target;
+            if (!(checkbox instanceof HTMLInputElement) || checkbox.type !== 'checkbox') {
+                return;
+            }
+            const rowIndex = checkbox.dataset.rowIndex;
+            if (rowIndex === undefined) {
+                return;
+            }
+            if (checkbox.checked) {
+                const instrumentId = Number.parseInt(checkbox.dataset.instrumentId || '', 10);
+                const instrumentName = checkbox.dataset.instrumentName || '';
+                selectedRows.set(rowIndex, {
+                    instrumentId: Number.isFinite(instrumentId) && instrumentId > 0 ? instrumentId : null,
+                    instrumentName
+                });
+            } else {
+                selectedRows.delete(rowIndex);
+            }
+            updateActions();
+        }
+
+        function toggleAllRows() {
+            if (!tbody || !headerCheckbox) return;
+            const checkboxes = tbody.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.checked = headerCheckbox.checked;
+                cb.dispatchEvent(new Event('change'));
+            });
+        }
+
+        function loadInstruments() {
+            setStatus('Cargando inventario…');
+            return fetch((window.BASE_URL || '') + '/backend/instrumentos/gages/list_gages.php', { credentials: 'same-origin' })
+                .then(response => {
+                    if (response.status === 403) {
+                        setStatus('No cuentas con permisos para consultar el inventario de instrumentos.', true);
+                        return null;
+                    }
+                    if (!response.ok) {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data === null) {
+                        instrumentos = [];
+                        renderTable();
+                        return;
+                    }
+                    instrumentos = Array.isArray(data) ? data : [];
+                    renderTable();
+                    if (!instrumentos.length) {
+                        setStatus('No se encontraron instrumentos para la empresa seleccionada.');
+                    } else {
+                        setStatus('Selecciona un registro para imprimir su etiqueta.');
+                    }
+                })
+                .catch(error => {
+                    console.error('No se pudo cargar el inventario', error);
+                    instrumentos = [];
+                    renderTable();
+                    setStatus('No se pudieron recuperar los instrumentos. Intenta nuevamente.', true);
+                });
+        }
+
+        if (tbody) {
+            tbody.addEventListener('change', handleRowSelection);
+        }
+        if (headerCheckbox) {
+            headerCheckbox.addEventListener('change', toggleAllRows);
+        }
+        if (btnRefresh) {
+            btnRefresh.addEventListener('click', () => {
+                loadInstruments();
+            });
+        }
+        if (btnPrintLabel) {
+            btnPrintLabel.addEventListener('click', () => {
+                const valid = Array.from(selectedRows.values()).filter(item => Number.isInteger(item.instrumentId) && item.instrumentId > 0);
+                if (valid.length !== 1) {
+                    alert('Selecciona un único instrumento para imprimir su etiqueta.');
+                    return;
+                }
+                const instrumentId = valid[0].instrumentId;
+                if (!instrumentId) {
+                    alert('El registro seleccionado no cuenta con un identificador válido.');
+                    return;
+                }
+                const url = (window.BASE_URL || '') + `/apps/service/instrumentos/print_label.html?instrument_id=${encodeURIComponent(instrumentId)}`;
+                window.open(url, '_blank', 'noopener');
+            });
+        }
+
+        loadInstruments();
+    })();
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var base = (window.BASE_URL || '') + '/apps/service/';
+            fetch(base + 'sidebar.html')
+                .then(function (resp) { return resp.text(); })
+                .then(function (html) {
+                    var container = document.getElementById('sidebar');
+                    if (container) {
+                        container.innerHTML = html;
+                        var active = container.querySelector('[data-section="instrumentos"]');
+                        if (active) {
+                            active.classList.add('active');
+                        }
+                    }
+                })
+                .catch(function (err) { console.error('No se pudo cargar el menú lateral', err); });
+
+            fetch(base + 'topbar.html')
+                .then(function (resp) { return resp.text(); })
+                .then(function (html) {
+                    var topbar = document.getElementById('topbarContainer');
+                    if (topbar) {
+                        topbar.innerHTML = html;
+                        if (window.fetchCurrentUser) {
+                            window.fetchCurrentUser().catch(function (error) {
+                                console.error('No se pudo recuperar el usuario actual', error);
+                            });
+                        }
+                    }
+                })
+                .catch(function (err) { console.error('No se pudo cargar la barra superior', err); });
+        });
+    </script>
+</body>
+</html>

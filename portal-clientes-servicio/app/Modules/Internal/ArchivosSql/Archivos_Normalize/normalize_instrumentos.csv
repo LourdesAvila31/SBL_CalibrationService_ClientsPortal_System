@@ -1,0 +1,688 @@
+catalogo_id,marca_id,modelo_id,empresa_id,serie,codigo,departamento_id,ubicacion,fecha_alta,fecha_baja,proxima_calibracion,estado,programado
+1,1,2,1,ARLL-9115,AER-VA-01,11,"Móvil, Almacén de Validación",2019-04-16,,,Stock,0
+2,2,3,1,350401334703,AGM-LC-01,3,Análisis Fisicoquímicos,,,,Stock,0
+2,2,3,1,350401009669,AGM-LC-02,12,NA,,2022-04-14,,Inactivo,0
+2,3,4,1,181213005,AGM-LC-03,12,NA,2019-03-01,2019-04-08,,Inactivo,0
+2,3,4,1,180907006,AGM-LC-04,12,NA,2019-03-01,2019-04-08,,Inactivo,0
+2,3,4,1,181213005,AGM-LC-05,3,Análisis Fisicoquímicos,2019-03-28,,,Stock,0
+2,3,4,1,180907006,AGM-LC-06,3,Análisis Fisicoquímicos,2019-03-28,,,Stock,0
+2,3,5,1,181221010,AGM-LC-07,12,NA,2019-03-28,2025-04-14,,Inactivo,0
+2,3,5,1,181221011,AGM-LC-08,3,Disolución,2019-03-28,,,Stock,0
+2,2,3,1,350401334757,AGM-DF-01,5,Desarrollo Farmacéutico,,,,Stock,0
+2,2,6,1,1534 21027189,AGM-DA-01,4,Análisis Fisicoquímicos ,2021-08-09,,,Stock,0
+3,4,7,1,40810741,AGP-PR-01,12,NA,2018-03-06,2023-12-11,,Inactivo,0
+3,5,8,1,ND,AGP-FR-02,6,"Recubrimiento, en REC-FR-02",2024-02-02,,,Stock,0
+4,6,9,1,A3-2746,VOR-DA-01,4,Análisis Fisicoquímicos,,,,Stock,0
+4,2,10,1,000020226027,AGV-LC-01,10,Microbiología,2020-11-04,,,Stock,0
+4,2,10,1,000020226028,AGV-LC-02,12,NA,2020-11-04,2023-12-04,,Inactivo,0
+4,7,11,1,A3-5600,AGV-LC-03,3,Análisis Fisicoquímicos,2023-12-04,,,Stock,0
+5,8,12,1,25900289,AMP-MA-01,12,NA,,2022-08-26,,Inactivo,0
+5,8,13,1,47367667MV,AMP-MA-02,9,"Móvil, Taller de Mantenimiento",2022-08-26,,,Stock,0
+6,3,14,1,80114311,ANE-VA-01,11,"Móvil, Almacén de Validación",,,,Stock,0
+6,9,15,1,451112,ANE-VA-02,11,"Móvil, Almacén de Validación",,,,Stock,0
+7,10,16,1,D604100010,BAA-AL-01,1,Pesado,2024-10-03,,,Stock,0
+7,11,17,1,8026191114,BAA-CP-01,12,NA,,2021-08-24,,Inactivo,0
+7,11,18,1,B824999566,BAA-CP-02,7,Control en Proceso,2019-01-24,,,Stock,0
+7,11,19,1,B650434148,BAA-CP-03,12,NA,2019-05-24,2024-06-24,,Inactivo,0
+7,11,20,1,C104035295,BAA-CP-04,7,Muestreo de Materia Prima,2021-08-27,,,Stock,0
+7,11,20,1,C3025547933,BAA-CP-05,7,Control en Proceso,2024-07-26,,,Stock,0
+7,12,21,1,12327074,BAA-DA-01,4,Área de Balanzas,,,,Stock,0
+7,13,22,1,ITA1702001,BAA-DA-02,4,Área de Balanzas,2018-12-21,,,Stock,0
+7,12,21,1,12323474,BAA-LC-01,3,Área de Balanzas,,,,Stock,0
+7,11,23,1,B830176127,BAA-DF-01,5,Desarrollo Farmacéutico,,,,Stock,0
+8,11,24,1,7129250596,BAE-LC-01,10,Preparación Microbiológica,,,,Stock,0
+8,11,25,1,B822913116,BAE-LC-02,3,Área de Balanzas,2018-10-02,,,Stock,0
+8,11,25,1,C204465423,BAE-MI-01,10,Microbiología,2024-05-08,,,Stock,0
+9,12,26,1,15110595,BSM-LC-01,3,Área de Balanzas,2021-01-25,,,Stock,0
+9,11,27,1,C412794367,BSM-LC-02,3,Área de Balanzas,2024-10-23,,,Stock,0
+10,14,28,1,19263602,BAL-VA-02,12,NA,,2020-06-19,,Inactivo,0
+10,14,29,1,71229675,BAL-VA-03,11,"Móvil, Almacén de Validación",2020-06-09,,,Stock,0
+11,3,30,1,500803,BAM-LC-01,10,Microbiología,,,,Stock,0
+11,3,31,1,1F1120228,BAM-LC-02,3,Análisis Fisicoquímicos ,,,,Stock,0
+12,10,32,1,1603EC300415,BAS-AL-01,12,NA,,2023-04-10,,Inactivo,0
+12,10,32,1,1306EC300879,BAS-AL-02,12,NA,,2022-11-07,,Inactivo,0
+12,10,33,1,141152930,BAS-AL-04,2,Almacén de Residuos,,,,Stock,0
+12,10,32,1,1603EC300416,BAS-AL-05,12,NA,2019-04-03,2021-08-23,,Inactivo,0
+12,10,33,1,141152942,BAS-AL-06,1,Recepción Materia Prima,2021-03-05,,,Stock,0
+12,11,34,1,8342246159,BAS-AL-07,1,Pesado,2021-10-15,,,Stock,0
+12,10,35,1,210654307,BAS-AL-08,1,Pesado,2022-02-15,,,Stock,0
+12,11,36,1,8343142254,BAS-AL-09,1,Surtido de Material de Acondicionamiento,2023-01-17,,,Stock,0
+12,11,37,1,8343142289,BAS-AL-10,1,Recepción Materia Prima,2023-04-10,,,Stock,0
+12,10,33,1,141152942,BAS-AM-01,12,NA,2019-08-02,2021-03-05,,Inactivo,0
+12,10,38,1,160851840,BAS-DF-01,5,Desarrollo Farmacéutico,2018-12-17,,,Stock,0
+12,10,39,1,121040486,BAS-PR-05,12,NA,,2018-03-22,,Inactivo,0
+12,10,40,1,170853393,BAS-PR-06,6,Encapsulado y Abrillantado 1,2017-11-15,,,Stock,0
+12,10,40,1,170853368,BAS-PR-07,12,NA,2017-12-13,2024-04-11,,Inactivo,0
+12,10,41,1,170853416,BAS-PR-08,2,Almacén Temporal de Residuos Peligrosos (Sólidos),2018-05-21,,,Stock,0
+12,10,42,1,170853407,BAS-PR-09,12,NA,2018-07-19,2024-02-21,,Inactivo,0
+12,10,40,1,170863400,BAS-PR-10,12,NA,2018-10-31,2024-08-30,,Inactivo,0
+12,10,40,1,170863311,BAS-PR-11,6,Recubrimiento,2018-10-31,,,Stock,0
+12,10,40,1,170853364,BAS-PR-12,12,NA,2018-10-31,2025-02-20,,Inactivo,0
+12,10,40,1,190383084,BAS-PR-13,12,NA,2019-09-02,2024-02-21,,Inactivo,0
+12,10,40,1,190363073,BAS-PR-14,12,NA,2020-01-28,2022-01-19,,Inactivo,0
+12,10,43,1,210654286,BAS-PR-15,12,NA,2021-11-11,2025-02-20,,Inactivo,0
+12,10,44,1,210654288,BAS-PR-16,6,Detección de Metales,2021-11-11,,,Stock,0
+12,10,35,1,220151911,BAS-FR-17,6,Acondicionamiento Primario Blíster,2024-02-21,,,Stock,0
+12,10,35,1,220151926,BAS-FR-18,6,Encapsulado y Abrillantado 4,2024-02-21,,,Stock,0
+12,10,35,1,231150292,BAS-FR-19,6,Encapsulado y Abrillantado #5  ,2024-04-08,,,Stock,0
+12,10,35,1,231150291,BAS-FR-20,6,Acondicionamiento Primario Llenado de Frascos,2024-07-09,,,Stock,0
+12,10,40,1,240755468,BAS-FR-21,6,Tableteado 1,2025-01-20,,,Stock,0
+12,10,40,1,240755469,BAS-FR-22,6,Tableteado 2,2025-01-20,,,Stock,0
+12,10,40,1,240755485,BAS-FR-23,6,Mezclado y Tamizado 1,2025-04-01,,,Stock,0
+13,15,45,1,170221-102287,BOP-DF-01,5,Desarrollo Farmacéutico,2020-01-02,,,Stock,0
+13,15,12,1,J120411,BOP-PR-01,12,NA,2018-03-06,2023-12-11,,Inactivo,0
+14,5,8,1,ND,CAL-DA-01,4,"Estabilidades, en CAC-DA-01",2018-08-10,,,Stock,0
+14,5,8,1,ND,CAL-DA-02,4,"Estabilidades, en CAC-DA-02",2018-08-10,,,Stock,0
+14,5,8,1,ND,CAL-DA-03,4,"Análisis Instrumental II, en ESE-DA-01",2023-07-14,,,Stock,0
+14,5,8,1,ND,CAL-DF-01,5,"Móvil, en DES-DF-01",2023-11-06,,,Stock,0
+14,5,8,1,ND,CAL-GC-02,7,"Control en Proceso, en DES-CP-01",,,,Stock,0
+14,5,8,1,ND,CAL-LC-01,3,"Análisis Instrumental IV, en MUF-LC-02",2018-08-10,,,Stock,0
+14,5,8,1,ND,CAL-LC-02,12,NA,2018-08-10,2023-06-14,,Inactivo,0
+14,5,8,1,ND,CAL-LC-03,3,"Estabilidades, en CAC-LC-01",2018-08-10,,,Stock,0
+14,5,8,1,ND,CAL-LC-04,3,"Estabilidades, en CAC-LC-02",2018-08-10,,,Stock,0
+14,5,8,1,ND,CAL-LC-05,10,"Preparación Microbiológica, en INC-LC-01",2018-08-10,,,Stock,0
+14,5,8,1,ND,CAL-LC-06,10,"Preparación Microbiológica, en INC-LC-04",2018-08-10,,,Stock,0
+14,5,8,1,ND,CAL-LC-07,10,"Preparación Microbiológica, en INC-LC-05",2018-08-10,,,Stock,0
+14,16,46,1,NA,CAL-LC-08,12,NA,2018-10-17,2021-08-17,,Inactivo,0
+14,5,8,1,ND,CAL-LC-09,10,"Preparación Microbiológica, en INC-LC-06",2021-03-30,,,Stock,0
+14,5,8,1,ND,CAL-LC-10,10,"Preparación Microbiológica, en INC-LC-07",2021-03-30,,,Stock,0
+14,5,8,1,ND,CAL-LC-11,3,"Análisis Instrumental IV, en ESE-LC-03",2022-01-10,,,Stock,0
+14,5,8,1,ND,CAL-CP-01,12,NA,2018-08-10,2019-04-01,,Inactivo,0
+15,17,47,1,0-80104003,COP-VA-01,12,NA,,2021-12-02,,Inactivo,0
+15,17,48,1,2108044049,COP-VA-02,11,"Móvil, Almacén de Validación",2021-10-27,,,Stock,0
+16,18,49,1,29X21MC,CTF-FR-01,6,"Acondicionamiento Primario Blíster, en BLI-FR-02",2022-12-16,,,Stock,0
+17,18,49,1,29X21MC,CTS-FR-01,6,"Acondicionamiento Primario Blíster, en BLI-FR-02",2022-12-16,,,Stock,0
+18,19,50,1,10431845,CRI-DA-01,4,"Móvil (Análisis Instrumental I, Análisis Instrumental II y Análisis Fisicoquímicos)",2023-07-07,,,Stock,0
+19,20,51,1,181572470,CRO-DA-01,4,Disolución,2018-12-21,,,Stock,0
+19,20,51,1,181572465,CRO-DA-02,12,NA,2022-01-27,2023-03-16,,Inactivo,0
+19,9,52,1,ND,CRO-DF-01,5,Desarrollo Farmacéutico,2024-10-04,,,Stock,0
+19,20,53,1,170601004,CRO-CP-01,7,Control en Proceso ,2017-12-19,,,Stock,0
+19,21,54,1,21017839,CRO-LC-01,12,NA,,2022-04-12,,Inactivo,0
+19,3,55,1,91215421,CRO-LC-02,12,NA,2021-01-18,2022-04-05,,Inactivo,0
+19,20,56,1,200518836,CRO-LC-03,12,NA,2021-02-10,2021-10-13,,Inactivo,0
+19,20,56,1,200518830,CRO-LC-04,12,NA,2021-02-10,2021-10-13,,Inactivo,0
+19,20,57,1,160141915,CRO-PR-01,12,NA,,2022-09-23,,Inactivo,0
+19,22,58,1,ND,CRO-FR-02,6,Mezclado y Tamizado 1,2022-08-23,,,Stock,0
+19,22,58,1,ND,CRO-FR-03,11,"Móvil, Almacén de Validación",2022-08-23,,,Stock,0
+19,3,59,1,ND,CRO-VA-01,12,NA,,2020-03-02,,Inactivo,0
+19,9,52,1,NA,CRO-VA-02,3,Análisis Instrumental II,2018-01-25,,,Stock,0
+19,23,60,1,19A18,CRO-VA-03,12,NA,2019-04-16,2023-07-12,,Inactivo,0
+19,20,56,1,200518836,CRO-VA-04,11,"Móvil, Almacén de Validación",2021-10-13,,,Stock,0
+19,20,56,1,200518830,CRO-VA-05,12,NA,2021-10-13,2021-12-02,,Inactivo,0
+19,20,61,1,230027989,CRO-VA-06,11,"Móvil, Almacén de Validación",2023-06-01,,,Stock,0
+19,20,61,1,221856015,CRO-VA-07,12,NA,2023-06-01,2024-09-18,,Inactivo,0
+19,20,56,1,200518830,CRO-MI-01,10,Preparación Microbiológica,2021-12-02,,,Stock,0
+20,24,62,1,PAG0502034,DEN-DF-01,5,Desarrollo Farmacéutico,2018-12-17,,,Stock,0
+21,25,63,1,05-0106-01,DUR-CP-01,12,NA,,2022-06-01,,Inactivo,0
+21,26,64,1,2109049,DUR-CP-02,12,NA,2021-11-01,2022-12-23,,Inactivo,0
+21,27,65,1,4112206430,DUR-CP-03,7,Control en Proceso,2022-11-11,,,Stock,0
+21,27,65,1,4111608066,DUR-DF-01,5,Desarrollo Farmacéutico,2020-01-02,,,Stock,0
+22,28,66,1,0CAE7DFACEDE,ELE-DA-01,12,NA,2023-07-24,2025-08-01,,Inactivo,0
+22,29,67,1,BU1-11977,ELE-DA-02,4,"Área de Balanzas, en TIT-LC-01",2025-04-03,,,Stock,0
+22,29,68,1,C442896093,ELE-DA-03,4,"Área de Balanzas, en TIT-LC-01",2025-04-03,,,Stock,0
+22,28,69,1,K81N04E6T,ELE-DA-04,4,"Instrumental II, en TIT-DA-01",2025-05-21,,,Stock,0
+22,28,66,1,E0FFF144DD8E,ELE-DA-05,4,"Móvil (Análisis Instrumental I, Análisis Fisicoquímico)",2025-07-02,,,Stock,0
+22,28,66,1,E0FFF1450C90,ELE-DA-06,4,Almacén de Validación,2025-07-02,,,Stock,0
+22,28,70,1,043897DN,ELE-LC-01,12,NA,2020-03-31,2022-12-16,,Inactivo,0
+22,28,71,1,05060D8N,ELE-LC-02,12,NA,2020-03-31,2022-12-16,,Inactivo,0
+22,30,72,1,38653,ELE-LC-03,12,NA,2020-11-04,2025-01-29,,Inactivo,0
+22,30,73,1,01X466601,ELE-LC-04,12,NA,2020-11-04,2023-12-20,,Inactivo,0
+22,30,74,1,93X218819,ELE-LC-05,12,NA,2021-07-29,2023-03-01,,Inactivo,0
+22,30,8,1,ND,ELE-LC-06,12,NA,2023-03-01,2024-08-08,,Inactivo,0
+22,30,75,1,EQ230426-69 2/5,ELE-LC-07,3,Análisis Fisicoquímicos,2023-07-12,,,Stock,0
+22,29,68,1,0433092,ELE-LC-08,3,"Área de Balanzas, en TIT-LC-01",2023-08-18,,,Stock,0
+22,29,76,1,5173193,ELE-LC-09,3,"Área de Balanzas, en TIT-LC-01",2023-08-18,,,Stock,0
+22,29,77,1,0421057,ELE-LC-10,3,"Área de Balanzas, en TIT-LC-01",2023-08-18,,,Stock,0
+22,29,78,1,8126635,ELE-LC-11,3,"Área de Balanzas, en TIT-LC-01",2023-08-18,,,Stock,0
+22,28,66,1,0CAE7DFADDEC,ELE-LC-12,3,Análisis Físicoquímicos ,2023-10-12,,,Stock,0
+22,31,8,1,303640,ELE-MI-01,10,Microbiología,2023-09-21,,,Stock,0
+22,30,72,1,EQ240814-27,ELE-MI-02,10,"Preparación Microbiológica, en POT-LC-02",2025-01-29,,,Stock,0
+23,32,79,1,NA,FIL-MA-03,9,Microbiología,2018-01-03,,,Stock,0
+24,33,80,1,SO2122000258/3000/D110026170/294/4/1,FIL-MA-10,9,"Piso Técnico, en UMA-MA-03",2022-03-24,,,Stock,0
+24,33,80,1,SO2122000258/3000/D110026170/294/4/2,FIL-MA-11,9,"Piso Técnico, en UMA-MA-03",2022-03-24,,,Stock,0
+25,34,8,1,ND,FIL-MA-12,9,"Tercer piso, en UMA-MA-04",2024-06-07,,,Stock,0
+26,34,8,1,ND,FIL-MA-13,9,"Tercer piso, en UMA-MA-04",2024-06-07,,,Stock,0
+27,35,81,1,1877090373510,FUS-LC-01,3,Análisis Fisicoquímicos,,,,Stock,0
+28,36,82,1,2409,HUM-MA-01,9,"Tercer piso, en UMA-MA-04",2024-06-07,,,Stock,0
+29,37,83,1,95-0007-05,LUV-DA-01,4,Móvil,2021-06-21,,,Stock,0
+29,38,84,1,1010.1-92,LUV-LC-01,3,Análisis Fisicoquímicos,2018-07-13,,,Stock,0
+30,39,85,1,NA,LAP-VA-01,11,"Móvil, Almacén de Validación",,,,Stock,0
+31,28,86,1,7500008101,LUX-DA-01,4,Móvil,2023-12-15,,,Stock,0
+31,40,87,1,230734195,LUX-VA-01,11,"Móvil, Almacén de Validación",2024-09-26,,,Stock,0
+32,41,46,1,NA,MAE-PR-01,12,NA,,2019-04-01,,Inactivo,0
+32,42,46,1,NA,MAE-PR-02,12,NA,,2019-04-01,,Inactivo,0
+32,16,46,1,NA,MAE-PR-03,12,NA,,2022-03-03,,Inactivo,0
+32,43,46,1,NA,MAE-PR-04,12,NA,2018-04-12,2019-04-01,,Inactivo,0
+32,44,88,1,4C65590658591,MAE-PR-05,12,NA,2018-04-12,2021-03-04,,Inactivo,0
+32,5,8,1,ND,MAN-LC-01,3,Almacén de Validación,2018-09-04,,,Stock,0
+32,5,8,1,ND,MAN-PR-01,12,NA,2018-08-09,2023-11-02,,Inactivo,0
+32,45,89,1,ND,MAN-VA-01,12,NA,,2022-06-08,,Inactivo,0
+32,46,90,1,NA,MAB-PR-01,12,NA,,2020-09-04,,Inactivo,0
+32,46,90,1,NA,MAB-PR-02,12,NA,,2021-09-03,,Inactivo,0
+33,16,46,1,NA,MAP-CP-01,7,"Control en Proceso, en BOV-CP-01",2018-07-19,,,Stock,0
+33,5,91,1,ND,MAP-DA-01,4,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-DA-01",2018-07-27,,,Stock,0
+33,5,8,1,ND,MAP-DA-02,4,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-DA-02",2018-11-29,,,Stock,0
+33,5,8,1,ND,MAP-DA-03,11,"Móvil, Almacén de Validación",2018-11-29,,,Stock,0
+33,5,8,1,ND,MAP-DA-04,12,NA,2019-02-01,2021-03-05,,Inactivo,0
+33,5,8,1,ND,MAP-DA-05,4,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-DA-03",2019-02-01,,,Stock,0
+33,43,8,1,ND,MAP-LC-01,3,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-LC-01",2018-07-27,,,Stock,0
+33,47,8,1,ND,MAP-LC-02,12,NA,2018-07-27,2018-11-12,,Inactivo,0
+33,5,8,1,ND,MAP-LC-03,12,NA,2018-08-10,2018-08-20,,Inactivo,0
+33,5,8,1,ND,MAP-LC-04,10,"Preparación Microbiológica, en EST-LC-01",2018-09-17,,,Stock,0
+33,48,92,1,ND,MAP-LC-05,3,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-LC-02",2018-10-31,,,Stock,0
+33,48,92,1,ND,MAP-LC-06,12,NA,2018-10-31,2024-11-22,,Inactivo,0
+33,16,46,1,NA,MAP-LC-07,12,NA,2018-11-28,2023-05-31,,Inactivo,0
+33,16,46,1,NA,MAP-LC-08,10,"Microbiología, en BOV-LC-03",2018-11-28,,,Stock,0
+33,5,93,1,ND,MAP-LC-09,12,NA,2019-11-05,2024-01-05,,Inactivo,0
+33,16,46,1,NA,MAP-LC-10,10,"Preparación Microbiológica, en MUE-LC-02",2020-09-11,,,Stock,0
+33,5,8,1,ND,MAP-LC-11,3,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-LC-04",2021-04-13,,,Stock,0
+33,49,8,1,ND,MAP-MI-01,10,"Preparación Microbiológica, en EST-MI-01.",2022-04-08,,,Stock,0
+33,16,46,1,NA,MAP-MA-01,12,NA,2018-05-15,2023-07-12,,Inactivo,0
+33,45,46,1,NA,MAP-MA-02,12,NA,2018-05-15,2018-07-25,,Inactivo,0
+33,50,46,1,NA,MAP-MA-03,12,NA,2018-06-22,2019-07-25,,Inactivo,0
+33,50,46,1,NA,MAP-MA-04,12,NA,2018-06-22,2020-07-24,,Inactivo,0
+33,51,8,1,ND,MAP-MA-05,12,NA,2018-08-22,2022-09-02,,Inactivo,0
+33,45,8,1,ND,MAP-MA-06,12,NA,2018-08-22,2018-11-12,,Inactivo,0
+33,5,8,1,ND,MAP-MA-07,12,NA,2018-08-22,2018-11-12,,Inactivo,0
+33,52,94,1,194589-00,MAP-MA-08,9,"Piso Técnico, en Extractor de polvos",2018-08-22,,,Stock,0
+33,5,8,1,ND,MAP-MA-09,12,NA,2018-10-02,2018-11-12,,Inactivo,0
+33,5,95,1,ND,MAP-MA-10,12,NA,2018-10-02,2022-09-02,,Inactivo,0
+33,5,95,1,ND,MAP-MA-11,12,NA,2018-10-02,2022-09-02,,Inactivo,0
+33,16,96,1,NA,MAP-MA-12,12,NA,2018-10-19,2020-10-19,,Inactivo,0
+33,16,96,1,NA,MAP-MA-13,9,Almacén de Validación,2018-10-19,,,Stock,0
+33,45,97,1,Z1867,MAP-MA-14,12,NA,2018-11-01,2019-11-11,,Inactivo,0
+33,45,97,1,Z2228,MAP-MA-15,12,NA,2018-11-01,2021-12-02,,Inactivo,0
+33,45,97,1,Z222,MAP-MA-16,12,NA,2018-11-01,2024-11-22,,Inactivo,0
+33,45,97,1,Z0958,MAP-MA-17,12,NA,2018-11-01,2019-11-11,,Inactivo,0
+33,5,8,1,ND,MAP-MA-18,12,NA,2018-12-07,2019-12-06,,Inactivo,0
+33,5,8,1,ND,MAP-MA-19,12,NA,2018-12-07,2023-03-16,,Inactivo,0
+33,5,8,1,ND,MAP-MA-20,12,NA,2019-04-16,2022-05-10,,Inactivo,0
+33,5,8,1,ND,MAP-MA-21,12,NA,2020-10-02,2021-12-02,,Inactivo,0
+33,5,8,1,ND,MAP-MA-22,9,"Piso Técnico, en Tanque Hidroneumático #1",2021-11-17,,,Stock,0
+33,5,8,1,ND,MAP-MA-23,9,"Cuarto Técnico, en Ósmosis Inversa",2021-11-17,,,Stock,0
+33,5,8,1,ND,MAP-MA-24,9,"Cuarto Técnico, antes de filtros suavizadores.",2021-11-17,,,Stock,0
+33,46,98,1,ND,MAP-MA-25,9,"Encapsulado y Abrillantado 4, en AC-03",2022-05-20,,,Stock,0
+33,46,98,1,ND,MAP-MA-26,9,"Lavado, en AC-06",2022-05-20,,,Stock,0
+33,46,98,1,ND,MAP-MA-27,9,"Recubrimiento, en AC-11",2022-05-20,,,Stock,0
+33,46,98,1,ND,MAP-MA-28,9,"Recubrimiento, en AC-12",2022-05-20,,,Stock,0
+33,46,98,1,ND,MAP-MA-29,9,"Desarrollo Farmaceútico, en AC-10",2022-05-20,,,Stock,0
+33,46,98,1,ND,MAP-MA-30,9,"Acondicionamiento Primario Blíster, en AC-13",2022-05-20,,,Stock,0
+33,5,8,1,ND,MAP-MA-31,12,NA,2022-05-20,2022-08-15,,Inactivo,0
+33,46,98,1,ND,MAP-MA-32,9,"Piso técnico, en Colector de polvos (AC-02)",2023-03-30,,,Stock,0
+33,46,98,1,ND,MAP-MA-33,12,NA,2023-04-11,2023-07-12,,Inactivo,0
+33,46,98,1,ND,MAP-MA-34,9,"Encapsulado y Abrillantado #5, en AC-04",2023-07-12,,,Stock,0
+33,46,98,1,ND,MAP-MA-35,9,"Encapsulado y Abrillantado 1, en AC-07",2023-07-12,,,Stock,0
+33,5,8,1,ND,MAP-MA-36,12,NA,2023-07-12,2024-01-15,,Inactivo,0
+33,54,8,1,ND,MAP-MA-37,9,"Cuarto Técnico, en salida del Tanque Pulmón de aire comprimido",2023-10-02,,,Stock,0
+33,55,8,1,ND,MAP-MA-38,9,"Cuarto Técnico, en Tanque hidroneumático (TH 02)",2024-12-03,,,Stock,0
+33,46,99,1,ND,MAP-PR-01,12,NA,2018-08-09,2022-06-08,,Inactivo,0
+33,56,100,1,180515,MAP-PR-02,12,NA,2018-10-19,2019-11-11,,Inactivo,0
+33,56,100,1,180511,MAP-PR-03,12,NA,2018-10-19,2021-01-18,,Inactivo,0
+33,5,8,1,ND,MAP-PR-04,12,NA,2019-02-25,2021-03-04,,Inactivo,0
+33,5,8,1,ND,MAP-PR-05,12,NA,2019-02-25,2021-03-04,,Inactivo,0
+33,5,8,1,ND,MAP-PR-06,12,NA,2019-02-25,2019-12-06,,Inactivo,0
+33,5,8,1,ND,MAP-PR-07,12,NA,2019-02-25,2020-03-09,,Inactivo,0
+33,5,101,1,ND,MAP-PR-08,11,"Móvil, Almacén de Validación",2019-11-05,,,Stock,0
+33,5,101,1,ND,MAP-PR-09,12,NA,2019-11-05,2023-01-17,,Inactivo,0
+33,16,46,1,NA,MAP-PR-10,6,"Acondicionamiento Primario Llenado de Frascos, en TAP-AC-01",2021-04-21,,,Stock,0
+33,16,46,1,NA,MAP-PR-11,6,"Acondicionamiento Primario Llenado de Frascos, en CON-AC-02",2021-04-21,,,Stock,0
+33,16,46,1,3,MAP-PR-12,12,NA,2021-04-21,2021-10-14,,Inactivo,0
+33,16,102,1,NA,MAP-PR-13,12,NA,2022-01-20,2024-06-07,,Inactivo,0
+33,57,103,1,20BB7313,MAP-FR-14,6,"Recubrimiento, en REC-FR-02",2022-03-24,,,Stock,0
+33,57,103,1,20BB7320,MAP-FR-15,6,"Recubrimiento, en REC-FR-02",2023-03-24,,,Stock,0
+33,5,8,1,ND,MAP-FR-16,6,"Acondicionamiento Primario Blíster, en BLI-FR-02.",2022-12-16,,,Stock,0
+33,58,8,1,ND,MAP-FR-17,6,"Abrillantadora, ABR-FR-02",2023-01-10,,,Stock,0
+33,58,8,1,ND,MAP-FR-18,6,"Abrillantadora, ABR-FR-03",2023-01-10,,,Stock,0
+33,5,8,1,ND,MAP-FR-19,11,"Móvil, Almacén de Validación",2023-01-26,,,Stock,0
+33,5,8,1,ND,MAP-FR-20,11,"Móvil, Almacén de Validación",2023-01-26,2025-07-22,,Inactivo,0
+33,59,104,1,ND,MAP-FR-21,6,"Tableteado 1, en TAB-PR-01",2023-10-24,,,Stock,0
+33,44,105,1,NA,MAP-FR-22,6,"Acondicionamiento Secundario Blíster, en ENA-FR-01",2024-02-14,,,Stock,0
+33,54,106,1,03220100758,MAP-FR-23,6,"Tableteado 2, en TAB-FR-02",2024-05-31,,,Stock,0
+33,1,107,1,4132290582,MAP-VA-01,11,"Móvil, Almacén de Validación",2019-04-16,,,Stock,0
+34,60,8,1,ND,MAV-VA-01,11,"Móvil, Almacén de Validación",2022-11-07,,,Stock,0
+34,54,8,1,ND,MAV-VA-02,11,"Móvil, Almacén de Validación",2023-01-10,,,Stock,0
+34,16,46,1,NA,MAV-CP-01,12,NA,2018-07-19,2022-09-07,,Inactivo,0
+34,5,108,1,ND,MAV-DA-01,12,NA,2018-07-27,2018-10-11,,Inactivo,0
+34,48,92,1,4CFDA8A,MAV-DA-02,4,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-DA-01",2018-10-02,,,Stock,0
+34,48,92,1,4CFD8A,MAV-DA-03,3,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-LC-01",2018-10-29,,,Stock,0
+34,5,8,1,ND,MAV-DA-04,12,NA,2019-02-01,2021-03-05,,Inactivo,0
+34,5,8,1,ND,MAV-DA-05,4,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-DA-03",2019-02-01,,,Stock,0
+34,5,109,1,ND,MAV-DA-06,4,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-DA-02",2019-11-05,,,Stock,0
+34,5,8,1,ND,MAV-DA-07,4,"Análisis Instrumental II, en ESE-DA-01",2023-07-14,,,Stock,0
+34,60,8,1,ND,MAV-FR-01,6,"Encapsulado y Abrillantado 4, en ENC-PR-04 (bomba)",2022-09-19,,,Stock,0
+34,54,110,1,6211205373,MAV-FR-02,12,NA,2022-10-13,2023-07-21,,Inactivo,0
+34,61,8,1,ND,MAV-FR-03,6,"Acondicionamiento Primario Blíster, en BLI-FR-02 (Bomba de vacío)",2022-12-16,,,Stock,0
+34,62,8,1,ND,MAV-FR-04,6,"Encapsulado y Abrillantado #5, en ENC-FR-05",2023-01-10,,,Stock,0
+34,62,8,1,ND,MAV-FR-05,6,"Encapsulado y Abrillantado 4, en ENC-FR-06",2023-08-16,,,Stock,0
+34,43,8,1,ND,MAV-LC-01,12,NA,2018-07-27,2019-08-15,,Inactivo,0
+34,5,108,1,ND,MAV-LC-02,12,NA,2018-07-27,2018-11-16,,Inactivo,0
+34,5,8,1,ND,MAV-LC-03,12,NA,2018-11-29,2018-12-17,,Inactivo,0
+34,5,8,1,ND,MAV-LC-04,3,"Análisis Fisicoquímicos, en BOV-LC-02",2018-11-29,,,Stock,0
+34,5,8,1,ND,MAV-LC-05,10,Microbiología,2019-08-15,,,Stock,0
+34,5,109,1,ND,MAV-LC-06,7,"Control en Proceso, en BOV-CP-01",2019-11-05,,,Stock,0
+34,5,8,1,ND,MAV-LC-07,3,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-LC-04",2021-04-13,,,Stock,0
+35,52,111,1,R041020KM13,MAD-LC-01,12,NA,,2018-09-28,,Inactivo,0
+35,52,111,1,R051003GA13,MAD-LC-02,10,Microbiología ,,,,Stock,0
+35,52,112,1,R041104LB37,MAD-LC-03,12,NA,2018-07-18,2018-09-28,,Inactivo,0
+35,52,111,1,W12AD JH,MAD-LC-04,10,Preparación Microbiológica,2018-09-11,,,Stock,0
+35,52,111,1,W12AD KM,MAD-LC-05,10,Esclusa a Microbiología,2018-09-11,,,Stock,0
+35,52,111,1,R040618GA14,MAD-LC-06,3,Control de Calidad,,,,Stock,0
+35,52,113,1,R041019LM64,MAD-MA-01,9,"Piso Técnico, en Prefiltro corrugado (UMA-MA-01)",,,,Stock,0
+35,52,113,1,R041019LM90,MAD-MA-02,9,"Piso Técnico, en Filtro de bolsa (UMA-MA-01)",,,,Stock,0
+35,52,114,1,R041014LM33,MAD-MA-03,9,"Piso Técnico, en Filtro HEPA (UMA-MA-01)",,,,Stock,0
+35,52,115,1,R070503JD110,MAD-MA-04,9,"Piso Técnico, en Prefiltro corrugado (UMA-MA-02)",,,,Stock,0
+35,52,116,1,R070307JT94,MAD-MA-05,9,"Piso Técnico, en Filtro de bolsa (UMA-MA-02)",,,,Stock,0
+35,52,113,1,R070622JT92,MAD-MA-06,9,"Piso Técnico, en Filtro HEPA (UMA-MA-02)",,,,Stock,0
+35,53,117,1,S17020071,MAD-MA-07,9,"Piso Técnico, en UMA-MA-03",2022-03-24,,,Stock,0
+35,53,117,1,S17020071,MAD-MA-08,9,"Piso Técnico, en UMA-MA-03",2022-03-24,,,Stock,0
+35,52,118,1,ND,MAD-MA-09,9,"Tercer Piso, en UMA-MA-04",2024-06-07,,,Stock,0
+35,52,118,1,ND,MAD-MA-10,9,"Tercer Piso, en UMA-MA-04",2024-06-07,,,Stock,0
+35,52,118,1,ND,MAD-MA-11,9,"Tercer Piso, en UMA-MA-04",2024-06-07,,,Stock,0
+35,52,118,1,ND,MAD-MA-12,9,"Tercer Piso, en UMA-MA-04",2024-06-07,,,Stock,0
+35,52,112,1,R041104LB6,MAD-PR-01,11,"Móvil, Almacén de Validación",,,,Stock,0
+35,52,112,1,R041104L2,MAD-PR-02,11,"Móvil, Almacén de Validación",,,,Stock,0
+35,52,112,1,R041104LB12,MAD-PR-03,6,Acondicionamiento Secundario,2019-01-03,,,Stock,0
+35,52,112,1,R041104LB37,MAD-PR-05,12,NA,,2018-04-17,,Inactivo,0
+35,52,112,1,R041104LB31,MAD-PR-09,1,Almacén de Materia Prima Aprobada y Cuarentena,2019-01-03,2025-07-04,,Inactivo,0
+35,52,112,1,R041104LB43,MAD-PR-10,12,NA,,2018-04-17,,Inactivo,0
+35,52,112,1,R041104LB32,MAD-PR-12,1,Preesclusa de Material de Acondicionamiento,2019-01-03,,,Stock,0
+35,52,112,1,R041104LB27,MAD-PR-13,12,NA,,2018-04-17,,Inactivo,0
+35,52,112,1,R041104LB3,MAD-PR-14,12,NA,,2024-03-11,,Inactivo,0
+35,52,112,1,R041104LB9,MAD-PR-15,12,NA,,2018-04-17,,Inactivo,0
+35,52,112,1,R041104LB23,MAD-PR-16,7,Preesclusa de Muestreo de Materia Prima,,,,Stock,0
+35,52,112,1,R041104LB5,MAD-PR-17,11,"Móvil, Almacén de Validación",,,,Stock,0
+35,52,112,1,R041104LB10,MAD-PR-18,12,NA,,2018-04-17,,Inactivo,0
+35,52,111,1,R050202LB38,MAD-PR-19,12,NA,,2021-09-03,,Inactivo,0
+35,52,112,1,R041104LB11,MAD-PR-20,6,Acondicionamiento Primario Blíster,,,,Stock,0
+35,52,111,1,ND,MAD-PR-21,6,Acondicionamiento Primario Llenado de Frascos,,,,Stock,0
+35,52,111,1,ND,MAD-PR-22,6,Tableteado 1,,,,Stock,0
+35,52,111,1,ND,MAD-PR-23,6,Encapsulado y Abrillantado 1,,,,Stock,0
+35,52,111,1,ND,MAD-PR-24,11,"Móvil, Almacén de validación",,,,Stock,0
+35,52,111,1,ND,MAD-PR-25,12,NA,,2024-09-03,,Inactivo,0
+35,52,111,1,ND,MAD-PR-26,11,"Móvil, Almacén de validación",,,,Stock,0
+35,52,111,1,W23VRG,MAD-PR-27,6,Control en Proceso,,,,Stock,0
+35,52,111,1,ND,MAD-PR-28,6,Tableteado 2,,,,Stock,0
+35,52,111,1,ND,MAD-PR-29,7,Muestreo de Materia Prima,,,,Stock,0
+35,52,111,1,R041104LB36,MAD-PR-30,11,"Móvil, Almacén de validación",,,,Stock,0
+35,52,111,1,R041104LB47,MAD-PR-31,11,"Móvil, Almacén de validación",,,,Stock,0
+35,52,111,1,R041104LB29,MAD-PR-34,11,"Móvil, Almacén de validación",,,,Stock,0
+35,52,112,1,R041104LB46,MAD-PR-35,12,NA,,2022-03-03,,Inactivo,0
+35,52,119,1,ND,MAD-PR-36,6,Preesclusa 1,2018-04-10,,,Stock,0
+35,52,119,1,W20Y KC,MAD-PR-37,6,Esclusa 1,2018-04-10,,,Stock,0
+35,52,119,1,W05AD KM,MAD-PR-38,11,"Móvil, Almacén de validación",2018-04-10,,,Stock,0
+35,52,119,1,ND,MAD-PR-39,6,Recubrimiento ,2018-04-10,,,Stock,0
+35,52,119,1,W46AC JH,MAD-PR-40,6,Cuarentena de Graneles,2018-04-10,,,Stock,0
+35,52,119,1,W19Y JH,MAD-PR-41,5,Desarrollo Farmacéutico,2018-04-10,,,Stock,0
+35,52,119,1,W46AC JH,MAD-PR-42,12,NA,2018-04-10,2023-12-20,,Inactivo,0
+35,52,119,1,ND,MAD-PR-43,6,Almacén de Material de Empaque,2018-04-10,,,Stock,0
+35,52,120,1,R041020KM13,MAD-PR-44,11,"Móvil, Almacén de validación",2019-08-27,,,Stock,0
+35,52,111,1,R041104LB9,MAD-PR-45,11,"Móvil, Almacén de Validación",2021-09-03,,,Stock,0
+35,53,121,1,S20020790,MAD-FR-46,6,"Recubrimiento, en REC-FR-02",2022-03-24,,,Stock,0
+35,52,111,1,ND,MAD-FR-47,7,Esclusa de Muestreo de Materia Prima,2023-10-24,,,Stock,0
+35,52,111,1,ND,MAD-FR-48,6,Surtido de Materia Prima para Fabricación,2023-10-24,,,Stock,0
+35,52,111,1,ND,MAD-FR-49,6,Pre esclusa 2,2023-10-24,,,Stock,0
+35,52,111,1,ND,MAD-FR-50,6,Pasillo A,2023-10-24,,,Stock,0
+35,52,111,1,ND,MAD-FR-51,6,Encapsulado y Abrillantado 4,2023-10-24,,,Stock,0
+35,52,111,1,ND,MAD-FR-52,6,Surtido de Material de Acondicionamiento,2023-10-24,,,Stock,0
+35,52,111,1,R0208286A12,MAD-VA-01,11,"Móvil, Almacén de validación",2018-11-22,,,Stock,0
+35,52,111,1,ND,MAD-VA-02,11,"Móvil, Almacén de Validación",2023-10-24,,,Stock,0
+35,52,111,1,ND,MAD-VA-03,11,"Móvil, Almacén de Validación",2023-10-24,,,Stock,0
+35,52,111,1,ND,MAD-VA-04,11,"Móvil, Almacén de Validación",2023-10-24,,,Stock,0
+36,52,122,1,06PRBV,MDI-MA-01,9,Mezclado y Tamizado 1,2025-07-04,,,Stock,0
+36,52,122,1,06PRBS,MDI-MA-02,9,Pesado,2025-07-04,,,Stock,0
+36,52,122,1,06PRC5,MDI-MA-03,9,Utensilios y Aditamentos de Fabricación,2025-07-04,,,Stock,0
+36,52,122,1,06PRBW,MDI-MA-04,9,Lavado,2025-07-04,,,Stock,0
+36,52,122,1,06PRBX,MDI-MA-05,9,Órdenes Surtidas,2025-07-04,,,Stock,0
+36,52,122,1,06PRC2,MDI-MA-06,9,Esclusa 2,2025-07-04,,,Stock,0
+36,52,122,1,06PRC0,MDI-MA-07,9,Encapsulado y Abrillantado #5,2025-07-04,,,Stock,0
+36,52,122,1,06PRBT,MDI-MA-08,9,Detección de Metales,2025-07-04,,,Stock,0
+37,11,123,1,ND,MAS-CP-01,1,Recepción de Material de Envase y Empaque ,,,,Stock,0
+37,63,124,1,ND,MAS-CP-02,3,Área de balanzas,2022-06-27,,,Stock,0
+37,63,125,1,ND,MAS-DA-01,4,Área de Balanzas,2019-01-08,,,Stock,0
+37,63,125,1,ND,MAS-LC-01,7,Control en Proceso,2018-01-12,,,Stock,0
+38,63,126,1,1000150790,MAS-LC-02,10,Preparación Microbiológica,2018-03-08,,,Stock,0
+38,63,127,1,1000150791,MAS-LC-03,10,Preparación Microbiológica,2018-03-08,,,Stock,0
+38,63,128,1,1000150792,MAS-LC-04,10,Preparación Microbiológica,2018-03-08,,,Stock,0
+38,63,129,1,1000150793,MAS-LC-05,12,NA,2018-03-08,2022-02-08,,Inactivo,0
+38,63,130,1,1000194589,MAS-LC-06,10,Preparación Microbiológica,2020-10-09,,,Stock,0
+39,64,131,1,255455456,MAS-DA-02,11,"Móvil, Almacén de Validación",2022-06-07,,,Stock,0
+40,30,132,1,544319,CON-LC-01,12,NA,,2018-10-01,,Inactivo,0
+41,65,133,1,67910529,MIM-MA-01,9,"Móvil, Taller de Mantenimiento",2021-05-13,,,Stock,0
+41,65,134,1,76018721,MIM-CP-01,7,Control en Proceso,2023-07-05,,,Stock,0
+42,3,135,1,942742204,MIP-DA-01,4,Análisis Fisicoquímicos,,,,Stock,0
+42,3,136,1,942766165,MIP-DA-02,12,NA,,2022-12-23,,Inactivo,0
+42,3,137,1,942780818,MIP-DA-03,4,Análisis Fisicoquímicos,,2025-07-02,,Inactivo,0
+42,35,138,1,JH92140,MIP-DA-04,4,Análisis Fisicoquímicos,,,,Stock,0
+42,35,138,1,JJ06794,MIP-DA-05,4,Análisis Fisicoquímicos,,,,Stock,0
+42,66,139,1,L27403L,MIP-DA-06,4,Análisis Fisicoquímicos,2022-12-21,,,Stock,0
+42,66,140,1,I38256L,MIP-DA-07,12,NA,2022-12-21,2024-06-25,,Inactivo,0
+42,66,140,1,I37928L,MIP-DA-08,12,NA,2022-12-21,2024-09-18,,Inactivo,0
+42,66,141,1,P17135J,MIP-DA-09,4,Análisis Fisicoquímicos,2024-06-21,,,Stock,0
+42,66,141,1,P17139J,MIP-DA-10,4,Análisis Fisicoquímicos,2024-06-21,,,Stock,0
+42,3,142,1,E42762007,MIP-DA-11,4,Análisis Fisicoquímicos,2025-01-20,,,Stock,0
+42,3,142,1,E42762017,MIP-DA-12,4,Análisis Fisicoquímicos,2025-01-20,,,Stock,0
+42,35,138,1,JH36377,MIP-LC-01,12,NA,,2020-01-27,,Inactivo,0
+42,35,138,1,JH54815,MIP-LC-02,10,Microbiología,,,,Stock,0
+42,3,135,1,842740197,MIP-LC-03,12,NA,2018-10-26,2024-08-05,,Inactivo,0
+42,3,136,1,742766379,MIP-LC-04,3,Análisis Fisicoquímicos,2018-10-26,2025-05-06,,Inactivo,0
+42,3,137,1,842780399,MIP-LC-05,3,Análisis Fisicoquímicos,2018-10-26,,,Stock,0
+42,3,136,1,842764274,MIP-LC-06,12,NA,2019-06-13,2023-01-17,,Inactivo,0
+42,3,136,1,A42760223,MIP-LC-07,3,Análisis Fisicoquímicos,2020-08-03,,,Stock,0
+42,3,137,1,A42780452,MIP-LC-08,3,Análisis Fisicoquímicos,2021-04-09,,,Stock,0
+42,67,143,1,704780,MIP-LC-09,3,Analisis Fisicoquímicos,2021-09-29,,,Stock,0
+42,35,144,1,UU06703,MIP-LC-10,3,Analisis Fisicoquímicos,2023-07-12,,,Stock,0
+42,35,145,1,TU09335,MIP-LC-11,3,Analisis Fisicoquímicos,2023-07-12,,,Stock,0
+42,35,146,1,SU33609,MIP-LC-12,3,Analisis Fisicoquímicos,2023-07-12,,,Stock,0
+42,3,135,1,D42741588,MIP-LC-13,3,Análisis Fisicoquímicos,2024-08-05,,,Stock,0
+42,3,136,1,C42762074,MIP-MI-01,10,Microbiología,2023-02-17,,,Stock,0
+42,3,136,1,C42762480,MIP-MI-02,10,Microbiología,2023-02-17,,,Stock,0
+43,3,147,1,936794,MIC-LC-01,3,Análisis Fisicoquímicos,,,,Stock,0
+43,68,148,1,ND,MIC-LC-02,10,Preparación Microbiológica,2018-11-01,,,Stock,0
+44,69,149,1,2720012,MUE-LC-01,10,Preparación Microbiológica,2020-08-27,,,Stock,0
+44,69,150,1,2720004,MUE-LC-02,10,Preparación Microbiológica,2020-09-11,,,Stock,0
+45,70,151,1,10402,MUT-MA-01,9,"Móvil, Taller de Mantenimiento",2021-10-01,,,Stock,0
+46,71,152,1,170728001234,MUL-DA-01,12,NA,2018-12-21,2024-05-07,,Inactivo,0
+46,71,152,1,190728001089,MUL-DA-02,12,NA,2019-10-14,2021-09-08,,Inactivo,0
+46,71,152,1,191228001077,MUL-DA-03,12,NA,2020-03-31,2023-05-05,,Inactivo,0
+46,71,152,1,170628001260,MUL-LC-01,12,NA,2018-08-03,2023-06-14,,Inactivo,0
+46,71,152,1,170628001233,MUL-LC-02,12,NA,2018-08-03,2020-09-03,,Inactivo,0
+40,71,153,1,220727001068,MUL-LC-03,3,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución)",2024-02-01,,,Stock,0
+47,72,154,1,31-040-9,NIV-VA-01,9,"Móvil, Taller de Mantenimiento",,,,Stock,0
+48,2,155,1,1535 21040240,PAA-DA-01,4,Móvil,2021-06-21,,,Stock,0
+48,2,155,1,NW23BAA0002429,PAA-DA-02,4,Móvil,2024-06-25,,,Stock,0
+48,3,156,1,0-90914007,PAA-LC-01,12,NA,,2023-06-14,,Inactivo,0
+48,2,155,1,NW23AAA0000620,PAA-LC-02,3,Análisis Fisicoquímicos,2024-08-08,,,Stock,0
+48,2,155,1,NW23AAA0000607,PAA-LC-03,3,Análisis Fisicoquímicos,2024-08-08,,,Stock,0
+48,73,8,1,ND,PAA-MI-01,10,Preparación Microbiológica,2022-07-25,,,Stock,0
+48,73,8,1,ND,PAA-MI-02,10,Preparación Microbiológica,2022-07-25,,,Stock,0
+49,6,157,1,120201001,PAE-LC-01,12,NA,,2022-04-12,,Inactivo,0
+49,3,158,1,190107002,PAE-LC-02,10,Preparación Microbiológica,2019-03-28,,,Stock,0
+49,3,157,1,181008001,PAE-LC-03,12,NA,2019-09-20,2024-10-16,,Inactivo,0
+50,74,159,1,15F054,PES-VA-01,11,"Móvil, Almacén de Validación",2017-12-19,,,Stock,0
+51,74,159,1,15F075,PES-VA-02,6,Utensilios y Aditamentos de Fabricación,2017-12-19,,,Stock,0
+52,74,159,1,15F069,PES-VA-03,6,Utensilios y Aditamentos de Fabricación,2017-12-19,,,Stock,0
+53,74,159,1,15F065,PES-VA-04,12,NA,2018-01-03,2019-12-13,,Inactivo,0
+53,74,159,1,15F065,PES-VA-05,12,NA,2018-01-03,2019-12-13,,Inactivo,0
+54,75,160,1,NA,PIR-PR-01,12,NA,2018-03-08,2023-12-11,,Inactivo,0
+55,5,8,1,ND,PUN-DF-01,5,Desarrollo Farmacéutico,2021-07-09,,,Stock,0
+56,5,8,1,ND,PUN-DF-02,5,Desarrollo Farmacéutico,2021-07-09,,,Stock,0
+57,5,8,1,ND,PUN-DF-03,5,Desarrollo Farmacéutico,2021-07-09,,,Stock,0
+58,5,8,1,ND,PUN-DF-04,5,Desarrollo Farmacéutico,2021-07-09,,,Stock,0
+59,76,161,1,UAF268T31,PUR-LC-01,3,Disolución,,,,Stock,0
+60,77,162,1,ND,REG-VA-01,11,"Móvil, Almacén de Validación",,,,Stock,0
+60,78,163,1,10025143,REG-VA-02,11,"Móvil, Almacén de Validación",,,,Stock,0
+60,78,163,1,68001028,REG-VA-03,11,"Móvil, Almacén de Validación",2020-07-17,,,Stock,0
+61,79,164,1,16070001,DAT-LO-01,12,NA,,2018-05-12,,Inactivo,0
+61,80,165,1,180106970,DAT-LO-02,12,NA,2018-03-08,2020-03-03,,Inactivo,0
+61,80,165,1,180106971,DAT-LO-03,12,NA,2018-03-08,2020-04-22,,Inactivo,0
+61,80,165,1,180106977,DAT-LO-04,12,NA,2018-05-07,2025-08-26,,Inactivo,0
+61,80,165,1,180106972,DAT-LO-05,12,NA,2018-05-07,2020-04-22,,Inactivo,0
+61,80,165,1,180106976,DAT-LO-06,12,NA,2018-05-07,2025-08-26,,Inactivo,0
+61,80,165,1,180106973,DAT-LO-07,11,"Móvil, Almacén de Validación",2018-05-16,,,Stock,0
+61,80,165,1,180106975,DAT-LO-08,12,NA,2018-05-16,2024-05-01,,Inactivo,0
+61,80,165,1,180106974,DAT-LO-09,11,"Móvil, Almacén de Validación",2018-05-16,,,Stock,0
+61,80,165,1,181004511,DAT-VA-01,12,NA,2018-11-13,2018-12-07,,Inactivo,0
+61,80,165,1,181004514,DAT-VA-02,11,"Móvil, Almacén de Validación",2018-11-13,,,Stock,0
+61,80,165,1,181004515,DAT-VA-03,11,"Móvil, Almacén de Validación",2018-11-13,,,Stock,0
+61,80,165,1,181004519,DAT-VA-04,11,"Móvil, Almacén de Validación",2018-11-13,,,Stock,0
+61,80,165,1,181004516,DAT-VA-05,11,"Móvil, Almacén de Validación",2018-11-13,,,Stock,0
+61,80,165,1,181004517,DAT-VA-06,11,"Móvil, Almacén de Validación",2018-11-13,,,Stock,0
+61,80,165,1,181004518,DAT-VA-07,11,"Móvil, Almacén de Validación",2018-11-13,,,Stock,0
+61,80,165,1,181004513,DAT-VA-08,11,"Móvil, Almacén de Validación",2018-11-13,,,Stock,0
+61,80,165,1,181004510,DAT-VA-09,11,"Móvil, Almacén de Validación",2018-11-13,,,Stock,0
+61,80,165,1,181004512,DAT-VA-10,11,"Móvil, Almacén de Validación",2018-11-13,,,Stock,0
+61,80,165,1,181004520,DAT-VA-11,11,"Móvil, Almacén de Validación",2018-12-28,,,Stock,0
+61,81,166,1,065042284,DAT-VA-12,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065042212,DAT-VA-13,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065042822,DAT-VA-14,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065042851,DAT-VA-15,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065041750,DAT-VA-16,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065042000,DAT-VA-17,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065041436,DAT-VA-18,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065032335,DAT-VA-19,12,NA,2023-05-05,2025-07-22,,Inactivo,0
+61,81,166,1,065042582,DAT-VA-20,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065038891,DAT-VA-21,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065031284,DAT-VA-22,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065033029,DAT-VA-23,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065032586,DAT-VA-24,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065044633,DAT-VA-25,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,81,166,1,065041322,DAT-VA-26,12,NA,2023-05-05,2025-08-26,,Inactivo,0
+61,82,166,1,000000530,DAT-VA-27,12,NA,2024-05-01,2025-08-26,,Inactivo,0
+61,82,166,1,000002972,DAT-VA-28,12,NA,2024-05-01,2025-08-26,,Inactivo,0
+61,82,166,1,000000594,DAT-VA-29,12,NA,2024-05-01,2025-08-26,,Inactivo,0
+61,82,166,1,000000986,DAT-VA-30,12,NA,2024-05-01,2025-08-26,,Inactivo,0
+61,82,166,1,000002332,DAT-VA-31,12,NA,2024-05-01,2025-08-26,,Inactivo,0
+61,82,166,1,000000704,DAT-VA-32,12,NA,2024-05-01,2025-08-26,,Inactivo,0
+61,82,166,1,000000493,DAT-VA-33,12,NA,2024-05-01,2025-08-26,,Inactivo,0
+61,82,166,1,000000488,DAT-VA-34,12,NA,2024-05-01,2025-08-26,,Inactivo,0
+61,82,166,1,000002002,DAT-VA-35,12,NA,2024-05-01,2025-08-26,,Inactivo,0
+61,82,166,1,000001208,DAT-VA-36,12,NA,2024-05-01,2025-08-26,,Inactivo,0
+61,82,166,1,000005771,DAT-VA-37,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000001697,DAT-VA-38,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000005819,DAT-VA-39,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000005793,DAT-VA-40,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000002333,DAT-VA-41,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000002340,DAT-VA-42,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000001528,DAT-VA-43,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000002259,DAT-VA-44,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000005776,DAT-VA-45,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000002568,DAT-VA-46,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000005763,DAT-VA-47,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000000620,DAT-VA-48,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000002616,DAT-VA-49,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000005797,DAT-VA-50,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000005817,DAT-VA-51,11,"Móvil, Almacén de Validación",2024-07-29,,,Stock,0
+61,82,166,1,000014757,DAT-VA-52,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014779,DAT-VA-53,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014869,DAT-VA-54,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014786,DAT-VA-55,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014827,DAT-VA-56,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014854,DAT-VA-57,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014793,DAT-VA-58,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014767,DAT-VA-59,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014870,DAT-VA-60,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014801,DAT-VA-61,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014799,DAT-VA-62,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014761,DAT-VA-63,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014858,DAT-VA-64,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000006115,DAT-VA-65,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014760,DAT-VA-66,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014829,DAT-VA-67,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000005806,DAT-VA-68,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000005809,DAT-VA-69,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014796,DAT-VA-70,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000005801,DAT-VA-71,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014874,DAT-VA-72,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000014856,DAT-VA-73,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000006508,DAT-VA-74,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000006125,DAT-VA-75,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000006123,DAT-VA-76,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000006114,DAT-VA-77,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000006490,DAT-VA-78,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000005818,DAT-VA-79,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000005798,DAT-VA-80,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+61,82,166,1,000006105,DAT-VA-81,11,"Móvil, Almacén de Validación",2025-07-21,,,Stock,0
+62,83,167,1,AX502204060176,SMI-FR-01,6,Acondicionamiento Primario Llenado de Frascos,2025-08-12,,,Stock,0
+63,5,8,1,ND,SEN-DA-01,4,"Análisis Instrumental II, en BOV-DA-04",2023-08-22,,,Stock,0
+64,84,168,1,30210709,SEN-VA-01,11,"Móvil, Almacén de Validación",2021-12-13,,,Stock,0
+65,85,169,1,R9513,SEN-FR-01,6,"Piso Técnico, en UMA-MA-03",2022-03-24,,,Stock,0
+65,85,169,1,R9507,SEN-FR-02,6,"Piso Técnico, en UMA-MA-03",2022-03-24,,,Stock,0
+65,86,170,1,19191865,SEN-FR-03,6,"Recubrimiento, en REC-FR-02",2022-07-07,,,Stock,0
+65,5,8,1,ND,SEN-MI-01,10,"Preparación Microbiológica, en REF-MI-01",2023-06-15,,,Stock,0
+66,5,8,1,ND,FIL-MA-01,12,NA,,2023-03-16,,Inactivo,0
+67,32,171,1,NA,FIL-MA-02,9,"Piso Técnico, en UMA-MA-01 y UMA-MA-02",2018-01-03,,,Stock,0
+68,87,173,1,ND,FIL-MA-04,12,NA,2020-09-22,2025-03-26,,Inactivo,0
+69,88,174,1,ND,FIL-MA-05,12,NA,2020-09-24,2022-06-27,,Inactivo,0
+69,46,179,1,ND,FIL-MA-06,12,NA,2020-09-24,2023-03-16,,Inactivo,0
+69,46,179,1,ND,FIL-MA-07,12,NA,2020-09-24,2023-03-16,,Inactivo,0
+69,89,182,1,ND,FIL-MA-08,12,NA,2020-09-24,2022-06-27,,Inactivo,0
+69,88,184,1,ND,FIL-MA-09,12,NA,2020-09-24,2022-06-27,,Inactivo,0
+70,90,187,1,05HS62305,SON-DA-01,12,NA,,2021-04-09,,Inactivo,0
+70,91,188,1,RLB0506053210,SON-LC-01,12,NA,,2021-08-17,,Inactivo,0
+70,91,189,1,BGQ011948220B,SON-LC-02,12,NA,2019-03-28,2021-08-18,,Inactivo,0
+70,91,190,1,BGS062121820B,SON-LC-03,3,Análisis Instrumental IV,2021-07-08,,,Stock,0
+71,79,191,1,19060022,TAC-CP-01,7,Control en Proceso ,2019-10-18,,,Stock,0
+71,3,192,1,72571817,TAC-VA-01,11,"Móvil, Almacén de Validación",,,,Stock,0
+72,5,8,1,ND,TMB-DF-01,5,"Móvil, en FRI-DF-01",2023-11-06,,,Stock,0
+72,5,8,1,ND,TMB-GC-01,7,"Control en Proceso, en FRI-CP-01",,,,Stock,0
+73,92,193,1,20031A,TPR-FR-01,6,"Mezclado y Tamizado 1, en PAN-FR-03.",2023-05-17,,,Stock,0
+74,29,194,1,1126120655,TEB-CP-01,7,Control en Proceso ,,,,Stock,0
+75,9,195,1,ND,TER-AL-01,1,Almacén de Materia Prima Aprobada y Cuarentena,,,,Stock,0
+75,9,195,1,ND,TER-AL-02,1,Pesado,,,,Stock,0
+75,9,195,1,ND,TER-AL-03,1,Cuarentena de Producto Terminado,2024-11-01,,,Stock,0
+75,9,195,1,ND,TER-AL-04,1,Producto Terminado Controlado,2024-11-01,,,Stock,0
+75,9,195,1,ND,TER-AL-05,1,Almacén de Materia Prima Aprobada,2024-11-04,,,Stock,0
+75,9,195,1,ND,TER-AL-06,1,Almacén de Validación,2024-11-04,,,Stock,0
+75,9,195,1,ND,TER-CP-01,12,NA,,2022-09-30,,Inactivo,0
+75,9,195,1,ND,TER-CP-02,10,"Microbiología, en REF-LC-04",,,,Stock,0
+75,9,196,1,ND,TER-CP-03,7,Muestreo de Materia Prima,2018-08-16,,,Stock,0
+75,9,195,1,ND,TER-CP-04,7,Museo de Muestras,,,,Stock,0
+75,9,195,1,ND,TER-CP-05,3,Análisis Fisicoquímicos,,,,Stock,0
+75,9,195,1,ND,TER-CP-06,7,Órdenes Surtidas,,,,Stock,0
+75,9,195,1,ND,TER-DF-01,5,Desarrollo Farmacéutico,2024-07-03,,,Stock,0
+75,9,195,1,ND,TER-LC-01,3,"Análisis Instrumental II, en DES-LC-01",,,,Stock,0
+75,9,195,1,ND,TER-LC-02,3,"Área de Balanzas, en DES-LC-02",,,,Stock,0
+75,9,195,1,ND,TER-LC-03,10,Preparación Microbiológica,,,,Stock,0
+75,9,195,1,ND,TER-LC-04,3,"Disolución, en REF-LC-05",,,,Stock,0
+75,9,195,1,ND,TER-LC-05,6,Encapsulado y Abrillantado 1,2022-06-27,,,Stock,0
+75,9,195,1,ND,TER-LC-06,12,NA,,2024-01-05,,Inactivo,0
+75,9,195,1,ND,TER-LC-07,12,NA,,2019-08-01,,Inactivo,0
+75,9,196,1,ND,TER-LC-08,10,Microbiología,,,,Stock,0
+75,9,195,1,ND,TER-LC-10,12,NA,,2021-04-15,,Inactivo,0
+75,9,195,1,ND,TER-LC-11,3,Almacén de Reactivos,,,,Stock,0
+75,9,195,1,ND,TER-LC-12,3,Análisis Instrumental I,,,,Stock,0
+75,9,195,1,ND,TER-LC-14,12,NA,,2024-01-11,,Inactivo,0
+75,9,195,1,ND,TER-LC-15,3,Estabilidades,,,,Stock,0
+75,9,196,1,NA,TER-LC-16,11,"Móvil, Almacén de Validación",2023-12-20,,,Stock,0
+75,9,196,1,NA,TER-LC-17,11,"Móvil, Almacén de Validación",2021-04-21,,,Stock,0
+75,9,197,1,ND,TER-LC-18,12,NA,2024-01-17,2024-07-10,,Inactivo,0
+75,9,197,1,ND,TER-LC-19,3,Almacén de Validación,2024-04-29,,,Stock,0
+75,9,195,1,ND,TER-LC-20,3,Área de Balanzas,2024-04-29,,,Stock,0
+75,9,195,1,ND,TER-LC-21,3,Análisis Instrumental IV,2024-04-29,,,Stock,0
+75,9,195,1,ND,TER-LC-22,3,"Análisis Fisicoquímicos, en Recepción de Muestras",2024-07-18,,,Stock,0
+75,9,195,1,ND,TER-LC-23,3,"Análisis Fisicoquímicos, en Muestras de Grupo I, II y III",2024-07-18,,,Stock,0
+75,93,198,1,ND,TER-LC-24,3,"Disolución, en REF-LC-05 (Congelador)",2024-07-18,,,Stock,0
+75,93,198,1,ND,TER-LC-25,3,Almacén de Validación,2024-07-18,,,Stock,0
+75,9,195,1,ND,TER-LC-26,3,"Área de Balanzas, Estándares secundarios para grupos I, II y III",2025-07-17,,,Stock,0
+75,9,197,1,ND,TER-LO-01,12,NA,,2023-02-08,,Inactivo,0
+75,94,199,1,H2000JA095,TER-LO-02,8,"Móvil, Transporte",2025-07-07,,,Stock,0
+75,9,195,1,ND,TER-PR-01,12,NA,,2019-01-09,,Inactivo,0
+75,9,195,1,ND,TER-PR-03,12,NA,,2018-09-07,,Inactivo,0
+75,9,195,1,ND,TER-PR-04,6,Almacén de Material de Empaque ,,,,Stock,0
+75,9,195,1,ND,TER-PR-05,12,NA,,2021-04-15,,Inactivo,0
+75,9,195,1,ND,TER-PR-06,11,"Móvil, Almacén de Validación",,,,Stock,0
+75,9,195,1,ND,TER-PR-08,12,NA,,2021-04-15,,Inactivo,0
+75,9,195,1,ND,TER-PR-10,12,NA,,2021-10-18,,Inactivo,0
+75,9,195,1,ND,TER-PR-11,12,NA,,2019-05-14,,Inactivo,0
+75,9,195,1,ND,TER-PR-12,5,Desarrollo Farmacéutico,,2024-07-03,,Inactivo,0
+75,9,195,1,ND,TER-PR-13,11,"Móvil, Almacén de Validación",2023-12-15,,,Stock,0
+75,94,199,1,HT21161663,TER-PR-14,12,NA,2017-11-30,2023-03-28,,Inactivo,0
+75,94,199,1,HT21161673,TER-PR-15,8,"Móvil, Transporte",2022-06-08,2025-07-04,,Inactivo,0
+75,94,199,1,HT21161660,TER-PR-16,12,NA,2017-11-30,2022-12-06,,Inactivo,0
+75,9,195,1,ND,TER-PR-17,12,NA,,2018-09-07,,Inactivo,0
+75,94,199,1,HT21161678,TER-PR-18,11,"Móvil, Almacén de Validación",2017-11-30,,,Stock,0
+75,9,195,1,ND,TER-PR-19,12,NA,,2024-11-01,,Inactivo,0
+75,94,199,1,HT21161660,TER-PR-20,12,NA,2017-11-30,2023-12-15,,Inactivo,0
+75,9,195,1,ND,TER-PR-21,6,Acondicionamiento Secundario Frasco,,,,Stock,0
+75,9,200,1,ND,TER-PR-24,12,NA,,2018-09-07,,Inactivo,0
+75,9,195,1,ND,TER-PR-25,11,"Móvil, Almacén de Validación",,,,Stock,0
+75,9,195,1,ND,TER-PR-26,12,NA,,2024-01-11,,Inactivo,0
+75,9,195,1,ND,TER-PR-27,12,NA,,2024-11-01,,Inactivo,0
+75,9,195,1,ND,TER-PR-28,12,NA,,2024-11-01,,Inactivo,0
+75,9,196,1,ND,TER-PR-29,12,NA,2018-08-16,2019-08-01,,Inactivo,0
+75,9,196,1,ND,TER-PR-30,12,NA,2018-08-16,2019-08-01,,Inactivo,0
+75,9,196,1,ND,TER-PR-31,12,NA,2018-08-16,2019-08-01,,Inactivo,0
+75,9,196,1,ND,TER-PR-32,12,NA,2018-08-16,2019-08-01,,Inactivo,0
+75,9,196,1,ND,TER-PR-33,11,"Móvil, Almacén de Validación",2022-11-10,,,Stock,0
+75,9,196,1,ND,TER-PR-34,11,"Móvil, Almacén de Validación",2022-11-10,,,Stock,0
+75,9,196,1,ND,TER-PR-35,11,"Móvil, Almacén de Validación",2022-11-10,,,Stock,0
+75,9,195,1,ND,TER-FR-36,6,Tableteado 1,2023-08-02,,,Stock,0
+75,9,195,1,NA,TER-FR-37,6,Acondicionamiento Primario Llenado de Frascos,2024-01-11,,,Stock,0
+75,9,195,1,NA,TER-FR-38,6,Mezclado y Tamizado 1,2024-01-11,,,Stock,0
+75,9,195,1,ND,TER-FR-39,6,Tableteado 2,2024-11-19,,,Stock,0
+75,9,195,1,ND,TER-FR-40,6,Encapsulado y Abrillantado #5,2024-11-19,,,Stock,0
+75,9,195,1,ND,TER-FR-41,6,Recubrimiento,2024-11-19,,,Stock,0
+75,9,195,1,ND,TER-FR-42,6,Encapsulado y Abrillantado 4,2024-11-19,,,Stock,0
+75,9,196,1,ND,TER-VA-02,11,"Móvil, Almacén de Validación",,,,Stock,0
+75,9,196,1,ND,TER-VA-03,11,"Móvil, Almacén de Validación",2018-09-07,,,Stock,0
+75,9,196,1,ND,TER-VA-04,11,"Móvil, Almacén de Validación",2018-09-07,,,Stock,0
+75,9,196,1,ND,TER-VA-05,11,"Móvil, Almacén de Validación",2018-09-07,,,Stock,0
+75,9,195,1,ND,TER-VA-06,11,"Móvil, Almacén de Validación",2018-10-17,,,Stock,0
+75,9,195,1,ND,TER-VA-07,11,"Móvil, Almacén de Validación",2018-10-17,,,Stock,0
+75,9,195,1,ND,TER-VA-08,12,NA,2018-10-17,2023-12-20,,Inactivo,0
+75,9,195,1,ND,TER-VA-09,11,"Móvil, Almacén de Validación",2018-10-17,,,Stock,0
+75,9,195,1,ND,TER-VA-10,11,"Móvil, Almacén de Validación",2018-10-17,,,Stock,0
+75,9,195,1,ND,TER-VA-11,11,"Móvil, Almacén de Validación",2018-10-17,,,Stock,0
+75,9,195,1,ND,TER-VA-12,12,NA,2018-10-17,2024-11-22,,Inactivo,0
+75,9,195,1,ND,TER-VA-13,11,"Móvil, Almacén de Validación",2020-01-22,,,Stock,0
+75,9,195,1,ND,TER-VA-14,6,Detección de Metales,2020-01-22,,,Stock,0
+75,9,195,1,ND,TER-VA-15,12,NA,2020-01-22,2024-01-05,,Inactivo,0
+75,9,195,1,ND,TER-VA-16,12,NA,2020-01-22,2022-01-20,,Inactivo,0
+75,9,195,1,ND,TER-VA-17,6,Acondicionamiento Secundario Blíster,2020-01-23,,,Stock,0
+75,9,195,1,ND,TER-VA-18,7,Cuarentena de Graneles,2020-01-23,,,Stock,0
+75,9,195,1,ND,TER-VA-19,11,"Móvil, Almacén de Validación",2023-06-01,,,Stock,0
+75,9,195,1,ND,TER-VA-20,11,"Móvil, Almacén de Validación",2023-06-01,,,Stock,0
+75,9,195,1,ND,TER-VA-21,11,"Móvil, Almacén de Validación",2023-06-01,,,Stock,0
+75,9,195,1,ND,TER-VA-22,11,"Móvil, Almacén de Validación",2023-06-01,,,Stock,0
+75,9,195,1,ND,TER-VA-23,11,"Móvil, Almacén de Validación",2023-06-01,,,Stock,0
+75,9,195,1,ND,TER-VA-24,11,"Móvil, Almacén de Validación",2023-06-01,,,Stock,0
+75,9,195,1,ND,TER-VA-25,11,"Móvil, Almacén de Validación",2023-06-01,,,Stock,0
+75,9,195,1,ND,TER-VA-26,11,"Móvil, Almacén de Validación",2023-06-01,,,Stock,0
+75,9,195,1,ND,TER-VA-27,11,"Móvil, Almacén de Validación",2023-06-01,,,Stock,0
+75,9,195,1,ND,TER-VA-28,11,"Móvil, Almacén de Validación",2023-06-01,,,Stock,0
+75,93,198,1,ND,TER-VA-29,11,"Móvil, Almacén de Validación",2025-07-04,,,Stock,0
+75,9,195,1,ND,TER-SC-01,6,Acondicionamiento Primario Blíster,,,,Stock,0
+76,20,201,1,181628793,TEM-DA-01,11,"Móvil, Almacén de Validación",2018-12-21,,,Stock,0
+77,3,202,1,230335067,TEM-DA-02,4,Disolución,2023-07-24,,,Stock,0
+76,5,8,1,ND,TEM-DF-01,12,NA,2019-01-09,2025-08-11,,Inactivo,0
+76,95,203,1,ND,TEM-DF-02,5,Desarrollo Farmacéutico,2025-08-11,,,Stock,0
+76,93,204,1,ND,TEM-LC-01,12,NA,,2018-09-21,,Inactivo,0
+76,93,204,1,ND,TEM-LC-02,12,NA,,2022-02-08,,Inactivo,0
+76,93,204,1,ND,TEM-LC-03,3,Análisis Fisicoquímicos,,,,Stock,0
+76,96,205,1,3Y1753,TEM-LC-04,12,NA,,2019-03-20,,Inactivo,0
+76,93,204,1,ND,TEM-LC-05,12,NA,,2018-08-06,,Inactivo,0
+76,95,204,1,ND,TEM-LC-06,3,Análisis Fisicoquímicos,2018-02-16,,,Stock,0
+76,95,204,1,ND,TEM-LC-07,12,NA,2018-02-16,2023-02-16,,Inactivo,0
+76,95,204,1,ND,TEM-LC-08,3,Análisis Fisicoquímicos,2018-02-16,,,Stock,0
+76,95,204,1,ND,TEM-LC-09,3,Análisis Fisicoquímicos,2018-02-16,,,Stock,0
+76,95,204,1,ND,TEM-LC-10,3,Análisis Fisicoquímicos,2018-11-08,,,Stock,0
+76,95,204,1,ND,TEM-LC-11,7,"Control en Proceso, en DES-CP-01",2018-11-08,,,Stock,0
+76,95,204,1,ND,TEM-LC-12,10,"Microbiología, en BAM-LC-01",2018-11-08,,,Stock,0
+76,95,204,1,ND,TEM-LC-13,11,"Móvil, Almacén de Validación",2018-11-08,,,Stock,0
+76,95,204,1,ND,TEM-LC-14,3,Analisis Fisicoquímicos,2018-11-08,,,Stock,0
+76,95,204,1,ND,TEM-LC-15,3,Análisis Fisicoquímicos,2019-01-18,,,Stock,0
+77,8,206,1,97380401,TED-LC-01,3,Disolución,,,,Stock,0
+78,8,210,1,49391283WS,TIR-DF-01,5,Desarrollo Farmacéutico,2022-07-04,,,Stock,0
+78,8,208,1,19220053,TIR-LC-01,12,NA,,2024-01-10,,Inactivo,0
+78,8,209,1,44280035WS,TIR-PR-02,12,NA,2019-04-08,2022-06-15,,Inactivo,0
+78,8,210,1,56790737MV,TIR-FR-01,6,Recubrimiento,2023-08-02,,,Stock,0
+79,78,211,1,3914008,TRK-LC-01,12,NA,,2023-02-09,,Inactivo,0
+79,8,212,1,DE6448,TRK-LC-02,3,Disolución,,,,Stock,0
+79,30,213,1,93X052911,TRK-LC-03,10,"Microbiología, en POT-LC-02",2020-11-04,,,Stock,0
+79,30,214,1,91,TRK-LC-04,12,NA,2021-07-29,2024-08-30,,Inactivo,0
+79,5,8,1,ND,TRK-MI-01,10,"Microbiología, en POT-MI-01",2023-09-21,,,Stock,0
+79,5,8,1,ND,TRK-PR-01,12,NA,2021-02-04,2023-01-17,,Inactivo,0
+79,5,8,1,ND,TRK-PR-02,12,NA,2021-02-04,2023-01-17,,Inactivo,0
+79,5,8,1,ND,TRK-PR-03,12,NA,2021-02-04,2023-02-09,,Inactivo,0
+79,28,215,1,05310F3N,TRT-LC-01,12,NA,2020-03-31,2022-12-16,,Inactivo,0
+80,100,229,1,M115J28XQ13680002,TEP-AL-01,1,Material impreso,2025-09-22,,,Stock,0
+80,100,229,1,M115J28XQ134E0004,TEP-AL-02,1,Almacén de material de envase y empaque aprobado,2025-09-22,,,Stock,0
+80,100,230,1,M115Q56XQ147Q0026,TEP-AL-03,1,Almacén de material de envase y empaque aprobado,2025-09-22,,,Stock,0
+80,100,229,1,M115J28XQ134E0020,TEP-AL-04,1,Cuarentena de material de envase y empaque,2025-09-22,,,Stock,0
+80,36,216,1,TH8320U1008,TEP-MA-01,12,NA,,2021-09-03,,Inactivo,0
+80,36,216,1,TH8320U1008,TEP-MA-02,9,Esclusa 1,,,,Stock,0
+80,36,217,1,1937JC461089,TEP-MA-03,9,Almacén de Materia Prima Aprobada,2020-07-08,,,Stock,0
+80,36,218,1,NA,TEP-MA-04,12,NA,2020-07-08,2025-02-10,,Inactivo,0
+80,36,217,1,2052JC965158,TEP-MA-05,9,Pasillo A,2021-03-22,,,Stock,0
+80,36,219,1,79944011636992,TEP-MA-06,9,Preparación Microbiológica,2024-06-07,,,Stock,0
+80,36,217,1,2412JJB02456,TEP-MA-07,9,Microbiología,2024-06-07,,,Stock,0
+80,36,220,1,1827JB605273,TEP-MA-08,9,"Acondicionamiento Secundario, en UPA-MA-01",2025-02-10,,,Stock,0
+80,36,231,1,2518JUE05650,TEP-MA-09,9,"Piso técnico, UMA-MA-05",2025-09-05,,,Stock,0
+81,86,221,1,N/A,TTH-FR-01,6,"Recubrimiento, en REC-FR-02",2023-03-30,,,Stock,0
+82,65,222,1,A17316342,VER-CP-01,7,Control en Proceso ,2018-04-05,,,Stock,0
+82,99,223,1,20180818,VER-DF-01,5,Desarrollo Farmacéutico,2018-12-17,,,Stock,0
+82,22,224,1,ND,VER-DF-02,5,Desarrollo Farmacéutico,2025-08-11,,,Stock,0
+82,3,225,1,Y500875,VER-LC-01,3,Análisis Fisicoquímicos,,,,Stock,0
+82,97,226,1,ND,VER-VA-01,9,Taller de Mantenimiento,,,,Stock,0
+82,65,227,1,A21151470,VER-MA-01,9,Taller de Mantenimiento,2024-04-26,,,Stock,0
+83,98,228,1,TSMR 210022,VIS-DA-01,4,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución)",2023-07-07,,,Stock,0

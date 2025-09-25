@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = (base === '/') ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <meta charset="UTF-8">
+    <title>Contactos de Servicio | SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img {
+            width: 140px;
+            margin-bottom: 22px;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-nav .nav-link {
+            width: 92%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0 8px 0;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s;
+            position: relative;
+        }
+        .sidebar-nav .nav-link.active,
+        .sidebar-nav .nav-link:hover {
+            background: #0c8c98;
+            color: #fff;
+        }
+        .sidebar-nav .nav-link i {
+            font-size: 1.85rem;
+            margin-bottom: 8px;
+        }
+        .sidebar-nav .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 4px;
+            height: 32px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .main-content {
+            margin-left: 200px;
+            min-height: 100vh;
+            padding: 0;
+        }
+        .topbar {
+            background: #fff;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px 0 28px;
+            box-shadow: 0 1px 8px #0001;
+        }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+        .topbar-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #217b9b;
+            letter-spacing: 1px;
+        }
+        .topbar-user {
+            font-size: 1rem;
+            color: #217b9b;
+            font-weight: 400;
+            margin-left: 24px;
+        }
+        .topbar-icons {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .topbar-icons i {
+            font-size: 1.2rem;
+            color: #217b9b;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .contacts-section {
+            padding: 32px 28px;
+        }
+        .filters-bar {
+            background: #e9eff1;
+            padding: 16px 24px;
+            border-radius: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+        }
+        .filters-bar input,
+        .filters-bar select {
+            flex: 1 1 200px;
+            min-width: 200px;
+            border-radius: 8px;
+            border: 1px solid #b0bec5;
+            padding: 10px 14px;
+            font-size: 1rem;
+            background: #fff;
+        }
+        .table-container {
+            margin-top: 24px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(13, 87, 90, 0.12);
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead {
+            background: #0d575a;
+            color: #fff;
+        }
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid #e0f2f1;
+        }
+        tbody tr:hover {
+            background: #f4fbfb;
+        }
+        .text-muted {
+            color: #607d8b;
+        }
+        .status-message {
+            margin-top: 20px;
+            font-weight: 600;
+            color: #217b9b;
+        }
+        @media (max-width: 900px) {
+            .main-content { margin-left: 0; }
+            .sidebar { position: relative; width: 100%; height: auto; }
+            .table-container { min-width: 100vw; border-radius: 0; }
+        }
+    </style>
+    <script>
+    fetch(BASE_URL + '/backend/check_permission.php?permiso=usuarios_view')
+      .then(r=>r.json())
+      .then(d=>{ if(!d.allowed) window.location.href = BASE_URL + '/apps/tenant/index.html'; });
+    </script>
+</head>
+<body>
+    <aside id="sidebar" class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link" href="apps/tenant/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+            <i class="fa fa-user-shield"></i>
+            <span>ROLES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+            <i class="fa fa-circle-question"></i>
+            <span>TUTORIAL</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </aside>
+    <div class="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+                <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Direcciones de contacto</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/tenant/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <section class="contacts-section">
+            <div class="filters-bar">
+                <input type="text" id="filterText" placeholder="Buscar por nombre, puesto o contacto">
+                <select id="filterRole">
+                    <option value="">Todos los roles</option>
+                </select>
+                <button class="btn btn-outline-primary" id="refreshBtn" type="button"><i class="fa fa-rotate"></i> Actualizar</button>
+            </div>
+            <div class="table-container">
+                <table id="contactsTable" class="builder-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Puesto</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Rol</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5" class="text-muted">Cargando contactos...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="status-message" id="statusMessage"></div>
+        </section>
+    </div>
+    <script type="module" src="assets/scripts/scripts-tenant.js"></script>
+    <script>
+    const filterText = document.getElementById('filterText');
+    const filterRole = document.getElementById('filterRole');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const tableBody = document.querySelector('#contactsTable tbody');
+    const statusMessage = document.getElementById('statusMessage');
+    let contacts = [];
+
+    function renderContacts(list) {
+        tableBody.innerHTML = '';
+        if (!Array.isArray(list) || list.length === 0) {
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.colSpan = 5;
+            cell.className = 'text-muted';
+            cell.textContent = 'No se encontraron contactos con los filtros aplicados.';
+            row.appendChild(cell);
+            tableBody.appendChild(row);
+            return;
+        }
+
+        list.forEach(contact => {
+            const row = document.createElement('tr');
+            const nombreCompleto = [contact.nombre, contact.apellidos].filter(Boolean).join(' ');
+            const nombreCell = document.createElement('td');
+            nombreCell.textContent = nombreCompleto || 'Sin nombre';
+            row.appendChild(nombreCell);
+
+            const puestoCell = document.createElement('td');
+            puestoCell.textContent = contact.puesto || 'Sin puesto';
+            row.appendChild(puestoCell);
+
+            const correoCell = document.createElement('td');
+            if (contact.correo) {
+                const correoLink = document.createElement('a');
+                correoLink.href = `mailto:${contact.correo}`;
+                correoLink.textContent = contact.correo;
+                correoCell.appendChild(correoLink);
+            } else {
+                correoCell.textContent = 'Sin correo';
+            }
+            row.appendChild(correoCell);
+
+            const telefonoCell = document.createElement('td');
+            telefonoCell.textContent = contact.telefono || 'Sin teléfono';
+            row.appendChild(telefonoCell);
+
+            const rolCell = document.createElement('td');
+            rolCell.textContent = contact.role_name || 'Sin rol';
+            row.appendChild(rolCell);
+            tableBody.appendChild(row);
+        });
+    }
+
+    function buildRoleFilter() {
+        const roles = new Set();
+        contacts.forEach(contact => {
+            if (contact.role_name) {
+                roles.add(contact.role_name);
+            }
+        });
+        const current = filterRole.value;
+        filterRole.innerHTML = '<option value="">Todos los roles</option>';
+        Array.from(roles).sort().forEach(role => {
+            const option = document.createElement('option');
+            option.value = role;
+            option.textContent = role;
+            filterRole.appendChild(option);
+        });
+        if (roles.has(current)) {
+            filterRole.value = current;
+        }
+    }
+
+    function applyFilters() {
+        const text = filterText.value.trim().toLowerCase();
+        const role = filterRole.value;
+        const filtered = contacts.filter(contact => {
+            const hayTexto = !text || [
+                contact.nombre,
+                contact.apellidos,
+                contact.puesto,
+                contact.correo,
+                contact.telefono
+            ].some(field => field && field.toLowerCase().includes(text));
+            const hayRol = !role || contact.role_name === role;
+            return hayTexto && hayRol;
+        });
+        renderContacts(filtered);
+        statusMessage.textContent = filtered.length ? '' : 'Actualiza los filtros o solicita apoyo a tu ejecutivo de servicio.';
+    }
+
+    async function cargarContactos() {
+        statusMessage.textContent = '';
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-muted">Cargando contactos...</td></tr>';
+        try {
+            const response = await fetch(BASE_URL + '/backend/usuarios/list_service_contacts.php');
+            const data = await response.json();
+            if (!Array.isArray(data)) {
+                throw new Error('Respuesta inesperada del servidor.');
+            }
+            contacts = data;
+            buildRoleFilter();
+            applyFilters();
+        } catch (error) {
+            statusMessage.textContent = error.message || 'No fue posible obtener los contactos.';
+            tableBody.innerHTML = '<tr><td colspan="5" class="text-muted">Error al cargar información.</td></tr>';
+        }
+    }
+
+    function cargarUsuarioActual() {
+        fetch(BASE_URL + '/backend/usuarios/get_actual_user.php')
+            .then(r => r.json())
+            .then(u => {
+                if (!u || u.error) return;
+
+                const userName = document.getElementById('userName');
+                userName.textContent = u.nombre || '';
+                if (u.role_id) {
+                    const roleSpan = document.createElement('span');
+                    roleSpan.className = 'text-accent';
+                    roleSpan.textContent = ` (${u.role_id})`;
+                    userName.appendChild(roleSpan);
+                }
+                document.getElementById('menuNombre').innerText = `Nombre: ${u.nombre}`;
+                document.getElementById('menuRol').innerText = `Rol: ${u.role_id}`;
+            });
+    }
+
+    filterText.addEventListener('input', applyFilters);
+    filterRole.addEventListener('change', applyFilters);
+    refreshBtn.addEventListener('click', cargarContactos);
+
+    window.addEventListener('DOMContentLoaded', () => {
+        cargarUsuarioActual();
+        cargarContactos();
+    });
+    </script>
+</body>
+</html>

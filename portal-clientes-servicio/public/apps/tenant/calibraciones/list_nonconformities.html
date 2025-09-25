@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = (base === '/') ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <meta charset="UTF-8">
+    <title>No conformidades | SISTEMA ISO 17025</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body { background: #f6f8fa; font-family: 'Montserrat', Arial, sans-serif; margin: 0; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 200px; height: 100vh; background: #0d575a; color: #fff; z-index: 100; display: flex; flex-direction: column; align-items: center; padding-top: 30px; box-shadow: 1px 0 6px #0002; }
+        .sidebar-logo img { width: 140px; margin-bottom: 22px; }
+        .sidebar-nav { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .sidebar-nav .nav-link { width: 92%; display: flex; flex-direction: column; align-items: center; padding: 20px 0 8px 0; color: #cfd8dc; text-decoration: none; font-size: 1.08rem; font-weight: 600; letter-spacing: 1px; border-radius: 10px; margin-bottom: 2px; transition: background 0.2s, color 0.2s; position: relative; }
+        .sidebar-nav .nav-link.active, .sidebar-nav .nav-link:hover { background: #0c8c98; color: #fff; }
+        .sidebar-nav .nav-link i { font-size: 1.85rem; margin-bottom: 8px; }
+        .sidebar-nav .nav-link.active::after { content: ""; position: absolute; left: 0; top: 16px; width: 4px; height: 32px; background: #fff; border-radius: 2px; }
+        .main-content { margin-left: 200px; min-height: 100vh; padding: 0; }
+        .topbar { background: #fff; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 34px 0 28px; box-shadow: 0 1px 8px #0001; }
+        .topbar-left { display: flex; align-items: center; gap: 26px; }
+        .topbar-title { font-size: 1.4rem; font-weight: 700; color: #217b9b; letter-spacing: 1px; }
+        .topbar-icons { display: flex; align-items: center; gap: 18px; }
+        .topbar-icons i { font-size: 1.2rem; color: #217b9b; cursor: pointer; margin-top: 5px; }
+        .topbar-user-box { position: relative; }
+        .dashboard-section { padding: 32px 28px; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 8px 20px rgba(13, 87, 90, 0.08); }
+        .card-header { background: #0d575a; color: #fff; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.4px; padding: 14px 20px; border-radius: 12px 12px 0 0; }
+        .table-responsive { padding: 0 0 18px 0; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #e9eff1; color: #0d575a; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; padding: 12px 14px; }
+        td { padding: 12px 14px; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; }
+        tbody tr:hover { background: #f4fbfd; }
+        .status-open { display: inline-flex; align-items: center; gap: 6px; background: #fee2e2; color: #b91c1c; font-weight: 600; font-size: 0.85rem; padding: 4px 10px; border-radius: 999px; }
+        .empty-row { text-align: center; padding: 24px 10px; color: #64748b; font-style: italic; }
+        .message-box { margin-bottom: 16px; }
+        .message-box .alert { margin: 0; }
+        @media (max-width: 900px) { .main-content { margin-left: 0; } .dashboard-section { padding: 18px 12px; } }
+    </style>
+</head>
+<body>
+    <aside id="sidebar" class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link" href="apps/tenant/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link active" href="apps/tenant/calibraciones/list_nonconformities.html" data-section="no-conformidades">
+            <i class="fa fa-triangle-exclamation"></i>
+            <span>NO CONFORMIDADES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+            <i class="fa fa-user-shield"></i>
+            <span>ROLES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+            <i class="fa fa-circle-question"></i>
+            <span>TUTORIAL</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </aside>
+    <div class="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+                <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">No conformidades abiertas</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-comment-dots" id="btnFeedback" data-feedback-url="apps/tenant/feedback/feedback_externos.html"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/tenant/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <section class="dashboard-section">
+            <div class="message-box" id="messageBox"></div>
+            <div class="card">
+                <div class="card-header"><i class="fa fa-triangle-exclamation"></i> No conformidades abiertas</div>
+                <div class="table-responsive">
+                    <table id="nonconformitiesTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>Instrumento</th>
+                                <th>Código</th>
+                                <th>Resultado</th>
+                                <th>Detectada</th>
+                                <th>Notificada</th>
+                                <th>Notas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="nonconformitiesBody">
+                            <tr><td colspan="6" class="empty-row">Cargando no conformidades…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script type="module" src="assets/scripts/scripts-tenant.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            fetch(BASE_URL + '/apps/tenant/sidebar.html')
+                .then(function(response) { return response.text(); })
+                .then(function(html) {
+                    var sidebar = document.getElementById('sidebar');
+                    if (sidebar) {
+                        sidebar.innerHTML = html;
+                        if (typeof initSidebar === 'function') { initSidebar(); }
+                        if (typeof window.initializeSidebarControls === 'function') { window.initializeSidebarControls(); }
+                    }
+                });
+            cargarNoConformidades();
+        });
+
+        function cargarNoConformidades() {
+            fetch(BASE_URL + '/backend/calibraciones/list_nonconformities.php')
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if (Array.isArray(data)) {
+                        renderRows(data);
+                        mostrarMensaje('');
+                    } else if (data && data.error) {
+                        renderRows([]);
+                        mostrarMensaje(data.error, false);
+                    } else {
+                        renderRows([]);
+                        mostrarMensaje('No se pudieron obtener las no conformidades.', false);
+                    }
+                })
+                .catch(function() {
+                    renderRows([]);
+                    mostrarMensaje('No se pudieron obtener las no conformidades.', false);
+                });
+        }
+
+        function renderRows(rows) {
+            var tbody = document.getElementById('nonconformitiesBody');
+            if (!tbody) { return; }
+            tbody.innerHTML = '';
+            if (!rows.length) {
+                var emptyRow = document.createElement('tr');
+                var emptyCell = document.createElement('td');
+                emptyCell.colSpan = 6;
+                emptyCell.className = 'empty-row';
+                emptyCell.textContent = 'No hay no conformidades abiertas.';
+                emptyRow.appendChild(emptyCell);
+                tbody.appendChild(emptyRow);
+                return;
+            }
+            rows.forEach(function(row) {
+                var tr = document.createElement('tr');
+                var nombre = row.instrumento_nombre ? row.instrumento_nombre : 'Instrumento #' + row.instrumento_id;
+                appendCell(tr, nombre);
+                appendCell(tr, row.codigo || 'Sin código');
+                appendCell(tr, row.resultado || '');
+                appendCell(tr, formatearFecha(row.detected_at));
+                appendCell(tr, row.notified_at ? formatearFecha(row.notified_at) : 'Pendiente');
+                appendCell(tr, row.notes || 'Sin notas');
+                tbody.appendChild(tr);
+            });
+        }
+
+        function appendCell(tr, text) {
+            var td = document.createElement('td');
+            td.textContent = text;
+            tr.appendChild(td);
+        }
+
+        function formatearFecha(valor) {
+            if (!valor) { return ''; }
+            try {
+                var fecha = new Date(valor.replace(' ', 'T'));
+                if (!isNaN(fecha.getTime())) {
+                    return fecha.toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' });
+                }
+            } catch (e) {
+                return valor;
+            }
+            return valor;
+        }
+
+        function mostrarMensaje(texto, esExito) {
+            var box = document.getElementById('messageBox');
+            if (!box) { return; }
+            if (!texto) {
+                box.innerHTML = '';
+                return;
+            }
+            var variant = esExito ? 'alert-success' : 'alert-danger';
+            box.innerHTML = '<div class="alert ' + variant + '" role="alert">' + texto + '</div>';
+        }
+    </script>
+</body>
+</html>

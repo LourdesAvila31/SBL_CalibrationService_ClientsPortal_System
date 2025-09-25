@@ -1,0 +1,450 @@
+:root {
+    --tutorial-primary: #0d575a;
+    --tutorial-accent: #0c8c98;
+    --tutorial-soft: #e1f4f5;
+    --tutorial-highlight: #ffd166;
+    --tutorial-text: #134b4d;
+}
+
+body {
+    background: #f4f6f8;
+    font-family: 'Montserrat', Arial, sans-serif;
+    margin: 0;
+}
+
+.main-content {
+    margin-left: 200px;
+    min-height: 100vh;
+    padding-bottom: 48px;
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+.tutorial-wrapper {
+    padding: 32px 32px 48px;
+}
+
+@media (max-width: 768px) {
+    .tutorial-wrapper {
+        padding: 24px 16px 40px;
+    }
+}
+
+.tutorial-hero {
+    background: linear-gradient(130deg, rgba(13, 87, 90, 0.92), rgba(12, 140, 152, 0.85));
+    color: #fff;
+    border-radius: 18px;
+    padding: 40px 48px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 28px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(13, 87, 90, 0.20);
+}
+
+.tutorial-hero::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    right: -60px;
+    bottom: -60px;
+}
+
+.tutorial-hero h1 {
+    font-size: clamp(1.8rem, 2.8vw, 2.4rem);
+    margin: 0 0 16px 0;
+}
+
+.tutorial-hero p {
+    font-size: clamp(1rem, 1.1vw, 1.1rem);
+    margin-bottom: 20px;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.btn-primary-hero,
+.btn-secondary-hero {
+    border: none;
+    border-radius: 50px;
+    padding: 12px 26px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.btn-primary-hero {
+    background: #fff;
+    color: var(--tutorial-primary);
+}
+
+.btn-primary-hero:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(255, 255, 255, 0.25);
+}
+
+.btn-secondary-hero {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+}
+
+.btn-secondary-hero:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+}
+
+.tutorial-section {
+    margin-top: 40px;
+}
+
+.section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--tutorial-primary);
+    margin-bottom: 12px;
+}
+
+.section-subtitle {
+    color: var(--tutorial-text);
+    margin-bottom: 22px;
+}
+
+.tutorial-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+}
+
+.tutorial-step-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 22px rgba(13, 87, 90, 0.08);
+    border-top: 5px solid var(--tutorial-accent);
+    position: relative;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.tutorial-step-card:hover,
+.tutorial-step-card.is-highlighted {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 28px rgba(13, 87, 90, 0.18);
+}
+
+.tutorial-step-card.is-highlighted {
+    border-color: var(--tutorial-highlight);
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--tutorial-soft);
+    color: var(--tutorial-primary);
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 14px;
+}
+
+.step-title {
+    font-weight: 700;
+    color: var(--tutorial-primary);
+    margin-bottom: 8px;
+    font-size: 1.05rem;
+}
+
+.step-description {
+    font-size: 0.96rem;
+    color: var(--tutorial-text);
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.step-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.step-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--tutorial-soft);
+    color: var(--tutorial-primary);
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.18s ease;
+}
+
+.step-links a:hover {
+    background: var(--tutorial-accent);
+    color: #fff;
+}
+
+.tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--tutorial-accent);
+    color: #fff;
+    font-size: 0.75rem;
+    cursor: default;
+    margin-left: 6px;
+    position: relative;
+}
+
+.tooltip-trigger::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #163536;
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 8px 10px;
+    border-radius: 6px;
+    width: max-content;
+    max-width: 220px;
+    line-height: 1.4;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease;
+    z-index: 10;
+}
+
+.tooltip-trigger:hover::after,
+.tooltip-trigger:focus::after {
+    opacity: 1;
+}
+
+.tutorial-progress {
+    background: #fff;
+    border-radius: 16px;
+    padding: 26px;
+    box-shadow: 0 10px 22px rgba(13, 87, 90, 0.08);
+}
+
+.progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.progress-bar {
+    background: #d0e9ea;
+    border-radius: 50px;
+    height: 12px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    background: var(--tutorial-accent);
+    width: 0;
+    height: 100%;
+    border-radius: 50px;
+    transition: width 0.25s ease-in-out;
+}
+
+.tutorial-checklist {
+    margin-top: 20px;
+    display: grid;
+    gap: 12px;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--tutorial-soft);
+    padding: 12px 16px;
+    border-radius: 12px;
+}
+
+.checklist-item input[type="checkbox"] {
+    margin-top: 4px;
+    width: 18px;
+    height: 18px;
+}
+
+.checklist-item label {
+    font-size: 0.95rem;
+    color: var(--tutorial-text);
+    line-height: 1.4;
+}
+
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.resource-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 10px 22px rgba(13, 87, 90, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.resource-card h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--tutorial-primary);
+}
+
+.resource-card p {
+    font-size: 0.9rem;
+    color: var(--tutorial-text);
+    margin: 0;
+}
+
+.resource-card a {
+    align-self: flex-start;
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--tutorial-accent);
+}
+
+.resource-card a:hover {
+    text-decoration: underline;
+}
+
+.guide-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(14, 39, 41, 0.68);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+    padding: 16px;
+}
+
+.guide-overlay.is-visible {
+    display: flex;
+}
+
+.guide-dialog {
+    background: #fff;
+    border-radius: 18px;
+    max-width: 480px;
+    width: 100%;
+    padding: 24px 26px 22px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+}
+
+.guide-dialog h2 {
+    margin: 0 0 8px 0;
+    color: var(--tutorial-primary);
+    font-size: 1.2rem;
+}
+
+.guide-dialog p {
+    color: var(--tutorial-text);
+    line-height: 1.5;
+}
+
+.guide-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+}
+
+.guide-actions button {
+    border: none;
+    border-radius: 30px;
+    padding: 10px 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--tutorial-primary);
+    border: 1px solid var(--tutorial-primary);
+}
+
+.btn-outline:hover {
+    background: var(--tutorial-soft);
+}
+
+.btn-filled {
+    background: var(--tutorial-accent);
+    color: #fff;
+}
+
+.btn-filled:hover {
+    filter: brightness(1.05);
+}
+
+.guide-step-label {
+    font-size: 0.85rem;
+    color: var(--tutorial-text);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+.quick-tips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.quick-tip {
+    background: #fff;
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 6px 18px rgba(13, 87, 90, 0.10);
+}
+
+.quick-tip h4 {
+    margin: 0 0 10px 0;
+    color: var(--tutorial-primary);
+    font-size: 1rem;
+}
+
+.quick-tip p {
+    margin: 0;
+    color: var(--tutorial-text);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.badge-soft {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    letter-spacing: 0.4px;
+}

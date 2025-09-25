@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <title>Gestión de no conformidad | SISTEMA ISO 17025</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <style>
+        body {
+            background: #f0f4f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            color: #1f2933;
+        }
+        .layout {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(15, 36, 70, 0.12);
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0d575a;
+            margin-bottom: 1.5rem;
+        }
+        .meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .meta-item {
+            padding: 1rem;
+            border-radius: 12px;
+            background: #f8fafc;
+        }
+        .meta-item span {
+            display: block;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #475569;
+        }
+        .meta-item strong {
+            display: block;
+            margin-top: 0.35rem;
+            font-size: 1.05rem;
+        }
+        .timeline {
+            list-style: none;
+            padding-left: 0;
+        }
+        .timeline li {
+            padding-left: 1.2rem;
+            border-left: 3px solid #0d575a;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        .timeline li::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #0d575a;
+            position: absolute;
+            left: -6px;
+            top: 0.4rem;
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <h1>Gestión de no conformidad</h1>
+    <p class="text-secondary">Coordina con tu equipo el análisis, las acciones correctivas y la verificación de cierre.</p>
+    <div id="statusMessage" class="alert alert-info">Consultando información...</div>
+    <div id="nonConformityContent" class="d-none">
+        <div class="meta">
+            <div class="meta-item"><span>Empresa</span><strong id="empresaNombre">—</strong></div>
+            <div class="meta-item"><span>Instrumento</span><strong id="instrumentoNombre">—</strong></div>
+            <div class="meta-item"><span>Código interno</span><strong id="instrumentoCodigo">—</strong></div>
+            <div class="meta-item"><span>Estado actual</span><strong id="estadoNc">—</strong></div>
+            <div class="meta-item"><span>Resultado</span><strong id="resultadoNc">—</strong></div>
+            <div class="meta-item"><span>Fecha de detección</span><strong id="fechaDeteccion">—</strong></div>
+            <div class="meta-item"><span>Fecha de calibración</span><strong id="fechaCalibracion">—</strong></div>
+        </div>
+        <div class="mb-4">
+            <h2 class="h5 text-primary">Detalle de la no conformidad</h2>
+            <p id="descripcionNc" class="mb-0">—</p>
+        </div>
+        <div class="mb-4">
+            <h2 class="h5 text-primary">Flujo sugerido</h2>
+            <ul class="timeline">
+                <li><strong>Análisis técnico:</strong> confirma el alcance de la desviación y determina los riesgos asociados.</li>
+                <li><strong>Plan de acción:</strong> documenta tareas, responsables y fechas objetivo.</li>
+                <li><strong>Implementación:</strong> ejecuta las acciones y adjunta evidencias en la bitácora correspondiente.</li>
+                <li><strong>Verificación:</strong> revisa la efectividad y actualiza el estado a "Cerrada" cuando proceda.</li>
+            </ul>
+        </div>
+        <div class="actions">
+            <a id="verCalibracion" class="btn btn-primary" href="#" target="_blank" rel="noopener">Abrir calibración</a>
+            <a id="abrirPlanAccion" class="btn btn-outline-secondary d-none" href="#" target="_blank" rel="noopener">Abrir plan de acción asociado</a>
+        </div>
+    </div>
+</div>
+<script>
+    (function () {
+        const params = new URLSearchParams(window.location.search);
+        const nonConformityId = params.get('nc_id');
+        const statusMessage = document.getElementById('statusMessage');
+        const content = document.getElementById('nonConformityContent');
+        const BASE_URL = window.BASE_URL || '';
+
+        if (!nonConformityId) {
+            statusMessage.classList.remove('alert-info');
+            statusMessage.classList.add('alert-danger');
+            statusMessage.textContent = 'Identificador de no conformidad no especificado.';
+            return;
+        }
+
+        fetch(`${BASE_URL}/backend/calibraciones/get_nonconformity.php?id=${encodeURIComponent(nonConformityId)}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('No se pudo consultar la no conformidad.');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (!data || data.error) {
+                    throw new Error(data && data.error ? data.error : 'No conformidad no encontrada.');
+                }
+
+                statusMessage.classList.add('d-none');
+                content.classList.remove('d-none');
+
+                document.getElementById('empresaNombre').textContent = data.empresa_nombre || '—';
+                document.getElementById('instrumentoNombre').textContent = data.instrumento_nombre || '—';
+                document.getElementById('instrumentoCodigo').textContent = data.instrumento_codigo || '—';
+                document.getElementById('resultadoNc').textContent = data.resultado || '—';
+                document.getElementById('fechaCalibracion').textContent = data.fecha_calibracion || '—';
+                document.getElementById('descripcionNc').textContent = data.descripcion || '—';
+                document.getElementById('fechaDeteccion').textContent = data.detected_at ? new Date(data.detected_at).toLocaleString('es-MX') : '—';
+                const estado = (data.estado || '').toString();
+                document.getElementById('estadoNc').textContent = estado === '' ? '—' : estado.charAt(0).toUpperCase() + estado.slice(1);
+
+                const enlaceCalibracion = `${BASE_URL}/apps/internal/calibraciones/edit_calibration.html?id=${encodeURIComponent(data.calibracion_id || '')}`;
+                document.getElementById('verCalibracion').setAttribute('href', enlaceCalibracion);
+
+                if (data.corrective_url) {
+                    try {
+                        const targetUrl = new URL(data.corrective_url, window.location.origin);
+                        if (targetUrl.pathname !== window.location.pathname) {
+                            const planBtn = document.getElementById('abrirPlanAccion');
+                            planBtn.classList.remove('d-none');
+                            planBtn.setAttribute('href', targetUrl.toString());
+                        }
+                    } catch (e) {
+                        console.warn('No se pudo interpretar la URL correctiva:', e);
+                    }
+                }
+            })
+            .catch((error) => {
+                statusMessage.classList.remove('alert-info');
+                statusMessage.classList.add('alert-danger');
+                statusMessage.textContent = error.message;
+            });
+    })();
+</script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+</body>
+</html>

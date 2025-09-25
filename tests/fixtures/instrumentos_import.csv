@@ -1,0 +1,3 @@
+Instrumento,Marca,Modelo,Serie,Código,Departamento responsable,Ubicación,Fecha de alta,Fecha de baja,Próxima calibración,Estado,Programado
+Balanza de prueba,Sigma,SP-200,SN-A1,TEST-CODE-IMPORT-001,Control de Calidad,Laboratorio Central,2024-01-15,,2024-07-15,Activo,1
+Termómetro digital,Omega,TX-90,SN-B2,TEST-CODE-IMPORT-002,Producción,Planta Norte,2023-11-20,,2024-11-20,Stock,0

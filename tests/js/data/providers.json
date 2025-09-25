@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "nombre": "Proveedor 1",
+    "direccion": "Calle 123",
+    "contactos": [
+      { "nombre": "Juan Pérez", "puesto": "Gerente", "correo": "juan@example.com" }
+    ]
+  },
+  {
+    "id": 2,
+    "nombre": "Proveedor 2",
+    "direccion": "Avenida 456",
+    "contactos": [
+      { "nombre": "María López", "puesto": "Supervisora", "correo": "maria@example.com" }
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "empresas": [
+    {
+      "id": 1,
+      "nombre": "Empresa Demo",
+      "roles": [
+        { "nombre": "Administrador", "delegated": false, "permisos": ["instrumentos_leer", "usuarios_view"] },
+        { "nombre": "Delegado Calidad", "delegated": true, "permisos": ["instrumentos_leer", "planeacion_leer"] }
+      ]
+    },
+    {
+      "id": 2,
+      "nombre": "Laboratorio Norte",
+      "roles": [
+        { "nombre": "Supervisor", "delegated": false, "permisos": ["calibraciones_leer"] },
+        { "nombre": "Delegado Planta", "delegated": true, "permisos": ["mensajeria_leer"] }
+      ]
+    }
+  ]
+}

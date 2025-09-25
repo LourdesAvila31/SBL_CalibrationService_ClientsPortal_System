@@ -1,0 +1,665 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = (base === '/') ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    
+    <title>Gestión de Calibraciones</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Bootstrap, Montserrat, FontAwesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden; /* evita que aparezca la barra horizontal */
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img {
+            width: 140px;
+            margin-bottom: 22px;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-nav .nav-link {
+            width: 92%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0 8px 0;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s;
+            position: relative;
+        }
+        .sidebar-nav .nav-link.active,
+        .sidebar-nav .nav-link:hover {
+            background: #0c8c98;
+            color: #fff;
+        }
+        .sidebar-nav .nav-link i {
+            font-size: 1.85rem;
+            margin-bottom: 8px;
+        }
+        .sidebar-nav .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 4px;
+            height: 32px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .main-content {
+            margin-left: 200px;
+            min-height: 100vh;
+            padding: 0;
+            width: calc(100% - 200px); /* que el contenido no exceda el ancho visible */
+        }
+        .topbar {
+            background: #fff;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px 0 28px;
+            box-shadow: 0 1px 8px #0001;
+        }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+        .topbar-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #217b9b;
+            letter-spacing: 1px;
+        }
+        .topbar-user {
+            font-size: 1rem;
+            color: #217b9b;
+            font-weight: 400;
+            margin-left: 24px;
+        }
+        .topbar-icons {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .topbar-icons i {
+            font-size: 1.2rem;
+            color: #217b9b;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .dashboard-section {
+            padding: 32px 28px;
+        }
+        .dashboard-bar {
+            background: #0d575a;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            margin-bottom: 22px;
+            padding: 10px 18px;
+            letter-spacing: 0.5px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+        /* Responsive adjustments based on viewport height for the last button column */
+        @media (max-height: 1600px) {
+            .dashboard-grid.grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-btn {
+                padding: 10px 10px 12px 10px;
+            }
+        }
+        @media (max-height: 700px) {
+            .dashboard-grid.grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .dashboard-btn {
+                padding: 10px 10px 12px 10px;
+            }
+        }
+        @media (max-height: 500px) {
+            .dashboard-grid.grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-btn {
+                padding: 10px 8px 10px 8px;
+            }
+        }
+        .dashboard-btn {
+            background: #0c8c98;
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            padding-top: clamp(12px, 1.5vw, 12px);
+            padding-right: clamp(12px, 1.5vw, 12px);
+            padding-bottom: clamp(12px, 1.5vw, 12px);
+            padding-left: clamp(12px, 1.5vw, 12px);
+            min-width: 130px;
+            text-align: left;
+            font-size: clamp(0.9rem, 1vw, 1.05rem);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            transition: background 0.18s, color 0.18s;
+            text-decoration: none;
+        }
+        .dashboard-btn .panel-title {
+            font-size: clamp(0.9rem, 1vw, 1.1rem);
+            font-weight: 600;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            white-space: pre-line;
+        }
+        .dashboard-btn .panel-value {
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            font-weight: 700;
+            margin-bottom: 6px;
+            word-break: break-word;
+        }
+        .dashboard-btn:hover {
+            background: #217b9b;
+            color: #fff;
+        }
+        .dashboard-btn .icon-btn {
+            font-size: 1.7rem;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        @media (min-width: 1200px) {
+            .dashboard-grid.grid-5 {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            .dashboard-grid.grid-4 {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .dashboard-btn {
+                font-size: 1.05rem;
+            }
+            .dashboard-btn .panel-value {
+                font-size: 2.4rem;
+            }
+        }
+        @media (min-width: 1600px) {
+            .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+            .dashboard-btn { padding: 24px 24px 24px 24px; font-size: 1.1rem; min-width: 200px; }
+            .dashboard-btn .panel-value { font-size: 2.6rem; }
+        }
+        @media (max-width: 1600px) {
+            .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+            .dashboard-btn { padding: 24px 10px 14px 10px; min-width: 120px; }
+        }
+        /* Responsivo para textos  */
+        @media (max-width: 900px) {
+            .main-content { margin-left: 0; width: 100%; }
+            .dashboard-section { padding: 18px 6px; }
+            .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+            .dashboard-btn { padding: 20px 8px 12px 8px; font-size: 0.95rem; }
+            .dashboard-btn .panel-title { font-size: 0.96rem; }
+            .dashboard-btn .panel-value { font-size: 1.3rem; }
+        }
+        @media (max-width: 600px) {
+            .dashboard-section { padding: 16px 10px; }
+            .dashboard-grid { grid-template-columns: 1fr; gap: 8px; }
+            .dashboard-btn { font-size: 0.88rem; padding: 16px 8px 10px 8px;}
+            .dashboard-btn .panel-value { font-size: 1.1rem; }
+        }
+         @media (max-width: 480px) {
+            .dashboard-btn {
+                min-width: 0;
+                padding: 16px 8px 10px 8px;
+                font-size: 0.85rem;
+                align-items: center;
+                text-align: center;
+            }
+            .dashboard-btn .panel-title { font-size: 0.9rem; }
+            .dashboard-btn .panel-value { font-size: 1.2rem; }
+        }
+        /* Complemento para menú desplegable y Notificaciones */
+        .topbar-user-box { display:inline-block; position:relative; }
+        #userMenu, #notificationsMenu {
+            display:none;
+            position:absolute;
+            right:0;
+            top:32px;
+            background:#fff;
+            border-radius:10px;
+            box-shadow:0 2px 12px #0d575a22;
+            min-width:180px;
+            z-index:99;
+            padding:12px;
+        }
+        #notificationsMenu { right:64px; top:40px; min-width:260px; padding:15px;}
+        #userMenu button, #userMenu .btn-perfil {
+            width:100%;
+            background:#0d575a;
+            color:#fff;
+            border:none;
+            border-radius:6px;
+            margin:8px 0 0 0;
+            padding:7px 0;
+            font-weight:700;
+            font-size:1rem;
+        }
+        #userMenu .btn-cerrar {
+            background:#fff; color:#0d575a; border:1px solid #0d575a;
+        }
+        #userMenu div { padding:6px 0; border-bottom:1px solid #e0f7fa; }
+        #userMenu div:last-child { border-bottom:none; }
+        
+        .dashboard-btn.thin-1,
+        .dashboard-btn.thin-2 {
+            width: 200px;
+            min-width: 0;
+            height: 100px;
+            min-height: 0;
+            padding-top: clamp(10px, 1.5vw, 16px);
+            padding-right: clamp(8px, 1.2vw, 12px);
+            padding-bottom: clamp(14px, 1.5vw, 18px);
+            padding-left: clamp(8px, 1.2vw, 12px);
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: none;
+            border-radius: 6px;
+            font-size: clamp(0.85rem, 0.9vw, 0.95rem);
+        }
+        .dashboard-btn.thin-1 { margin:10px 0 0 0; }
+        .dashboard-btn.thin-2 { margin:10px 0 0 0; }
+        .dashboard-btn.thin-1 .panel-title,
+        .dashboard-btn.thin-2 .panel-title {
+            font-size: clamp(0.85rem, 0.9vw, 1rem);
+        }
+        .dashboard-btn.thin-1 .panel-value,
+        .dashboard-btn.thin-2 .panel-value {
+            font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+        }
+
+        /* Uniform size for first two dashboard rows */
+        .dashboard-grid.grid-5 .dashboard-btn:not(.thin-1):not(.thin-2) {
+            width: 100%;
+            height: 120px;
+            box-sizing: border-box;
+        }
+        /* Uniform size for last dashboard row */
+        .dashboard-grid.grid-4 .dashboard-btn {
+            width: 100%;
+            height: 120px;
+            box-sizing: border-box;
+        }
+
+        /* Center slim buttons within their columns */
+        .dashboard-btn.thin-1,
+        .dashboard-btn.thin-2 {
+            justify-self: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+        <aside id="sidebar" class="sidebar" data-guide-step="1" data-guide-title="Explora el menú lateral" data-guide-description="Desde aquí accedes a instrumentos, calibraciones, calidad y reportes del laboratorio. Usa estos accesos para moverte entre los módulos internos.">
+        <!-- SIDEBAR CONTENT -->
+        <style>
+            .sidebar-nav {
+                gap: 12px;
+            }
+        
+            .sidebar-nav .nav-link {
+                width: 90%;
+                padding: 16px 0 10px 0;
+                font-size: 1.02rem;
+                letter-spacing: 0.5px;
+            }
+        
+            .sidebar-nav .nav-link i {
+                font-size: 1.7rem;
+                margin-bottom: 6px;
+            }
+        
+            @media (max-width: 900px) {
+                .sidebar-nav .nav-link {
+                    width: 92%;
+                }
+            }
+        </style>
+        <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+        <div class="sidebar-logo">
+            <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-link active" href="apps/internal/index.html" data-section="menu">
+                <i class="fa fa-tachometer-alt"></i>
+                <span>MENÚ</span>
+            </a>
+            <a class="nav-link" href="apps/internal/instrumentos/list_gages.html" data-section="instrumentos">
+                <i class="fa fa-boxes-stacked"></i>
+                <span>INSTRUMENTOS</span>
+            </a>
+            <a class="nav-link" href="apps/internal/planeacion/list_planning.html" data-section="planeacion">
+                <i class="fa fa-calendar-alt"></i>
+                <span>PLANEACIÓN</span>
+            </a>
+            <a class="nav-link" href="apps/internal/calibraciones/list_calibrations.html" data-section="calibraciones">
+                <i class="fa fa-balance-scale"></i>
+                <span>CALIBRACIONES</span>
+            </a>
+            <a class="nav-link" href="apps/internal/reportes/reports.html" data-section="reportes">
+                <i class="fa fa-file-alt"></i>
+                <span>REPORTES</span>
+            </a>
+            <a class="nav-link" href="apps/internal/configuracion/api_tokens.html" data-section="configuracion" data-requires-api-tokens="manage">
+                <i class="fa fa-key"></i>
+                <span>TOKENS API</span>
+            </a>
+            <a class="nav-link" href="apps/internal/ayuda/help_center.html" data-section="ayuda">
+                <i class="fa fa-circle-question"></i>
+                <span>AYUDA</span>
+            </a>
+            <a class="nav-link" href="apps/internal/calidad/index.html" data-section="calidad">
+                <i class="fa fa-award"></i>
+                <span>CALIDAD</span>
+            </a>
+        </nav>
+        </aside>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-content">
+        <!-- Topbar -->
+         <div class="topbar" data-guide-step="2" data-guide-title="Controla la barra superior" data-guide-description="Consulta la búsqueda, notificaciones y tu perfil. Desde aquí también puedes enviar comentarios y cerrar sesión de forma segura.">
+            <div class="topbar-left">
+        <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Gestión de Instrumentos y Calibraciones</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-cog" id="btnSettings" title="Configuración" aria-label="Abrir configuración" onclick="window.location.href = BASE_URL + '/apps/internal/configuracion/settings.html'"></i>
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <!-- Menú usuario -->
+                     <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/internal/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <!-- Notificaciones -->
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList">
+                        <div class="text-muted-sm">No hay notificaciones nuevas.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="dashboard-section">
+            <!-- Gages Section -->
+            <div class="dashboard-bar">Instrumentos</div>
+            <div class="dashboard-grid grid-5" data-guide-step="3" data-guide-title="Supervisa tus instrumentos" data-guide-description="Revisa los indicadores clave y accede a los atajos para programar calibraciones, cargar instrumentos o abrir el calendario.">
+                <a href="apps/internal/instrumentos/list_gages.html?filtro=activo" class="dashboard-btn" data-section="instrumentos">
+                    <span class="panel-title">Activos</span>
+                    <span class="panel-value" id="activos">0</span>
+                </a>
+                <a href="apps/internal/instrumentos/list_gages.html?filtro=stock" class="dashboard-btn" data-section="instrumentos">
+                    <span class="panel-title">En Stock</span>
+                    <span class="panel-value" id="inactivos">0</span>
+                </a>
+                <a href="apps/internal/planeacion/list_planning.html?filtro=programada" class="dashboard-btn" data-section="planeacion">
+                    <span class="panel-title">Programado</span>
+                    <span class="panel-value" id="programado">0</span>
+                </a>
+                <a href="apps/internal/planeacion/list_planning.html?filtro=pendiente" class="dashboard-btn" data-section="planeacion">
+                    <span class="panel-title">No Programado</span>
+                    <span class="panel-value" id="no_programado">0</span>
+                </a>
+                <a href="apps/internal/instrumentos/add_gage.html" class="dashboard-btn thin-1 sbl-skyblue" data-section="instrumentos">
+                    <span class="panel-title">Añadir Instrumento</span>
+                    <span class="panel-value"><i class="fa fa-plus icon-btn"></i></span>
+                </a>
+            </div>
+            <div class="dashboard-grid grid-5">
+                <a href="apps/internal/instrumentos/list_gages.html?periodo=expired" class="dashboard-btn" data-section="instrumentos">
+                    <span class="panel-title">Vencido</span>
+                    <span class="panel-value" id="vencido">0</span>
+                </a>
+                <a href="apps/internal/instrumentos/list_gages.html?periodo=30" class="dashboard-btn" data-section="instrumentos">
+                    <span class="panel-title">Vence en 30 días</span>
+                    <span class="panel-value" id="vence_30">0</span>
+                </a>
+                <a href="apps/internal/instrumentos/list_gages.html?periodo=60" class="dashboard-btn" data-section="instrumentos">
+                    <span class="panel-title">Vence en 60 días</span>
+                    <span class="panel-value" id="vence_60">0</span>
+                </a>
+                <a href="apps/internal/instrumentos/list_gages.html?periodo=90" class="dashboard-btn" data-section="instrumentos">
+                    <span class="panel-title">Vence en 90 días</span>
+                    <span class="panel-value" id="vence_90">0</span>
+                </a>
+                <a href="apps/internal/planeacion/calendar.html" class="dashboard-btn thin-2 sbl-skyblue" data-section="planeacion">
+                    <span class="panel-title">Calendario</span>
+                    <span class="panel-value"><i class="fa fa-calendar-alt icon-btn"></i></span>
+                </a>
+            </div>
+            <!-- Account Section -->
+            <div class="dashboard-bar">Registros</div>
+            <div class="dashboard-grid grid-5" data-guide-step="4" data-guide-title="Gestiona tus registros" data-guide-description="Administra usuarios internos, proveedores y auditorías. Estos accesos concentran los módulos necesarios para cumplir con ISO 17025 y NOM-059.">
+                <a href="apps/internal/usuarios/list_users.html" class="dashboard-btn" data-section="usuarios">
+                    <span class="panel-title">Usuarios</span>
+                    <span class="panel-value" id="usuarios_cuenta">0</span>
+                    <span class="dashboard-subtitle"></span>
+                </a>
+                <a href="apps/internal/proveedores/list_providers.html" class="dashboard-btn" data-section="proveedores">
+                    <span class="panel-title">Proveedores</span>
+                    <span class="panel-value" id="proveedores_registrados">0</span>
+                    <span class="dashboard-subtitle"></span>
+                </a>
+                <a href="apps/internal/instrumentos/list_gages.html" class="dashboard-btn" data-section="instrumentos">
+                    <span class="panel-title">Instrumentos</span>
+                    <span class="panel-value" id="instrumentos_usados">0</span>
+                    <span class="dashboard-subtitle"></span>
+                </a>
+                <a href="apps/internal/auditoria/list_audit_trail.html" class="dashboard-btn" data-section="auditoria">
+                    <span class="panel-title">Audit Trail</span>
+                    <span class="panel-value" id="audit_trail">0</span>
+                    <span class="dashboard-subtitle"></span>
+                </a>
+                <a href="apps/internal/configuracion/api_tokens.html" class="dashboard-btn sbl-skyblue" data-section="configuracion" data-requires-api-tokens="manage" data-api-tokens-activator>
+                    <span class="panel-title">Tokens API</span>
+                    <span class="panel-value"><i class="fa fa-key icon-btn"></i></span>
+                </a>
+                <a href="apps/internal/ayuda/help_center.html" class="dashboard-btn" data-section="ayuda">
+                    <span class="panel-title">Ayuda</span>
+                    <span class="panel-value"><i class="fa fa-circle-question"></i></span>
+                </a>
+                <a href="apps/internal/calidad/index.html" class="dashboard-btn" data-section="calidad">
+                    <span class="panel-title">Calidad</span>
+                    <span class="panel-value"><i class="fa fa-award icon-btn"></i></span>
+                </a>
+            </div>
+        </section>
+    </div>
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script>
+    // CARGA DINÁMICAMENTE LOS NÚMEROS DEL BACKEND
+    fetch(BASE_URL + '/backend/dashboard/dashboardController.php')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('activos').textContent = data.activos ?? 0;
+        document.getElementById('inactivos').textContent = data.inactivos ?? 0;
+        document.getElementById('vencido').textContent = data.vencido ?? 0;
+        document.getElementById('vence_30').textContent = data.vence_30 ?? 0;
+        document.getElementById('vence_60').textContent = data.vence_60 ?? 0;
+        document.getElementById('vence_90').textContent = data.vence_90 ?? 0;
+        document.getElementById('usuarios_cuenta').textContent = data.usuarios_cuenta ?? 0;
+        document.getElementById('proveedores_registrados').textContent = data.proveedores_registrados ?? 0;
+        document.getElementById('instrumentos_usados').textContent = data.instrumentos_usados ?? 0;
+      }).catch(() => {});
+
+// Conteos de planeación (programados y no programados)
+    fetch(BASE_URL + '/backend/planeacion/count_planning.php')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('programado').textContent = data.programado ?? 0;
+        document.getElementById('no_programado').textContent = data.no_programado ?? 0;
+      }).catch(() => {});
+
+        // --- Usuario dinámico ---
+         function cargarUsuarioActual() {
+        fetch(BASE_URL + '/backend/usuarios/get_actual_user.php')
+            .then(r=>r.json())
+            .then(u=>{
+                document.getElementById('userName').innerHTML = `${u.nombre} <span class="text-accent">(${u.role_id})</span>`;
+                document.getElementById('menuNombre').innerText = `Nombre: ${u.nombre}`;
+                document.getElementById('menuRol').innerText = `Rol: ${u.role_id}`;
+            });
+    }
+    cargarUsuarioActual();
+ // --- Menú perfil ---
+    const userMenu = document.getElementById('userMenu');
+    const notificationsMenu = document.getElementById('notificationsMenu');
+    const btnUser = document.getElementById('btnUser');
+    const btnBell = document.getElementById('btnBell');
+
+    const showMenu = menu => { if(menu){ menu.classList.remove('is-hidden'); menu.classList.add('is-visible'); } };
+    const hideMenu = menu => { if(menu){ menu.classList.add('is-hidden'); menu.classList.remove('is-visible'); } };
+    const toggleMenu = menu => {
+        if(!menu) return;
+        if(menu.classList.contains('is-visible')) hideMenu(menu);
+        else { hideMenu(menu === userMenu ? notificationsMenu : userMenu); hideMenu(document.getElementById('searchMenu')); showMenu(menu); }
+    };
+
+    if(btnUser && userMenu){
+        btnUser.onclick = function(e){
+            toggleMenu(userMenu);
+            e.stopPropagation();
+        };
+        userMenu.onclick = function(e){ e.stopPropagation(); };
+    }
+    document.body.onclick = function(){
+        hideMenu(userMenu);
+        hideMenu(notificationsMenu);
+        const sm = document.getElementById('searchMenu');
+        hideMenu(sm);
+    };
+
+    // --- Notificaciones automáticas de calibraciones próximas a vencer ---
+    if(btnBell && notificationsMenu){
+        btnBell.onclick = function(e){
+            if(notificationsMenu.classList.contains('is-visible')){
+                hideMenu(notificationsMenu);
+            } else {
+                hideMenu(userMenu);
+                hideMenu(document.getElementById('searchMenu'));
+                showMenu(notificationsMenu);
+                cargarNotificaciones();
+            }
+            e.stopPropagation();
+        };
+        notificationsMenu.onclick = function(e){ e.stopPropagation(); };
+    }
+    // --- Búsqueda (lupa) ---
+    (function(){
+        var btnSearch = document.getElementById('btnSearch');
+        if(!btnSearch) return;
+        var container = document.querySelector('.topbar-icons') || document.body;
+        var sm = document.getElementById('searchMenu');
+        if(!sm){
+            sm = document.createElement('div');
+            sm.id = 'searchMenu';
+            sm.className = 'dropdown-panel is-hidden';
+            sm.innerHTML = '<input type="text" class="topbar-search-input" placeholder="Buscar…" />';
+            container.appendChild(sm);
+            sm.onclick = function(e){ e.stopPropagation(); };
+        }
+        btnSearch.onclick = function(e){
+            if(sm.classList.contains('is-visible')){
+                hideMenu(sm);
+            } else {
+                hideMenu(userMenu);
+                hideMenu(notificationsMenu);
+                showMenu(sm);
+                var inp = sm.querySelector('input.topbar-search-input'); if(inp){ setTimeout(function(){ inp.focus(); }, 10); }
+            }
+            e.stopPropagation();
+        };
+    })();
+    function cargarNotificaciones(){
+        fetch(BASE_URL + '/backend/usuarios/notifications.php')
+          .then(r=>r.json())
+          .then(data=>{
+            let notiList = document.getElementById('notiList');
+            if(!data.length){
+                notiList.innerHTML = '<div class="text-muted-sm">No hay notificaciones nuevas.</div>';
+            }else{
+                notiList.innerHTML = data.map(n=>
+                    `<div class="notification-item">
+                        <span class="notification-title">${n.titulo||''}</span><br>
+                        <span class="notification-message">${n.mensaje||''}</span>
+                    </div>`
+                ).join('');
+            }
+          });
+    }
+    </script>
+</body>
+</html>
+
+
+
+
+

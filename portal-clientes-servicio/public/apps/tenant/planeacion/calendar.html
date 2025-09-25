@@ -1,0 +1,647 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = (base === '/') ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <meta charset="UTF-8">
+    <title>Calendario | SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Bootstrap, Montserrat, FontAwesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+         body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img {
+            width: 140px;
+            margin-bottom: 22px;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-nav .nav-link {
+            width: 92%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0 8px 0;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s;
+            position: relative;
+        }
+        .sidebar-nav .nav-link.active,
+        .sidebar-nav .nav-link:hover {
+            background: #0c8c98;
+            color: #fff;
+        }
+        .sidebar-nav .nav-link i {
+            font-size: 1.85rem;
+            margin-bottom: 8px;
+        }
+        .sidebar-nav .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 4px;
+            height: 32px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .main-content {
+            margin-left: 200px;
+            min-height: 100vh;
+            padding: 0;
+        }
+        .topbar {
+            background: #fff;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px 0 28px;
+            box-shadow: 0 1px 8px #0001;
+        }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+        .topbar-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #217b9b;
+            letter-spacing: 1px;
+        }
+        .topbar-user {
+            font-size: 1rem;
+            color: #217b9b;
+            font-weight: 400;
+            margin-left: 24px;
+        }
+        .topbar-icons {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .topbar-icons i {
+            font-size: 1.2rem;
+            color: #217b9b;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+         @media (max-width: 900px) {
+            .table-container { min-width: 100vw; }
+            table { min-width: 700px; }
+        }
+         /* Responsivo para textos */
+        @media (max-width: 900px) {
+            .main-content { margin-left: 0; }
+        }
+        /* Complemento para menú desplegable y Notificaciones */
+        .topbar-user-box { display:inline-block; position:relative; }
+        #userMenu, #notificationsMenu {
+            display:none;
+            position:absolute;
+            right:0;
+            top:32px;
+            background:#fff;
+            border-radius:10px;
+            box-shadow:0 2px 12px #0d575a22;
+            min-width:180px;
+            z-index:99;
+            padding:12px;
+        }
+        #notificationsMenu { right:64px; top:40px; min-width:260px; padding:15px;}
+        #userMenu button, #userMenu .btn-perfil {
+            width:100%;
+            background:#0d575a;
+            color:#fff;
+            border:none;
+            border-radius:6px;
+            margin:8px 0 0 0;
+            padding:7px 0;
+            font-weight:700;
+            font-size:1rem;
+        }
+        #userMenu .btn-cerrar {
+            background:#fff; color:#0d575a; border:1px solid #0d575a;
+        }
+        #userMenu div { padding:6px 0; border-bottom:1px solid #e0f7fa; }
+        #userMenu div:last-child { border-bottom:none; }
+        /* Toolbar calendario */
+        .calendar-toolbar {
+            background: #ececec;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .calendar-toolbar .btn-nav { background: #e9eff1; border: none; color: #227b9b; font-size: 1.3rem; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: background 0.18s;}
+        .calendar-toolbar .btn-nav:hover { background: #bde2ef;}
+        .calendar-toolbar .calendar-month {
+            min-width: 150px; text-align: center; font-weight: 600; font-size: 1.1rem; background: #fff; border: 1px solid #b9d6e2; border-radius: 4px; padding: 4px 18px;
+        }
+        .calendar-toolbar .tool-btn { background: #e9eff1; border: none; color: #227b9b; font-size: 1.25rem; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; margin-left: 4px;}
+        .calendar-toolbar .tool-btn:hover { background: #bde2ef;}
+        /* Calendario visual */
+        .calendar-container {
+            background: #fff;
+            margin: 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(60,60,100,0.09);
+            padding: 14px 22px 22px 22px;
+        }
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .calendar-table th, .calendar-table td {
+            border: 1px solid #d1d5db;
+            padding: 0;
+            text-align: center;
+            vertical-align: top;
+        }
+        .calendar-table th {
+            background: #e3e8ea;
+            color: #227b9b;
+            font-weight: 700;
+            font-size: 1.05rem;
+            height: 44px;
+        }
+        .calendar-table td {
+            background: #f7f7f7;
+            min-height: 90px;
+            height: 110px;
+            font-size: 1.08rem;
+            color: #616e7b;
+            position: relative;
+        }
+        .day-num {
+            position: absolute;
+            left: 8px; top: 8px;
+            font-size: 1.01rem;
+            font-weight: 600;
+            color: #217b9b;
+            background: none;
+        }
+        .calendar-event {
+            background: #39a4d8;
+            color: #fff;
+            border-radius: 18px;
+            padding: 4px 10px;
+            font-size: 0.97rem;
+            margin: 6px 2px 2px 2px;
+            cursor: pointer;
+            transition: background 0.18s;
+            display: block;
+            text-align: left;
+            position: relative;
+        }
+        .calendar-event.calibracion-pendiente { background: #f7c948; color: #2d3748; }
+        .calendar-event.calibracion-programada { background: #39a4d8; color: #fff; }
+        .calendar-event.calibracion-vencida { background: #e53e3e; color: #fff; }
+        .calendar-event:hover {
+            box-shadow: 0 2px 6px #227b9b22;
+            background: #227b9b;
+            color: #fff;
+        }
+        .calendar-table td.today .day-num {
+            background: #39a4d8;
+            color: #fff;
+            border-radius: 50%;
+            padding: 2px 8px;
+        }
+        .calendar-alert {
+            color: #e53e3e;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        /* Modal evento */
+        .modal-bg {
+            position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; background: #000a; z-index: 9999; display: flex; align-items: center; justify-content: center;
+        }
+        .modal-evento {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 6px 24px #0003;
+            max-width: 390px;
+            width: 100%;
+            padding: 26px 26px 20px 26px;
+            font-family: 'Montserrat', Arial, sans-serif;
+            position: relative;
+        }
+        .modal-evento .modal-close {
+            position: absolute; right: 15px; top: 12px;
+            font-size: 1.5rem; color: #227b9b; cursor: pointer;
+        }
+        .modal-evento .modal-title {
+            font-size: 1.3rem; font-weight: 700; color: #227b9b; margin-bottom: 6px;
+        }
+        .modal-evento .modal-date {
+            font-size: 1.1rem; font-weight: 600; color: #39a4d8; margin-bottom: 10px;
+        }
+        .modal-evento .modal-desc { font-size: 1.02rem; color: #2d3748; margin-bottom: 10px;}
+        .modal-evento .modal-info { font-size: 0.97rem; color: #616e7b;}
+        @media (max-width: 900px) {
+            .main-content { margin-left: 0; }
+            .calendar-container { margin: 6px; padding: 8px 2px 12px 2px; }
+            .calendar-table th, .calendar-table td { font-size: 0.97rem; }
+            .modal-evento { max-width: 97vw; padding: 20px 6px 16px 6px; }
+        }
+    </style>
+</head>
+<body>
+      <!-- Notificaciones -->
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList">
+                        <div class="text-muted-sm">No hay notificaciones nuevas.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     <!-- SIDEBAR -->
+        <aside id="sidebar" class="sidebar">
+        <!-- SIDEBAR CONTENT -->
+        <style>
+            .sidebar-nav {
+                gap: 12px;
+            }
+        
+            .sidebar-nav .nav-link {
+                width: 90%;
+                padding: 16px 0 10px 0;
+                font-size: 1.02rem;
+                letter-spacing: 0.5px;
+            }
+        
+            .sidebar-nav .nav-link i {
+                font-size: 1.7rem;
+                margin-bottom: 6px;
+            }
+        
+            @media (max-width: 900px) {
+                .sidebar-nav .nav-link {
+                    width: 92%;
+                }
+            }
+        </style>
+        <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+        <div class="sidebar-logo">
+            <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-link" href="apps/tenant/index.html" data-section="menu">
+                <i class="fa fa-tachometer-alt"></i>
+                <span>MENÚ</span>
+            </a>
+            <a class="nav-link" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+                <i class="fa fa-boxes-stacked"></i>
+                <span>INSTRUMENTOS</span>
+            </a>
+            <a class="nav-link active" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+                <i class="fa fa-calendar-alt"></i>
+                <span>PLANEACIÓN</span>
+            </a>
+            <a class="nav-link" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+                <i class="fa fa-balance-scale"></i>
+                <span>CALIBRACIONES</span>
+            </a>
+            <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+                <i class="fa fa-file-alt"></i>
+                <span>REPORTES</span>
+            </a>
+            <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+                <i class="fa fa-user-shield"></i>
+                <span>ROLES</span>
+            </a>
+            <a class="nav-link" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+                <i class="fa fa-circle-question"></i>
+                <span>TUTORIAL</span>
+            </a>
+            <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+                <i class="fa fa-award"></i>
+                <span>CALIDAD</span>
+            </a>
+        </nav>
+        </aside>
+ <!-- FIN SIDEBAR -->
+    <div class="main-content">
+        <!-- Topbar -->
+         <div class="topbar">
+            <div class="topbar-left">
+        <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Calendario</span>
+            </div>
+             <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <!-- Menú usuario -->
+                     <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/tenant/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <!-- Notificaciones -->
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList">
+                        <div class="text-muted-sm">No hay notificaciones nuevas.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Barra de herramientas calendario -->
+        <div class="calendar-toolbar">
+            <button class="btn-nav" id="btnPrevMonth"><i class="fa fa-angle-left"></i></button>
+            <input type="text" class="calendar-month" id="monthLabel" readonly>
+            <button class="btn-nav" id="btnNextMonth"><i class="fa fa-angle-right"></i></button>
+            <button class="tool-btn" title="Ir a mes actual" id="btnToday"><i class="fa fa-calendar-day"></i></button>
+            <button class="tool-btn" title="Actualizar" id="btnRefresh"><i class="fa fa-sync"></i></button>
+            <button class="tool-btn" title="Opciones"><i class="fa fa-cog"></i></button>
+        </div>
+        <!-- Calendario visual -->
+        <div class="calendar-container">
+            <table class="calendar-table" id="calendarTable">
+                <thead>
+                    <tr>
+                        <th>Domingo</th><th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th><th>Sábado</th>
+                    </tr>
+                </thead>
+                <tbody id="calendarBody">
+                    <!-- Aquí se renderiza el calendario -->
+                </tbody>
+            </table>
+             <div id="calendarAlert" class="calendar-alert is-hidden"></div>
+        </div>
+    </div>
+    <!-- Modal evento -->
+    <div id="modalBg" class="modal-bg is-hidden">
+        <div class="modal-evento" id="modalEvento">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-date" id="modalDate"></div>
+            <div class="modal-desc" id="modalDesc"></div>
+            <div class="modal-info" id="modalInfo"></div>
+        </div>
+    </div>
+    <script>
+    // ----------- CALENDARIO JS -----------
+    // Utilidad para obtener fechas
+    function pad(n) { return n < 10 ? '0' + n : n; }
+    function getMonthName(month, year) {
+        const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+        return meses[month] + " " + year;
+    }
+
+    // Estado calendario
+    let selectedDate = new Date();
+    let eventos = [];
+
+    // Navegación calendario
+    document.getElementById('btnPrevMonth').onclick = function() {
+        selectedDate.setMonth(selectedDate.getMonth() - 1);
+        renderCalendar();
+    };
+    document.getElementById('btnNextMonth').onclick = function() {
+        selectedDate.setMonth(selectedDate.getMonth() + 1);
+        renderCalendar();
+    };
+    document.getElementById('btnToday').onclick = function() {
+        selectedDate = new Date();
+        renderCalendar();
+    };
+    document.getElementById('btnRefresh').onclick = function() {
+        fetchEventos();
+    };
+
+    function renderCalendar() {
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth();
+        document.getElementById('monthLabel').value = getMonthName(month, year);
+
+        const firstDay = new Date(year, month, 1);
+        const startDay = firstDay.getDay(); // día de la semana (0=domingo)
+        const lastDate = new Date(year, month + 1, 0).getDate();
+
+        // Fechas previas y siguientes para completar la cuadrícula
+        const prevMonthDays = startDay;
+        const totalDays = prevMonthDays + lastDate;
+        const totalRows = Math.ceil(totalDays / 7);
+
+        let html = "";
+        let dayNum = 1;
+        let prevMonth = new Date(year, month, 0);
+        let prevMonthLastDate = prevMonth.getDate();
+        let todayDate = new Date();
+
+        for (let row = 0; row < totalRows; row++) {
+            html += "<tr>";
+            for (let col = 0; col < 7; col++) {
+                let cellDay = row * 7 + col - prevMonthDays + 1;
+                let tdClass = "";
+                let displayDay = "";
+                let cellDate = "";
+
+                if (row === 0 && col < prevMonthDays) {
+                    // Días del mes anterior
+                    displayDay = prevMonthLastDate - prevMonthDays + col + 1;
+                    tdClass = "calendar-other";
+                    cellDate = `${year}-${pad(month)}-${pad(displayDay)}`;
+                } else if (cellDay > lastDate) {
+                    // Días del mes siguiente
+                    displayDay = cellDay - lastDate;
+                    tdClass = "calendar-other";
+                    cellDate = `${year}-${pad(month+2)}-${pad(displayDay)}`;
+                } else {
+                    // Día actual del mes
+                    displayDay = cellDay;
+                    cellDate = `${year}-${pad(month+1)}-${pad(displayDay)}`;
+                    if (
+                        year === todayDate.getFullYear() &&
+                        month === todayDate.getMonth() &&
+                        displayDay === todayDate.getDate()
+                    ) {
+                        tdClass = "today";
+                    }
+                }
+                html += `<td class="${tdClass}"><span class="day-num">${displayDay}</span>`;
+
+                // Eventos del día
+                if (tdClass !== "calendar-other") {
+                    let dayEvents = eventos.filter(e => e.date === cellDate);
+                    dayEvents.forEach(ev => {
+                        html += `<span class="calendar-event ${ev.type}" data-eventid="${ev.id}">${ev.title}</span>`;
+                    });
+                }
+                html += "</td>";
+            }
+            html += "</tr>";
+        }
+        document.getElementById('calendarBody').innerHTML = html;
+
+        // Eventos click en eventos
+        document.querySelectorAll('.calendar-event').forEach(elem => {
+            elem.onclick = function() {
+                const id = this.getAttribute('data-eventid');
+                showModalEvento(id);
+            };
+        });
+    }
+
+    // Modal responsive para evento
+    function showModalEvento(eventId) {
+        const evento = eventos.find(ev => ev.id == eventId);
+         if (!evento) return;
+        document.getElementById('modalTitle').textContent = evento.title;
+          const label = evento.type === 'calibracion-programada' ? 'Fecha programada: ' : 'Fecha: ';
+        document.getElementById('modalDate').textContent = label + evento.date_spanish;
+        document.getElementById('modalDesc').textContent = evento.description;
+        const info = [];
+        if (evento.instrumento) info.push(`<strong>Instrumento:</strong> ${evento.instrumento}`);
+        if (evento.proveedor) info.push(`<strong>Proveedor:</strong> ${evento.proveedor}`);
+        if (evento.modalidad) info.push(`<strong>Servicio:</strong> ${evento.modalidad}`);
+        document.getElementById('modalInfo').innerHTML = info.join('<br>');
+        const modalBg = document.getElementById('modalBg');
+        if(modalBg){
+            modalBg.classList.remove('is-hidden');
+        }
+    }
+    document.getElementById('modalClose').onclick = function() {
+        const modalBg = document.getElementById('modalBg');
+        if(modalBg){
+            modalBg.classList.add('is-hidden');
+        }
+    };
+    document.getElementById('modalBg').onclick = function(e) {
+        if (e.target === this) {
+            this.classList.add('is-hidden');
+        }
+    };
+
+    // ----------- Consulta eventos al backend -----------
+    function fetchEventos() {
+        // Consulta eventos del mes actual
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth() + 1; // 1-indexed
+         const alertBox = document.getElementById('calendarAlert');
+        alertBox.classList.add('is-hidden');
+        alertBox.classList.remove('is-visible');
+        return fetch(`backend/planeacion/calendar_events.php?year=${year}&month=${month}`)
+          .then(response => {
+              if (!response.ok) throw new Error('Network response was not ok');
+              return response.json();
+          })
+          .then(data => {
+              // Ajusta los datos para frontend (formato fecha, tipo)
+              eventos = data.map(ev => ({
+                  ...ev,
+                  date_spanish: formatDateSpanish(ev.date),
+                  type: ev.type // calibracion-pendiente, calibracion-programada, calibracion-vencida
+              }));
+              renderCalendar();
+              alertBox.classList.add('is-hidden');
+              alertBox.classList.remove('is-visible');
+          })
+          .catch(() => {
+              // Si falla la consulta, se muestra el calendario sin eventos
+              eventos = [];
+              renderCalendar();
+              alertBox.textContent = 'No se pudieron cargar los eventos de calibración.';
+              alertBox.classList.remove('is-hidden');
+              alertBox.classList.add('is-visible');
+          });
+    }
+
+    function formatDateSpanish(dateStr) {
+        // dateStr en formato YYYY-MM-DD
+        const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+        const d = new Date(dateStr);
+        const day = d.getDate();
+        const month = meses[d.getMonth()];
+        const year = d.getFullYear();
+        return `${day} de ${month} de ${year}`;
+    }
+
+   // Inicialización
+    window.onload = function() {
+        // Renderiza inmediatamente el mes actual
+        renderCalendar();
+        // Luego intenta cargar los eventos desde el backend
+        fetchEventos();
+    }
+    
+     // --- Usuario dinámico ---
+         function cargarUsuarioActual() {
+        fetch(BASE_URL + '/backend/usuarios/get_actual_user.php')
+            .then(r=>r.json())
+            .then(u=>{
+                document.getElementById('userName').innerHTML = `${u.nombre} <span class="text-accent">(${u.role_id})</span>`;
+                document.getElementById('menuNombre').innerText = `Nombre: ${u.nombre}`;
+                document.getElementById('menuRol').innerText = `Rol: ${u.role_id}`;
+            });
+    }
+    cargarUsuarioActual();
+ // --- Menú perfil ---
+        // Topbar dinámico centralizado en topbar.js
+    </script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script type="module" src="assets/scripts/scripts-tenant.js"></script>
+</body>
+</html>
+
+
+
+

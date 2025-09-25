@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <base id="app-base" href="/">
+    <script>
+        (function () {
+            var baseTag = document.getElementById('app-base');
+            if (!baseTag) {
+                return;
+            }
+            var pathname = window.location && typeof window.location.pathname === 'string'
+                ? window.location.pathname
+                : '';
+            var baseHref = '';
+            var publicIndex = pathname.indexOf('/public/');
+            if (publicIndex !== -1) {
+                baseHref = pathname.slice(0, publicIndex + 7);
+            } else if (pathname.endsWith('/public')) {
+                baseHref = pathname;
+            } else {
+                baseHref = '/public';
+            }
+            if (!baseHref) {
+                baseHref = '/public';
+            }
+            if (!baseHref.endsWith('/')) {
+                baseHref += '/';
+            }
+            baseTag.setAttribute('href', baseHref);
+            var globalBase = baseHref.replace(/\/+$/, '');
+            if (!globalBase) {
+                globalBase = '/public';
+            }
+            window.BASE_URL = globalBase;
+            window.AppUrl = window.AppUrl || {};
+            if (typeof window.AppUrl.BASE_URL !== 'string' || !window.AppUrl.BASE_URL) {
+                window.AppUrl.BASE_URL = globalBase;
+            }
+        })();
+    </script>
+    <script src="assets/scripts/base-url.js" defer></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            var baseTag = document.getElementById('app-base');
+            if (!baseTag) {
+                return;
+            }
+            var href = (typeof window.BASE_URL === 'string' && window.BASE_URL) ? window.BASE_URL : '/public';
+            if (!href.endsWith('/')) {
+                href += '/';
+            }
+            baseTag.setAttribute('href', href);
+        });
+    </script>
+    <title>Gestión integral de clientes | SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/styles.css">
+    <link rel="stylesheet" href="assets/styles/service-portal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        :root {
+            color-scheme: light;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: #f4f6f8;
+            color: #0d575a;
+        }
+        #sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease-in-out;
+        }
+        .main-content {
+            margin-left: 200px;
+            width: calc(100% - 200px);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .topbar {
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 32px;
+            height: 70px;
+        }
+        .topbar .title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #0d575a;
+        }
+        .topbar .subtitle {
+            font-size: 0.95rem;
+            color: #4a6c70;
+        }
+        .topbar .topbar-icons {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        .topbar .topbar-icons i {
+            color: #0d575a;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        main {
+            flex: 1;
+            padding: 24px 36px 48px;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+        .summary-card {
+            background: #fff;
+            padding: 18px 20px;
+            border-radius: 16px;
+            box-shadow: 0 12px 28px rgba(13, 87, 90, 0.12);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .summary-card i {
+            font-size: 2rem;
+            color: #0c8c98;
+        }
+        .summary-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        .summary-card .label {
+            font-size: 0.95rem;
+            color: #4a6c70;
+        }
+        .card-panel {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 24px rgba(13, 87, 90, 0.08);
+            margin-bottom: 28px;
+        }
+        .card-panel header {
+            padding: 18px 24px;
+            border-bottom: 1px solid #e0eaec;
+        }
+        .card-panel header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: #0d575a;
+        }
+        .card-panel header p {
+            margin: 6px 0 0;
+            color: #5d7d80;
+            font-size: 0.95rem;
+        }
+        .card-panel .panel-body {
+            padding: 20px 24px 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table thead {
+            background: #f0f5f6;
+            color: #0d575a;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        table th, table td {
+            padding: 12px 14px;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #e5ecee;
+        }
+        table tbody tr:hover {
+            background: rgba(12, 140, 152, 0.06);
+        }
+        .empty-row {
+            text-align: center;
+            padding: 24px 0;
+            color: #6d8589;
+        }
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .filters label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #4a6c70;
+        }
+        .filters select,
+        .filters input[type="date"],
+        .filters input[type="text"] {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid #cbd9db;
+            font-size: 0.95rem;
+            min-width: 160px;
+        }
+        .filters button {
+            background: #0c8c98;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .filters button:hover {
+            background: #0a6a73;
+        }
+        form .form-control,
+        form .form-select {
+            border-radius: 10px;
+            border: 1px solid #cbd9db;
+            padding: 10px 12px;
+        }
+        form .form-label {
+            font-weight: 600;
+            color: #4a6c70;
+        }
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .status-message {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        .status-message.success {
+            color: #0c8c98;
+        }
+        .status-message.error {
+            color: #c0392b;
+        }
+        .list-inline {
+            padding-left: 18px;
+            margin-bottom: 0;
+        }
+        .list-inline li {
+            padding: 4px 0;
+            color: #4a6c70;
+        }
+        @media (max-width: 1024px) {
+            #sidebar {
+                position: static;
+                width: 100%;
+                min-height: auto;
+                height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="service-clients">
+    <aside id="sidebar" class="sidebar" aria-label="Menú lateral"></aside>
+    <div class="main-content">
+        <div id="topbarContainer"></div>
+        <main class="service-main">
+            <header class="service-page-header">
+                <h1>Atención a clientes</h1>
+                <p>Panel operativo para seguimiento de solicitudes y calibraciones</p>
+            </header>
+            <section class="summary-grid">
+                <article class="summary-card">
+                    <i class="fa fa-building"></i>
+                    <div>
+                        <div id="summary-empresas" class="value">0</div>
+                        <div class="label">Empresas activas</div>
+                    </div>
+                </article>
+                <article class="summary-card">
+                    <i class="fa fa-user-tie"></i>
+                    <div>
+                        <div id="summary-clientes" class="value">0</div>
+                        <div class="label">Contactos clientes</div>
+                    </div>
+                </article>
+                <article class="summary-card">
+                    <i class="fa fa-screwdriver-wrench"></i>
+                    <div>
+                        <div id="summary-instrumentos" class="value">0</div>
+                        <div class="label">Instrumentos registrados</div>
+                    </div>
+                </article>
+                <article class="summary-card">
+                    <i class="fa fa-envelope-open-text"></i>
+                    <div>
+                        <div id="summary-solicitudes" class="value">0</div>
+                        <div class="label">Solicitudes pendientes</div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="card-panel">
+                <header>
+                    <h2>Empresas y contactos</h2>
+                    <p>Consulta rápida de información clave por empresa y los contactos con rol de cliente.</p>
+                </header>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>Contacto principal</th>
+                                    <th>Clientes</th>
+                                    <th>Instrumentos</th>
+                                    <th>Calibraciones</th>
+                                    <th>Solicitudes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="companies-body">
+                                <tr class="empty-row"><td colspan="6">Cargando información…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card-panel">
+                <header>
+                    <h2>Solicitudes de calibración</h2>
+                    <p>Filtra solicitudes activas para programar calibraciones y dar seguimiento.</p>
+                </header>
+                <div class="panel-body">
+                    <form id="requests-filter" class="filters" autocomplete="off">
+                        <label>
+                            Empresa
+                            <select id="requests-company" class="form-select" name="empresa_id">
+                                <option value="">Todas</option>
+                            </select>
+                        </label>
+                        <label>
+                            Estado
+                            <select id="requests-status" class="form-select" name="estado">
+                                <option value="">Todos</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="En proceso">En proceso</option>
+                                <option value="Completada">Completada</option>
+                            </select>
+                        </label>
+                        <label>
+                            Desde
+                            <input id="requests-from" type="date" name="desde" class="form-control">
+                        </label>
+                        <label>
+                            Hasta
+                            <input id="requests-to" type="date" name="hasta" class="form-control">
+                        </label>
+                        <button type="submit"><i class="fa fa-filter me-2"></i>Actualizar</button>
+                    </form>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>Instrumento</th>
+                                    <th>Tipo</th>
+                                    <th>Solicitante</th>
+                                    <th>Fecha deseada</th>
+                                    <th>Instrucciones del cliente</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="requests-body">
+                                <tr class="empty-row"><td colspan="7">Sin solicitudes registradas.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card-panel">
+                <header>
+                    <h2>Calibraciones y certificados</h2>
+                    <p>Actualiza resultados y adjunta certificados desde un único lugar.</p>
+                    <div class="alert alert-warning mt-3 mb-0 service-alert-note" role="status">
+                        <strong>Importante:</strong> los certificados se liberan solo cuando otra persona de calidad aprueba la calibración y un segundo responsable registra la liberación.
+                        Mientras veas un aviso de bloqueo al descargar, significa que la doble validación aún no concluye.
+                    </div>
+                </header>
+                <div class="panel-body">
+                    <div class="row g-4">
+                        <div class="col-lg-5">
+                            <label class="form-label" for="calibration-company">Empresa</label>
+                            <select id="calibration-company" class="form-select">
+                                <option value="">Selecciona una empresa</option>
+                            </select>
+                            <label class="form-label mt-3" for="calibration-select">Calibración</label>
+                            <select id="calibration-select" class="form-select" disabled>
+                                <option value="">Selecciona una calibración</option>
+                            </select>
+                            <ul id="calibration-certificates" class="list-inline mt-3"></ul>
+                        </div>
+                        <div class="col-lg-7">
+                            <form id="calibration-update-form" class="mb-4" autocomplete="off">
+                                <input type="hidden" name="calibracion_id" id="calibration-id">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="calibration-date">Fecha de calibración</label>
+                                        <input type="date" id="calibration-date" name="fecha_calibracion" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="calibration-next">Próxima calibración</label>
+                                        <input type="date" id="calibration-next" name="fecha_proxima" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="calibration-result">Resultado</label>
+                                        <input type="text" id="calibration-result" name="resultado" class="form-control" placeholder="Aprobado / Rechazado">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="calibration-type">Tipo</label>
+                                        <input type="text" id="calibration-type" name="tipo" class="form-control" placeholder="Interna / Externa">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label" for="calibration-notes">Observaciones</label>
+                                        <textarea id="calibration-notes" name="observaciones" rows="3" class="form-control" placeholder="Notas relevantes sobre la calibración"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-actions mt-3">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save me-2"></i>Guardar cambios</button>
+                                </div>
+                                <div id="calibration-update-status" class="status-message" role="status"></div>
+                            </form>
+                            <form id="certificate-form" enctype="multipart/form-data">
+                                <input type="hidden" name="calibracion_id" id="certificate-calibration-id">
+                                <div class="mb-3">
+                                    <label class="form-label" for="certificate-file">Adjuntar certificado (PDF o imagen)</label>
+                                    <input type="file" id="certificate-file" name="archivo" class="form-control" accept=".pdf,.png,.jpg,.jpeg">
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-paperclip me-2"></i>Adjuntar certificado</button>
+                                </div>
+                                <div id="certificate-status" class="status-message" role="status"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="assets/scripts/scripts-service.js"></script>
+    <script src="apps/internal/clientes/service_clientes.js" type="module"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script src="assets/scripts/service-layout.js"></script>
+</body>
+</html>

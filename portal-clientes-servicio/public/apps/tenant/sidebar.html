@@ -1,0 +1,62 @@
+<!-- SIDEBAR CONTENT -->
+<style>
+    .sidebar-nav {
+        gap: 12px;
+    }
+
+    .sidebar-nav .nav-link {
+        width: 90%;
+        padding: 16px 0 10px 0;
+        font-size: 1.02rem;
+        letter-spacing: 0.5px;
+    }
+
+    .sidebar-nav .nav-link i {
+        font-size: 1.7rem;
+        margin-bottom: 6px;
+    }
+
+    @media (max-width: 900px) {
+        .sidebar-nav .nav-link {
+            width: 92%;
+        }
+    }
+</style>
+<button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+<div class="sidebar-logo">
+    <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+</div>
+<nav class="sidebar-nav">
+    <a class="nav-link" href="apps/tenant/index.html" data-section="menu">
+        <i class="fa fa-tachometer-alt"></i>
+        <span>MENÚ</span>
+    </a>
+    <a class="nav-link" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+        <i class="fa fa-boxes-stacked"></i>
+        <span>INSTRUMENTOS</span>
+    </a>
+    <a class="nav-link" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+        <i class="fa fa-calendar-alt"></i>
+        <span>PLANEACIÓN</span>
+    </a>
+    <a class="nav-link" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+        <i class="fa fa-balance-scale"></i>
+        <span>CALIBRACIONES</span>
+    </a>
+    <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+        <i class="fa fa-file-alt"></i>
+        <span>REPORTES</span>
+    </a>
+    <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+        <i class="fa fa-user-shield"></i>
+        <span>ROLES</span>
+    </a>
+    <a class="nav-link" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+        <i class="fa fa-circle-question"></i>
+        <span>TUTORIAL</span>
+    </a>
+    <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+        <i class="fa fa-award"></i>
+        <span>CALIDAD</span>
+    </a>
+</nav>

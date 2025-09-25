@@ -1,0 +1,512 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    
+    <title>Control de Usuarios</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Bootstrap, Montserrat, FontAwesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img { width: 140px; margin-bottom: 22px; }
+        .sidebar-nav { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .sidebar-nav .nav-link {
+            width: 92%; display: flex; flex-direction: column; align-items: center;
+            padding: 20px 0 8px 0; color: #cfd8dc; text-decoration: none; font-size: 1.08rem;
+            font-weight: 600; letter-spacing: 1px; border-radius: 10px; margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s; position: relative;
+        }
+        .sidebar-nav .nav-link.active,
+        .sidebar-nav .nav-link:hover { background: #0c8c98; color: #fff; }
+        .sidebar-nav .nav-link i { font-size: 1.85rem; margin-bottom: 8px; }
+        .sidebar-nav .nav-link.active::after {
+            content:""; position:absolute; left:0; top:16px; width:4px; height:32px; background:#fff; border-radius:2px;
+        }
+        .main-content { margin-left:200px; min-height:100vh; padding:0; }
+        .topbar {
+            background:#fff; height:64px; display:flex; align-items:center; justify-content:space-between;
+            padding:0 34px 0 28px; box-shadow:0 1px 8px #0001;
+        }
+        .topbar-left { display:flex; align-items:center; gap:26px; }
+        .topbar-title { font-size:1.45rem; font-weight:700; color:#217b9b; letter-spacing:1px; }
+        .topbar-user { font-size:1rem; color:#217b9b; font-weight:400; margin-left:24px; }
+        .topbar-icons { display:flex; align-items:center; gap:18px; }
+        .topbar-icons i { font-size:1.2rem; color:#217b9b; cursor:pointer; margin-top:5px; }
+        .topbar-user-box { display:inline-block; position:relative; }
+        #userMenu, #notificationsMenu {
+            display:none; position:absolute; right:0; top:32px; background:#fff; border-radius:10px;
+            box-shadow:0 2px 12px #0d575a22; min-width:180px; z-index:99; padding:12px;
+        }
+        #notificationsMenu { right:64px; top:40px; min-width:260px; padding:15px; }
+        #userMenu button, #userMenu .btn-perfil {
+            width:100%; background:#0d575a; color:#fff; border:none; border-radius:6px;
+            margin:8px 0 0 0; padding:7px 0; font-weight:700; font-size:1rem;
+        }
+        #userMenu .btn-cerrar { background:#fff; color:#0d575a; border:1px solid #0d575a; }
+        #userMenu div { padding:6px 0; border-bottom:1px solid #e0f7fa; }
+        #userMenu div:last-child { border-bottom:none; }
+        .users-section { padding:32px 28px; }
+        .actions-bar {
+            background:#e9eff1; padding:14px 24px; display:flex; align-items:center; gap:14px;
+            flex-wrap:wrap;
+        }
+        .actions-bar .btn {
+            background:#227b9b; color:#fff; border:none; border-radius:22px; padding:7px 20px;
+            font-weight:500; font-size:1rem; cursor:pointer; transition:background .18s;
+            display:flex; align-items:center; gap:7px;
+        }
+        .actions-bar .btn:hover { background:#08536a; }
+        .actions-bar select {
+            font-size:1rem; padding:4px 8px; border-radius:6px; border:1px solid #d1d5db; margin-left:8px;
+        }
+        .table-container {
+            background:#fff; margin:0 24px; border-radius:8px; box-shadow:0 4px 16px rgba(60,60,100,0.09);
+            overflow-x:auto; margin-top:8px;
+        }
+        .empty-row { text-align:center; color:#555; font-size:1.08rem; padding:32px 0; }
+        .pagination-bar {
+            display:flex; align-items:center; justify-content:flex-end; background:#e9eff1;
+            padding:10px 24px; margin-top:0; gap:12px;
+        }
+        .pagination-bar select, .pagination-bar input {
+            font-size:1rem; padding:4px 8px; border-radius:6px; border:1px solid #d1d5db;
+        }
+        .pagination-bar .btn {
+            background:#227b9b; color:#fff; border:none; border-radius:18px; padding:5px 16px;
+            font-weight:500; font-size:1rem; cursor:pointer; transition:background .18s;
+        }
+        .pagination-bar .btn:disabled { background:#b1c9d1; cursor:not-allowed; }
+        .reset-btn {
+            background:#fff; color:#227b9b; border:1px solid #227b9b; padding:5px 16px; border-radius:18px;
+            margin-left:8px; cursor:pointer; font-weight:500;
+        }
+        .role-label { font-weight:600; color:#217b9b; }
+        @media (max-width:900px){
+            .table-container { min-width:100vw; }
+            .main-content { margin-left:0; }
+        }
+    </style>
+
+    <script>
+    fetch(BASE_URL + '/backend/check_permission.php?permiso=usuarios_view')
+      .then(r=>r.json())
+      .then(d=>{ if(!d.allowed) window.location.href = BASE_URL + '/apps/internal/index.html'; });
+    </script>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link active" href="apps/internal/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link" href="apps/internal/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/internal/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/internal/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link" href="apps/internal/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/internal/configuracion/api_tokens.html" data-section="configuracion" data-requires-api-tokens="manage">
+            <i class="fa fa-key"></i>
+            <span>TOKENS API</span>
+        </a>
+        <a class="nav-link" href="apps/internal/ayuda/help_center.html" data-section="ayuda">
+            <i class="fa fa-circle-question"></i>
+            <span>AYUDA</span>
+        </a>
+        <a class="nav-link" href="apps/internal/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </aside>
+    <!-- FIN SIDEBAR -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Control de Usuarios</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <!-- Menú usuario -->
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/internal/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <!-- Notificaciones -->
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList">
+                        <div class="text-muted-sm">No hay Notificaciones nuevas.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="users-section">
+            <div class="actions-bar">
+                <button class="btn" id="btnAddUser"><i class="fa fa-plus"></i> Agregar Usuario</button>
+                <button class="btn" onclick="habilitar2FA()"><i class="fa fa-key"></i> Habilitar 2FA</button>
+                <select id="selectPerPage">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100" selected>100</option>
+                </select>
+                <span>por página</span>
+            </div>
+            <div class="table-container">
+                <table id="usersTable" class="builder-table">
+                    <thead>
+                        <tr>
+                            <th>Correo Electrónico</th>
+                            <th>Teléfono</th>
+                            <th>Activo</th>
+                            <th>Correo Verificado</th>
+                            <th>2FA Habilitado</th>
+                            <th>Última Dirección IP</th>
+                             <th class="date-col">Último Inicio de Sesión</th>
+                            <th class="date-col">Fecha de Creación</th>
+                            <th>Puesto</th>
+                            <th>Roles de Usuario</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTbody"></tbody>
+                </table>
+            </div>
+            <div class="pagination-bar">
+                <button class="btn" id="btnFirst">&lt;&lt;</button>
+                <button class="btn" id="btnPrev">&lt;</button>
+                <span>Página <input type="number" id="currentPage" value="1" min="1" class="pagination-input" /> de <span id="totalPages">1</span></span>
+                <button class="btn" id="btnNext">&gt;</button>
+                <button class="btn" id="btnLast">&gt;&gt;</button>
+                <select id="selectPerPageBottom">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100" selected>100</option>
+                </select>
+                <span>por página</span>
+                <button class="reset-btn" onclick="window.location.reload()">RESTABLECER VISTA</button>
+            </div>
+            <div class="export-actions">
+                <button class="btn-export excel" id="exportUsersExcel"><i class="fa fa-file-excel"></i> Exportar a Excel</button>
+                <button class="btn-export pdf" id="exportUsersPdf"><i class="fa fa-file-pdf"></i> Exportar a PDF</button>
+            </div>
+        </section>
+    </div>
+    <!-- Sidebar JS y carga dinámica -->
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/F54q9WlH0I1GtIsfRSAxEPPGjBJOCa/MEGLjm+rXhN3kLBXjg5eQof8I4eAbOeXtfLOcAfeUOLVN2y5kqL/hg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="assets/scripts/exports.js"></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        fetch(BASE_URL + '/apps/internal/sidebar.html')
+          .then(response => response.text())
+          .then(html => {
+            document.getElementById('sidebar').innerHTML = html;
+            if (typeof initSidebar === 'function') initSidebar();
+            if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+            if (typeof window.applyApiTokenVisibility === 'function') window.applyApiTokenVisibility();
+            if (typeof window.activateApiTokensIfAvailable === 'function') window.activateApiTokensIfAvailable();
+          });
+      });
+
+      let usuarios = [];
+      let currentPage = 1;
+      let perPage = 100;
+      const btnAddUser = document.getElementById('btnAddUser');
+      let canManageUsuarios = Boolean(window.permissionFlags && window.permissionFlags.canManageUsuarios);
+
+      const usuariosExportColumns = [
+        { key: 'correo', label: 'Correo' },
+        { key: 'telefono', label: 'Teléfono' },
+        { key: 'activo', label: 'Activo' },
+        { key: 'verificado', label: 'Verificado' },
+        { key: 'dosfa', label: '2FA' },
+        { key: 'ultima_ip', label: 'Última IP' },
+        { key: 'last_login', label: 'Último Acceso' },
+        { key: 'created_at', label: 'Fecha de Creación' },
+        { key: 'puesto', label: 'Puesto' },
+        { key: 'rol', label: 'Rol' }
+      ];
+
+      function enforceUsuariosPermissions(){
+        if (btnAddUser) btnAddUser.disabled = !canManageUsuarios;
+      }
+
+      document.addEventListener('permissionsready', function(event){
+        canManageUsuarios = Boolean(event.detail && event.detail.canManageUsuarios);
+        enforceUsuariosPermissions();
+        renderTabla();
+      });
+
+      if (btnAddUser) {
+        btnAddUser.addEventListener('click', function(){
+          if (!canManageUsuarios) return;
+          window.location.href = BASE_URL + '/apps/internal/usuarios/add_user.html';
+        });
+      }
+
+      enforceUsuariosPermissions();
+
+      function syncSelects(value){
+        const sel1 = document.getElementById('selectPerPage');
+        const sel2 = document.getElementById('selectPerPageBottom');
+        if(sel1) sel1.value = value;
+        if(sel2) sel2.value = value;
+      }
+
+      document.getElementById('selectPerPage').addEventListener('change', function(){
+        perPage = parseInt(this.value);
+        syncSelects(perPage);
+        currentPage = 1;
+        renderTabla();
+      });
+      document.getElementById('selectPerPageBottom').addEventListener('change', function(){
+        perPage = parseInt(this.value);
+        syncSelects(perPage);
+        currentPage = 1;
+        renderTabla();
+      });
+      document.getElementById('btnFirst').onclick = function(){ currentPage = 1; renderTabla(); };
+      document.getElementById('btnPrev').onclick = function(){ if(currentPage>1){ currentPage--; renderTabla(); } };
+      document.getElementById('btnNext').onclick = function(){
+        const total = Math.max(1, Math.ceil(usuarios.length/perPage));
+        if(currentPage < total){ currentPage++; renderTabla(); }
+      };
+      document.getElementById('btnLast').onclick = function(){ currentPage = Math.max(1, Math.ceil(usuarios.length/perPage)); renderTabla(); };
+      document.getElementById('currentPage').addEventListener('change', function(){
+        const total = Math.max(1, Math.ceil(usuarios.length/perPage));
+        let val = parseInt(this.value);
+        if(isNaN(val) || val < 1) val = 1;
+        if(val > total) val = total;
+        currentPage = val;
+        renderTabla();
+      });
+
+      function cargarUsuarios(){
+        fetch(BASE_URL + '/backend/usuarios/list_users.php')
+          .then(r=>r.json())
+          .then(data=>{ usuarios = Array.isArray(data)?data:[]; renderTabla(); })
+          .catch(()=>{ usuarios = []; renderTabla(); });
+      }
+
+      function renderTabla(){
+        const tbody = document.getElementById('usersTbody');
+        tbody.innerHTML = '';
+        const total = Math.max(1, Math.ceil(usuarios.length/perPage));
+        document.getElementById('totalPages').textContent = total;
+        document.getElementById('currentPage').value = currentPage;
+        document.getElementById('btnFirst').disabled = currentPage === 1;
+        document.getElementById('btnPrev').disabled = currentPage === 1;
+        document.getElementById('btnNext').disabled = currentPage === total;
+        document.getElementById('btnLast').disabled = currentPage === total;
+
+        if(!usuarios.length){
+          const row = document.createElement('tr');
+          const td = document.createElement('td');
+          td.colSpan = 11;
+          td.className = 'empty-row';
+          td.textContent = 'No hay usuarios registrados.';
+          row.appendChild(td);
+          tbody.appendChild(row);
+          return;
+        }
+        const start = (currentPage-1)*perPage;
+        const end = Math.min(start + perPage, usuarios.length);
+        for(let i=start; i<end; i++){
+          const u = usuarios[i];
+          const tr = document.createElement('tr');
+          const activoControl = canManageUsuarios
+            ? `<input type="checkbox" ${u.activo?'checked':''} onchange="toggleActivo(${u.id},this.checked)">`
+            : `<input type="checkbox" ${u.activo?'checked':''} disabled>`;
+          const acciones = canManageUsuarios
+            ? `<button class="btn btn-primary btn-sm" onclick="editarUsuario(${u.id})"><i class="fa fa-edit"></i> Editar</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteUsuario(${u.id})"><i class="fa fa-trash"></i> Eliminar</button>`
+            : `<button class="btn btn-primary btn-sm" disabled><i class="fa fa-edit"></i> Editar</button>
+              <button class="btn btn-danger btn-sm" disabled><i class="fa fa-trash"></i> Eliminar</button>`;
+          tr.innerHTML = `
+            <td>${formatNA(u.correo)}</td>
+            <td>${formatNA(u.telefono)}</td>
+            <td>${activoControl}</td>
+            <td><input type="checkbox" ${u.verificado?'checked':''} disabled></td>
+            <td><input type="checkbox" ${u.dosfa?'checked':''} disabled></td>
+            <td>${formatNA(u.ultima_ip)}</td>
+             <td class="date-col">${u.last_login ? formatFechaCorta(u.last_login) : 'NA'}</td>
+            <td class="date-col">${u.created_at ? formatFechaCorta(u.created_at) : 'NA'}</td>
+            <td>${formatNA(u.puesto)}</td>
+            <td><span class="role-label">${formatNA(u.role_id)}</span></td>
+            <td>${acciones}</td>
+          `;
+          tbody.appendChild(tr);
+        }
+      }
+
+      function buildUsuariosExportData(){
+        return usuarios.map(function(u){
+          return {
+            correo: formatNA(u.correo),
+            activo: u.activo ? 'Sí' : 'No',
+            verificado: u.verificado ? 'Sí' : 'No',
+            dosfa: u.dosfa ? 'Sí' : 'No',
+            telefono: formatNA(u.telefono),
+            ultima_ip: formatNA(u.ultima_ip),
+            last_login: u.last_login ? formatFechaCorta(u.last_login) : 'NA',
+            created_at: u.created_at ? formatFechaCorta(u.created_at) : 'NA',
+            puesto: formatNA(u.puesto),
+            rol: formatNA(u.role_id)
+          };
+        });
+      }
+
+      function initExportButtons(){
+        const excelBtn = document.getElementById('exportUsersExcel');
+        const pdfBtn = document.getElementById('exportUsersPdf');
+        if(excelBtn){
+          excelBtn.addEventListener('click', function(){
+            const data = buildUsuariosExportData();
+            if(data.length){
+              exportToExcel(data, usuariosExportColumns, 'usuarios');
+            }
+          });
+        }
+        if(pdfBtn){
+          pdfBtn.addEventListener('click', function(){
+            const data = buildUsuariosExportData();
+            if(data.length){
+              exportToPDF(data, usuariosExportColumns, 'usuarios');
+            }
+          });
+        }
+      }
+
+      function editarUsuario(id){
+        if (!canManageUsuarios) return;
+        window.location.href = `apps/internal/usuarios/edit_user.html?id=${id}`;
+      }
+
+      function toggleActivo(id, activo){
+        if (!canManageUsuarios) return;
+        fetch(BASE_URL + '/backend/usuarios/users_actions.php', {
+          method:'POST',
+          headers:{'Content-Type':'application/x-www-form-urlencoded'},
+          body:'accion=activo&id='+id+'&valor='+(activo?1:0)
+        })
+        .then(r=>r.text())
+        .then(msg=>alert(msg));
+      }
+
+      function deleteUsuario(id){
+        if (!canManageUsuarios) return;
+        if(confirm('¿Seguro que deseas eliminar este usuario?')){
+          fetch(BASE_URL + '/backend/usuarios/delete_user.php', {
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'id='+id
+          })
+          .then(r=>r.json())
+          .then(res=>{
+            alert(res.msg);
+            if(res.success) cargarUsuarios();
+          });
+        }
+      }
+
+      function habilitar2FA(){
+        alert('Función de 2FA solo para usuarios verificados. (Implementación pendiente)');
+      }
+
+      window.onload = cargarUsuarios;
+      initExportButtons();
+    </script>
+</body>
+</html>
+

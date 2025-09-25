@@ -1,0 +1,12 @@
+{
+  "1": {
+    "changes": ["created", "calibrated", "repaired"],
+    "dates": ["2021-01-01", "2022-05-10", "2023-07-15"],
+    "certificates": ["certA.pdf", "certB.pdf", "certC.pdf"]
+  },
+  "2": {
+    "changes": ["created"],
+    "dates": ["2022-08-01"],
+    "certificates": ["certX.pdf"]
+  }
+}

@@ -1,0 +1,5 @@
+-- Archivo sin inserciones deliberadas.
+-- A partir de ahora las pruebas funcionales deben importar los paquetes
+-- generados para cada empresa desde app/Modules/Tenant/ArchivosSql/.
+-- Conservamos este archivo únicamente para mantener compatibilidad con los
+-- pasos históricos de documentación.

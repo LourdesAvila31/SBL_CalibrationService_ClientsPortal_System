@@ -1,0 +1,29 @@
+﻿<!-- Topbar dinámico -->
+<div class="topbar">
+    <div class="topbar-left">
+        <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+        <span class="topbar-title">Portal de clientes</span>
+    </div>
+    <div class="topbar-icons">
+        <i class="fa fa-search" id="btnSearch"></i>
+        <i class="fa fa-circle-question" id="btnTutorial" data-tutorial-url="/apps/tenant/tutorial/index.html" title="Tutorial de inicio" role="button" tabindex="0"></i>
+        <i class="fa fa-comment-dots" id="btnFeedback" data-feedback-url="feedback_externos.html"></i>
+        <i class="fa fa-bell" id="btnBell"></i>
+        <div class="topbar-user-box">
+            <i class="fa fa-user-circle" id="btnUser"></i>
+            <span class="topbar-user" id="userName"></span>
+            <div id="userMenu" class="dropdown-panel">
+                <div class="menu-section-title">Mi perfil</div>
+                <div id="menuNombre"></div>
+                <div id="menuRol"></div>
+                <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/tenant/usuarios/my_information.html'">Mi información</button>
+                <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+            </div>
+        </div>
+        <div id="notificationsMenu" class="dropdown-panel">
+            <div class="menu-section-title">Notificaciones</div>
+            <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+        </div>
+    </div>
+</div>
+<script src="assets/scripts/topbar.js"></script>

@@ -1,0 +1,77 @@
+{
+  "iq": {
+    "database": {
+      "status": "failed",
+      "details": "No se pudo contactar al servidor MySQL",
+      "connection": {
+        "type": "MySQL",
+        "active": false,
+        "is_real": false
+      }
+    },
+    "permissions": {
+      "roles": {
+        "Superadministrador": "present",
+        "Administrador": "missing",
+        "Supervisor": "present",
+        "Operador": "missing",
+        "Lector": "present",
+        "Cliente": "present",
+        "Sistemas": "missing"
+      },
+      "permissions": {
+        "calibraciones_crear": "present",
+        "calibraciones_actualizar": "missing",
+        "calibraciones_leer": "present",
+        "reportes_leer": "missing",
+        "usuarios_view": "present",
+        "usuarios_add": "missing"
+      },
+      "status": "failed",
+      "details": "Roles y permisos críticos faltantes"
+    }
+  },
+  "oq": {
+    "flows": {
+      "login_page": {
+        "status": "passed",
+        "details": "Login interno disponible"
+      },
+      "calibration_capture": {
+        "status": "failed",
+        "details": "Error al guardar calibración"
+      },
+      "approval": {
+        "status": "failed",
+        "details": "El supervisor no posee permisos"
+      },
+      "rejection": {
+        "status": "passed",
+        "details": "Rechazo gestionado con auditoría"
+      },
+      "report_generation": {
+        "status": "failed",
+        "details": "El módulo de reportes devolvió HTTP 500"
+      }
+    },
+    "reports": {
+      "status": "failed",
+      "details": "No se pudo generar el reporte consolidado"
+    }
+  },
+  "pq": {
+    "cases": [
+      {
+        "name": "Carga nominal",
+        "status": "failed",
+        "details": "Tiempo de respuesta excede 2 s"
+      },
+      {
+        "name": "Carga pico",
+        "status": "failed",
+        "details": "Errores intermitentes durante la importación masiva"
+      }
+    ],
+    "status": "failed"
+  }
+}

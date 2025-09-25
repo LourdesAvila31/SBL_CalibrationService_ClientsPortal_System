@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <title>Capacitaciones de Calidad | SISTEMA ISO 17025</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+</head>
+<body>
+    <div id="sidebar" class="sidebar"></div>
+    <div class="main-content" data-calidad-section="capacitaciones">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="sidebarOpen" aria-label="Abrir menú">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <h1 class="topbar-title">Capacitaciones</h1>
+            </div>
+            <div class="topbar-right">
+                <span id="userName" class="topbar-user"></span>
+            </div>
+        </header>
+        <section class="p-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body d-flex flex-wrap gap-3 align-items-center">
+                    <div class="flex-grow-1">
+                        <label for="capacitacionesSearch" class="form-label mb-1">Buscar</label>
+                        <input id="capacitacionesSearch" type="search" class="form-control" placeholder="Tema o responsable" autocomplete="off">
+                    </div>
+                    <div>
+                        <label for="capacitacionesFilterEstado" class="form-label mb-1">Estado</label>
+                        <select id="capacitacionesFilterEstado" class="form-select">
+                            <option value="todas">Todas</option>
+                            <option value="programada">Programadas</option>
+                            <option value="en-curso">En curso</option>
+                            <option value="completada">Completadas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="capacitacionesFilterPeriodo" class="form-label mb-1">Periodo</label>
+                        <select id="capacitacionesFilterPeriodo" class="form-select">
+                            <option value="12">Últimos 12 meses</option>
+                            <option value="6">Últimos 6 meses</option>
+                            <option value="3">Últimos 3 meses</option>
+                            <option value="1">Último mes</option>
+                        </select>
+                    </div>
+                    <div class="ms-auto">
+                        <button id="openCapacitacionForm" class="btn btn-primary" data-calidad-action="capacitaciones:create">
+                            <i class="fa fa-plus me-1"></i> Agregar capacitación
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="capacitacionesGuard" class="alert alert-warning" role="alert" hidden>
+                No cuenta con permisos para gestionar capacitaciones.
+            </div>
+            <div id="capacitacionesError" class="alert alert-danger" role="alert" hidden></div>
+            <div class="card shadow-sm">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Tema</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Responsable</th>
+                                <th scope="col">Participantes</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col" class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="capacitacionesTableBody"></tbody>
+                    </table>
+                </div>
+                <div id="capacitacionesEmptyState" class="p-4 text-center text-muted">
+                    No hay capacitaciones registradas.
+                </div>
+            </div>
+        </section>
+    </div>
+    <aside id="capacitacionFormPanel" class="offcanvas offcanvas-end" tabindex="-1" aria-labelledby="capacitacionFormTitle">
+        <div class="offcanvas-header">
+            <h2 id="capacitacionFormTitle" class="offcanvas-title h5">Nueva capacitación</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form id="capacitacionForm" novalidate>
+                <input type="hidden" name="capacitacion_id" id="capacitacionId">
+                <div class="mb-3">
+                    <label for="capacitacionTema" class="form-label">Tema</label>
+                    <input type="text" id="capacitacionTema" name="tema" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="capacitacionFecha" class="form-label">Fecha programada</label>
+                    <input type="date" id="capacitacionFecha" name="fecha_programada" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="capacitacionResponsable" class="form-label">Responsable</label>
+                    <input type="text" id="capacitacionResponsable" name="responsable" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="capacitacionParticipantes" class="form-label">Participantes</label>
+                    <textarea id="capacitacionParticipantes" name="participantes" class="form-control" rows="3" placeholder="Separar con comas"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="capacitacionEstado" class="form-label">Estado</label>
+                    <select id="capacitacionEstado" name="estado" class="form-select" required>
+                        <option value="programada">Programada</option>
+                        <option value="en-curso">En curso</option>
+                        <option value="completada">Completada</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="capacitacionEvaluacion" class="form-label">Resultado/Evaluación</label>
+                    <textarea id="capacitacionEvaluacion" name="evaluacion" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas" id="cancelCapacitacionForm">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </aside>
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/scripts/calidad/capacitaciones.js"></script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    
+    <title>Añadir Reporte Personalizado | SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Bootstrap, FontAwesome, Montserrat -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <style>
+        :root {
+            --sidebar-bg: #0d575a;
+            --sidebar-active: #0c8c98;
+            --sidebar-hover: #17b6c1;
+            --table-header-bg: #0d575a;
+            --table-header-color: #fff;
+            --page-bg: #f4f6f8;
+            --actionbar-bg: #ececec;
+            --actionbar-icon-bg: #176d72;
+        }
+        body { background: var(--page-bg); font-family: 'Montserrat', Arial, sans-serif; margin:0; }
+        .sidebar { position:fixed; left:0; top:0; width:200px; height:100vh; background:#0d575a; color:#fff; z-index:100; display:flex; flex-direction:column; align-items:center; padding-top:30px; box-shadow:1px 0 6px #0002; }
+        .sidebar-logo img { width:140px; margin-bottom:22px; }
+        .sidebar-nav { width:100%; display:flex; flex-direction:column; align-items:center; gap:8px; }
+        .sidebar-nav .nav-link { width:92%; display:flex; flex-direction:column; align-items:center; padding:20px 0 8px 0; color:#cfd8dc; text-decoration:none; font-size:1.08rem; font-weight:600; letter-spacing:1px; border-radius:10px; margin-bottom:2px; transition:background 0.2s,color 0.2s; position:relative; }
+        .sidebar-nav .nav-link.active, .sidebar-nav .nav-link:hover { background:#0c8c98; color:#fff; }
+        .sidebar-nav .nav-link i { font-size:1.85rem; margin-bottom:8px; }
+        .sidebar-nav .nav-link.active::after { content:""; position:absolute; left:0; top:16px; width:4px; height:32px; background:#fff; border-radius:2px; }
+        .main-content { margin-left:200px; min-height:100vh; padding:0; }
+        .topbar { background:#fff; height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 34px 0 28px; box-shadow:0 1px 8px #0001; }
+        .topbar-left { display:flex; align-items:center; gap:26px; }
+        .topbar-title { font-size:1.45rem; font-weight:700; color:#217b9b; letter-spacing:1px; }
+        .topbar-user { font-size:1rem; color:#217b9b; font-weight:400; margin-left:24px; }
+        .topbar-icons { display:flex; align-items:center; gap:18px; }
+        .topbar-icons i { font-size:1.2rem; color:#217b9b; cursor:pointer; margin-top:5px; }
+        .formbar { background:var(--actionbar-bg); padding:14px 32px; display:flex; align-items:center; gap:14px; border-bottom:1px solid #e2e8f0; }
+        .formbar-title { font-weight:500; color:#217b9b; font-size:1.1rem; margin-right:18px; }
+        .formbar .btn-back { background:var(--actionbar-icon-bg); color:#fff; border:none; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:1.15rem; cursor:pointer; transition:background 0.2s; }
+        .formbar .btn-back:hover { background:#218fa1; }
+        .form-container { max-width:760px; margin:28px auto; background:#fff; border-radius:16px; box-shadow:0 4px 18px #0d575a11; padding:30px 38px 22px 38px; }
+        .form-title { font-size:1.32rem; color:#0d575a; font-weight:700; margin-bottom:26px; text-align:left; }
+        form .form-group { margin-bottom:20px; }
+        form input, form select, form textarea { width:100%; padding:10px 14px; font-size:1rem; border:1px solid #b0bec5; border-radius:6px; background:#f9fafb; margin-bottom:2px; transition:border-color 0.2s; }
+        form input:focus, form select:focus, form textarea:focus { border-color:#217b9b; outline:none; background:#fff; }
+        .form-actions { margin-top:22px; }
+        .form-actions .btn { background:#0d575a; color:#fff; border:none; padding:10px 24px; border-radius:8px; font-weight:600; margin-right:14px; transition:background 0.2s; }
+        .form-actions .btn:hover { background:#0c8c98; }
+        .form-actions .btn.btn-cancel { background:#fff; color:#217b9b; border:2px solid #217b9b; }
+        .msg { margin-top:14px; font-weight:600; text-align:center; }
+        .msg-success { background:#e9ffe4; color:#097a3d; border:1.5px solid #097a3d; padding:10px; border-radius:8px; }
+        .msg-error { background:#ffeded; color:#c00; border:1.5px solid #c00; padding:10px; border-radius:8px; }
+        .dataset-columns { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px; padding:6px 0; }
+        .dataset-columns label { display:flex; align-items:center; gap:10px; background:#f1f5f9; border-radius:8px; padding:10px 12px; border:1px solid transparent; cursor:pointer; transition:border-color 0.2s, background 0.2s; }
+        .dataset-columns input[type="checkbox"] { width:auto; }
+        .dataset-columns label:hover { border-color:#0c8c98; background:#e8f9fb; }
+        .filters-grid { display:grid; gap:14px; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); }
+        .filter-block { display:flex; flex-direction:column; gap:6px; }
+        .filter-inline { display:flex; gap:12px; flex-wrap:wrap; }
+        .filter-inline .filter-block { flex:1 1 180px; }
+        .hint-text { font-size:0.85rem; color:#546e7a; margin-top:4px; }
+        .config-preview { background:#0d575a0f; border:1px dashed #0d575a33; border-radius:10px; padding:14px 16px; font-family:'Fira Code', 'Courier New', monospace; font-size:0.88rem; color:#0d575a; white-space:pre-wrap; word-break:break-word; min-height:80px; }
+        .config-toolbar { display:flex; justify-content:flex-end; gap:10px; margin-bottom:12px; }
+        .config-toolbar button { background:#e0f2f1; border:none; border-radius:20px; padding:6px 14px; font-size:0.85rem; color:#0d575a; cursor:pointer; transition:background 0.2s; }
+        .config-toolbar button:hover { background:#b2dfdb; }
+        .status-input { position:relative; }
+        .status-input datalist option { font-size:0.9rem; }
+    </style>
+</head>
+<body>
+    <aside id="sidebar" class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link active" href="apps/internal/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link" href="apps/internal/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/internal/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/internal/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link" href="apps/internal/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/internal/configuracion/api_tokens.html" data-section="configuracion" data-requires-api-tokens="manage">
+            <i class="fa fa-key"></i>
+            <span>TOKENS API</span>
+        </a>
+        <a class="nav-link" href="apps/internal/ayuda/help_center.html" data-section="ayuda">
+            <i class="fa fa-circle-question"></i>
+            <span>AYUDA</span>
+        </a>
+        <a class="nav-link" href="apps/internal/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </aside>
+    <div class="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+                <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Añadir Reporte</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/internal/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="formbar">
+            <button class="btn-back" onclick="window.location.href = BASE_URL + '/apps/internal/reportes/reports.html'"><i class="fa fa-arrow-left"></i></button>
+            <div class="formbar-title">Reportes &gt; Añadir Reporte</div>
+        </div>
+        <div class="form-container">
+            <div class="form-title">Añadir Reporte Personalizado</div>
+            <form id="formAddReport" autocomplete="off">
+                <div class="form-group">
+                    <label for="reportName">Nombre del Reporte</label>
+                    <input type="text" id="reportName" name="nombre" maxlength="120" required>
+                    <p class="hint-text">Elige un nombre fácil de identificar para el equipo que consultará el reporte.</p>
+                </div>
+                <div class="form-group">
+                    <label for="datasetType">Tipo de dataset</label>
+                    <select id="datasetType" name="dataset" required>
+                        <option value="">Selecciona un dataset…</option>
+                    </select>
+                    <p class="hint-text">Define la fuente de datos sobre la que se construirá el reporte (calibraciones, planes, instrumentos, etc.).</p>
+                </div>
+                <div class="form-group">
+                    <div class="config-toolbar">
+                        <button type="button" id="selectAllColumns">Seleccionar todo</button>
+                        <button type="button" id="clearAllColumns">Limpiar selección</button>
+                    </div>
+                    <label>Columnas visibles</label>
+                    <div id="datasetColumns" class="dataset-columns" aria-live="polite"></div>
+                    <p class="hint-text">Selecciona las columnas que aparecerán en el reporte. Puedes ajustar la selección cuando cambies el dataset.</p>
+                </div>
+                <div class="form-group">
+                    <label>Filtros</label>
+                    <div class="filter-inline">
+                        <div class="filter-block">
+                            <label for="filterDateFrom" id="dateFilterLabel">Fecha desde</label>
+                            <input type="date" id="filterDateFrom" name="fecha_desde">
+                        </div>
+                        <div class="filter-block">
+                            <label for="filterDateTo" id="dateFilterLabelTo">Fecha hasta</label>
+                            <input type="date" id="filterDateTo" name="fecha_hasta">
+                        </div>
+                        <div class="filter-block status-input">
+                            <label for="filterStatus" id="statusFilterLabel">Estado</label>
+                            <input type="text" id="filterStatus" name="estado" list="statusSuggestionsList" placeholder="Escribe o selecciona un estado">
+                            <datalist id="statusSuggestionsList"></datalist>
+                        </div>
+                    </div>
+                    <p class="hint-text">Los filtros se aplicarán cada vez que se ejecute el reporte personalizado.</p>
+                </div>
+                <div class="form-group">
+                    <label for="defaultFormat">Formato predeterminado</label>
+                    <select id="defaultFormat" name="formato_preferido">
+                        <option value="excel">Excel (.xls)</option>
+                        <option value="csv">CSV</option>
+                        <option value="pdf">PDF</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Resumen de la configuración</label>
+                    <div id="configPreview" class="config-preview">Selecciona un dataset y columnas para generar la vista previa…</div>
+                </div>
+                <input type="hidden" name="configuracion" id="configuracion">
+                <input type="hidden" name="filtros" id="filtros">
+                <div class="form-actions">
+                    <button type="submit" class="btn"><i class="fa fa-plus"></i> Añadir Reporte</button>
+                    <button type="button" class="btn btn-cancel" onclick="window.location.href = BASE_URL + '/apps/internal/reportes/reports.html'">Cancelar</button>
+                </div>
+                <div class="msg" id="addReportMsg"></div>
+            </form>
+        </div>
+    </div>
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script>
+    window.addEventListener('DOMContentLoaded', function() {
+        fetch(BASE_URL + '/apps/internal/sidebar.html').then(r=>r.text()).then(html=>{
+            document.getElementById('sidebar').innerHTML = html;
+            if (typeof initSidebar === 'function') initSidebar();
+            if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+            if (typeof window.applyApiTokenVisibility === 'function') window.applyApiTokenVisibility();
+            if (typeof window.activateApiTokensIfAvailable === 'function') window.activateApiTokensIfAvailable();
+        });
+    });
+    </script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script>
+      (function(){
+        const el = document.getElementById('userName');
+        if(!el) return;
+        fetch(BASE_URL + '/backend/usuarios/get_actual_user.php')
+          .then(r=>r.json())
+          .then(u=>{ el.innerHTML = `${u?.nombre||'Invitado'} <span class="text-accent">(${u?.role_id||'Sin rol'})</span>`; });
+      })();
+    </script>
+</body>
+</html>

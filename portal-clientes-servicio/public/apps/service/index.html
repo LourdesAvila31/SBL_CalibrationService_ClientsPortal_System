@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <base id="app-base" href="/">
+    <script>
+        (function () {
+            var baseTag = document.getElementById('app-base');
+            if (!baseTag) {
+                return;
+            }
+            var pathname = window.location && typeof window.location.pathname === 'string'
+                ? window.location.pathname
+                : '';
+            var baseHref = '';
+            var publicIndex = pathname.indexOf('/public/');
+            if (publicIndex !== -1) {
+                baseHref = pathname.slice(0, publicIndex + 7);
+            } else if (pathname.endsWith('/public')) {
+                baseHref = pathname;
+            } else {
+                baseHref = '/public';
+            }
+            if (!baseHref) {
+                baseHref = '/public';
+            }
+            if (!baseHref.endsWith('/')) {
+                baseHref += '/';
+            }
+            baseTag.setAttribute('href', baseHref);
+            var globalBase = baseHref.replace(/\/+$/, '');
+            if (!globalBase) {
+                globalBase = '/public';
+            }
+            window.BASE_URL = globalBase;
+            window.AppUrl = window.AppUrl || {};
+            if (typeof window.AppUrl.BASE_URL !== 'string' || !window.AppUrl.BASE_URL) {
+                window.AppUrl.BASE_URL = globalBase;
+            }
+        })();
+    </script>
+    <script src="assets/scripts/base-url.js" defer></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            var baseTag = document.getElementById('app-base');
+            if (!baseTag) {
+                return;
+            }
+            var href = (typeof window.BASE_URL === 'string' && window.BASE_URL) ? window.BASE_URL : '/public';
+            if (!href.endsWith('/')) {
+                href += '/';
+            }
+            baseTag.setAttribute('href', href);
+        });
+    </script>
+
+    <title>Portal de Servicio | Sistema ISO 17025</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/styles.css">
+    <link rel="stylesheet" href="assets/styles/service-portal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+            transition: transform 0.3s ease-in-out;
+        }
+        .main-content {
+            margin-left: 200px;
+            min-height: 100vh;
+            padding: 0;
+            width: calc(100% - 200px);
+        }
+        .dashboard-section {
+            padding: 32px 28px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-top: 24px;
+        }
+        .dashboard-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 8px 20px #0d575a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 180px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.18s, box-shadow 0.18s;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 24px #0d575a1f;
+        }
+        .dashboard-card .icon {
+            font-size: 2.2rem;
+            color: #0c8c98;
+            margin-bottom: 18px;
+        }
+        .dashboard-card .title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0d575a;
+            margin-bottom: 10px;
+        }
+        .dashboard-card .description {
+            font-size: 1rem;
+            color: #496064;
+            flex: 1;
+        }
+        @media (max-width: 900px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+            .main-content { margin-left: 0; width: 100%; }
+            .dashboard-section { padding: 24px 12px; }
+        }
+    </style>
+</head>
+<body class="service-portal" data-active-section="menu">
+    <aside id="sidebar" class="sidebar" aria-label="Menú lateral"></aside>
+    <div class="main-content">
+        <div id="topbarContainer"></div>
+        <section class="dashboard-section">
+            <h1 class="h3 text-primary fw-bold">Gestión de Servicio a Clientes y Calibraciones</h1>
+            <p class="text-muted">Administra solicitudes, actualiza calibraciones externas y comparte certificados desde un portal dedicado.</p>
+            <div class="dashboard-grid">
+                <a class="dashboard-card" href="clientes/panel.html" data-section="clientes-servicio">
+                    <i class="fa fa-handshake-angle icon" aria-hidden="true"></i>
+                    <span class="title">Panel de clientes</span>
+                    <span class="description">Consulta información de contacto, instrumentos vinculados y compromisos de servicio para tus clientes externos.</span>
+                </a>
+                <a class="dashboard-card" href="instrumentos/list_gages.html" data-section="instrumentos">
+                    <i class="fa fa-screwdriver-wrench icon" aria-hidden="true"></i>
+                    <span class="title">Inventario de instrumentos</span>
+                    <span class="description">Revisa el inventario recibido de cada cliente y genera etiquetas con código QR listas para entregar.</span>
+                </a>
+                <a class="dashboard-card" href="calibraciones/list_calibrations.html" data-section="calibraciones-lista">
+                    <i class="fa fa-balance-scale icon" aria-hidden="true"></i>
+                    <span class="title">Calibraciones externas</span>
+                    <span class="description">Seguimiento centralizado de calibraciones, certificados adjuntos y vencimientos asociados a cada cliente.</span>
+                </a>
+                <a class="dashboard-card" href="calibraciones/alert_notifications.html" data-section="calibraciones-alertas">
+                    <i class="fa fa-bell icon" aria-hidden="true"></i>
+                    <span class="title">Alertas y notificaciones</span>
+                    <span class="description">Gestiona avisos automáticos sobre calibraciones próximas a vencer y asigna responsables de seguimiento.</span>
+                </a>
+                <a class="dashboard-card" href="calibraciones/non_conformity_flow.html" data-section="calibraciones-nc">
+                    <i class="fa fa-clipboard-check icon" aria-hidden="true"></i>
+                    <span class="title">Flujo de no conformidades</span>
+                    <span class="description">Registra hallazgos, acciones correctivas y evidencia para cerrar desviaciones detectadas en servicio.</span>
+                </a>
+                <a class="dashboard-card" href="calidad/index.html" data-section="calidad">
+                    <i class="fa fa-award icon" aria-hidden="true"></i>
+                    <span class="title">Calidad del servicio</span>
+                    <span class="description">Centraliza indicadores de validación y compromisos derivados de auditorías para clientes externos.</span>
+                </a>
+            </div>
+        </section>
+    </div>
+    <script type="module" src="assets/scripts/scripts-service.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script src="assets/scripts/service-layout.js"></script>
+</body>
+</html>

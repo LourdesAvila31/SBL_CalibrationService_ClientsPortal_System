@@ -1,0 +1,419 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = (base === '/') ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <meta charset="UTF-8">
+    <title>Registrar Instrumento | SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Bootstrap, FontAwesome, Montserrat -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <style>
+        :root {
+            --sidebar-bg: #0d575a;
+            --sidebar-active: #0c8c98;
+            --sidebar-hover: #17b6c1;
+            --table-header-bg: #0d575a;
+            --table-header-color: #fff;
+            --page-bg: #f4f6f8;
+            --actionbar-bg: #ececec;
+            --actionbar-icon-bg: #176d72;
+            }
+        body {
+            background: var(--page-bg);
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img {
+            width: 140px;
+            margin-bottom: 22px;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 26px;
+        }
+        .topbar-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #217b9b;
+            letter-spacing: 1px;
+        }
+        .topbar-user {
+            font-size: 1rem;
+            color: #217b9b;
+            font-weight: 400;
+            margin-left: 24px;
+        }
+        .topbar-icons {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .topbar-icons i {
+            font-size: 1.2rem;
+            color: #217b9b;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .formbar {
+            background: var(--actionbar-bg);
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .formbar-title {
+            font-weight: 500;
+            color: #217b9b;
+            font-size: 1.1rem;
+            margin-right: 18px;
+        }
+        .formbar .btn-back {
+            background: var(--actionbar-icon-bg);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 32px; height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .formbar .btn-back:hover { background: #218fa1; }
+        .form-container {
+            max-width: 860px;
+            margin: 28px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px #0d575a11;
+            padding: 30px 38px 22px 38px;
+        }
+        .form-title {
+            font-size: 1.32rem;
+            color: #0d575a;
+            font-weight: 700;
+            margin-bottom: 26px;
+            text-align: left;
+        }
+        form .form-group { margin-bottom: 18px; }
+        .form-row { display: flex; gap: 24px; flex-wrap: wrap; }
+        .form-col { flex: 1 1 200px; min-width: 220px; }
+        form input, form select, form textarea {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 1rem;
+            border: 1px solid #b0bec5;
+            border-radius: 6px;
+            background: #f9fafb;
+            margin-bottom: 2px;
+            transition: border-color 0.2s;
+        }
+        form input:focus, form select:focus, form textarea:focus {
+            border-color: #217b9b;
+            outline: none;
+            background: #fff;
+        }
+        .form-actions { margin-top: 22px; }
+        .form-actions .btn {
+            background: #0d575a;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-right: 14px;
+            transition: background 0.2s;
+        }
+        .form-actions .btn:hover { background: #0c8c98; }
+        .form-actions .btn.btn-cancel {
+            background: #fff;
+            color: #217b9b;
+            border: 2px solid #217b9b;
+        }
+        .msg { margin-top: 14px; font-weight: 600; color: #217b9b; text-align: center; }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link" href="apps/tenant/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link active" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+            <i class="fa fa-user-shield"></i>
+            <span>ROLES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+            <i class="fa fa-circle-question"></i>
+            <span>TUTORIAL</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </aside>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Gestión de Instrumentos</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/tenant/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+<div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <!-- FormBar -->
+        <div class="formbar">
+            <button class="btn-back" onclick="window.location.href = BASE_URL + '/apps/tenant/instrumentos/list_gages.html'">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+            <div class="formbar-title">Instrumentos &gt; Registrar Instrumento</div>
+        </div>
+        <!-- Formulario -->
+        <div class="form-container">
+            <div class="form-title">Información del Instrumento</div>
+            <form id="forminstrumento" autocomplete="off">
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="catalogo_id">Nombre del instrumento</label>
+                        <select id="catalogo_id" name="catalogo_id" required>
+                            <option value="">Selecciona una opción...</option>
+                        </select>
+                    </div>
+                    <div class="form-col form-group">
+                         <label for="marca_id">Marca</label>
+                        <select id="marca_id" name="marca_id" required>
+                            <option value="">Selecciona una opción...</option>
+                        </select>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="modelo_id">Modelo</label>
+                        <select id="modelo_id" name="modelo_id" required>
+                            <option value="">Selecciona una opción...</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="serie">Serie</label>
+                        <input type="text" id="serie" name="serie" required>
+                    </div>
+                    <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="codigo">Código Interno</label>
+                            <input type="text" id="codigo" name="codigo" required>
+                        </div>
+                    </div>
+                    <div class="form-col form-group">
+                         <label for="departamento_id">Departamento responsable</label>
+                        <select id="departamento_id" name="departamento_id" required>
+                            <option value="">Selecciona una opción...</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="ubicacion">Ubicación</label>
+                            <input type="text" id="ubicacion" name="ubicacion" required>
+                    </div>
+                </div>
+                    <div class="form-col form-group">
+                        <label for="estado_instrumento">Estado del instrumento</label>
+                        <input type="text" id="estado_instrumento" value="Se calculará automáticamente" readonly tabindex="-1" aria-readonly="true">
+                        <small class="text-muted">El estado se determinará de forma automática al registrar el instrumento.</small>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="fecha_de_alta">Fecha de alta</label>
+                        <input type="date" id="fecha_de_alta" name="fecha_de_alta" required>
+                    </div>
+                    <div class="form-col form-group"></div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Registrar Instrumento</button>
+                    <button type="button" class="btn btn-cancel" onclick="window.location.href = BASE_URL + '/apps/tenant/instrumentos/list_gages.html'">Cancelar</button>
+                </div>
+                <div class="msg" id="mensaje"></div>
+            </form>
+        </div>
+    </div>
+    <script>
+    function cargarOpciones(url, selectId, selectedValue = '') {
+        fetch(url)
+          .then(r => r.json())
+          .then(opciones => {
+              const select = document.getElementById(selectId);
+              select.innerHTML = '<option value="">Seleccione...</option>';
+              opciones.forEach(opcion => {
+                   const selected = opcion.id == selectedValue ? ' selected' : '';
+                   select.innerHTML += `<option value="${opcion.id}"${selected}>${opcion.nombre}</option>`;
+              });
+          })
+          .catch(() => {
+              document.getElementById(selectId).innerHTML = '<option value="">Error al cargar opciones</option>';
+          });
+    }
+
+    function configurarAddNuevo(selectId, addUrl, getUrl) {
+        const select = document.getElementById(selectId);
+        select.addEventListener('change', function() {
+            if (this.value === '__add_new__') {
+                const nuevo = prompt('Ingresa el nuevo valor:');
+                if (nuevo) {
+                    const datos = new FormData();
+                    datos.append('nombre', nuevo);
+                    fetch(addUrl, { method: 'POST', body: datos })
+                      .then(() => cargarOpciones(getUrl, selectId, nuevo));
+                } else {
+                    this.value = '';
+                }
+            }
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+        cargarOpciones(BASE_URL + '/backend/instrumentos/catalogo/get_catalogo_instrumentos.php', 'catalogo_id');
+        cargarOpciones(BASE_URL + '/backend/instrumentos/marcas/get_marcas_gage.php', 'marca_id');
+        cargarOpciones(BASE_URL + '/backend/instrumentos/modelo/get_modelos_gage.php', 'modelo_id');
+        cargarOpciones(BASE_URL + '/backend/departamentos/get_departamentos.php', 'departamento_id');
+        configurarAddNuevo('catalogo_id', 'backend/instrumentos/catalogo/add_catalogo_instrumentos.php', 'backend/instrumentos/catalogo/get_catalogo_instrumentos.php');
+        configurarAddNuevo('marca_id', 'backend/instrumentos/marcas/add_marca_gage.php', 'backend/instrumentos/marcas/get_marcas_gage.php');
+        configurarAddNuevo('modelo_id', 'backend/instrumentos/modelo/add_modelo_gage.php', 'backend/instrumentos/modelo/get_modelos_gage.php');
+    });
+
+    document.getElementById('forminstrumento').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const datos = new FormData(this);
+        datos.delete('estado_instrumento');
+        fetch(BASE_URL + '/backend/instrumentos/gages/add_gage.php', {
+            method: 'POST',
+            body: datos
+        })
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('mensaje').textContent = data;
+        })
+        .catch(error => {
+            document.getElementById('mensaje').textContent = 'Error al conectar con el servidor.';
+        });
+    });
+    </script>
+    <script type="module" src="assets/scripts/scripts-tenant.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        fetch(BASE_URL + '/apps/tenant/sidebar.html')
+          .then(response => response.text())
+          .then(html => {
+            document.getElementById('sidebar').innerHTML = html;
+            if (typeof initSidebar === 'function') initSidebar();
+            if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+            if (typeof window.applyApiTokenVisibility === 'function') window.applyApiTokenVisibility();
+            if (typeof window.activateApiTokensIfAvailable === 'function') window.activateApiTokensIfAvailable();
+          });
+      });
+      (function(){
+        if(window.currentUser && window.updateUserDisplay){
+          window.updateUserDisplay(window.currentUser);
+        }
+      })();
+    </script>
+</body>
+</html>

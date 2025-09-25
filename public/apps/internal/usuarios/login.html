@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <title>Inicio de Sesión | Sistema Calibraciones SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Fuentes y estilos SBL -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e6f6fb 0%, #a3defd 55%, #0d575a 100%);
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .login-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-box {
+            background: #fff;
+            box-shadow: 0 8px 32px rgba(60, 100, 180, 0.13);
+            border-radius: 18px;
+            padding: 46px 36px 38px 36px;
+            max-width: 370px;
+            width: 100%;
+            text-align: center;
+        }
+        .login-logo img {
+            width: 170px;
+            margin-bottom: 22px;
+        }
+        .login-title {
+            font-weight: 700;
+            font-size: 1.55rem;
+            color: #0d575a;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .login-subtitle {
+            color: #217b9b;
+            font-size: 1.09rem;
+            margin-bottom: 26px;
+            font-weight: 400;
+            letter-spacing: 0.4px;
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 1.5px solid #a3defd;
+            font-size: 1.03rem;
+            margin-bottom: 15px;
+            padding: 12px;
+        }
+        .form-control:focus {
+            border-color: #0d575a;
+            box-shadow: 0 0 0 2px #a3defd88;
+        }
+        .is-hidden {
+            display: none !important;
+        }
+        .is-visible {
+            display: block !important;
+        }
+        .forgot-link {
+            display: inline-block;
+            margin-top: 16px;
+            font-size: 0.95rem;
+            color: #0d575a;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .forgot-link:hover {
+            text-decoration: underline;
+            color: #217b9b;
+        }
+        .login-btn {
+            background: #0d575a;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 0;
+            font-weight: 700;
+            font-size: 1.08rem;
+            width: 100%;
+            margin-top: 4px;
+            transition: background 0.18s;
+            box-shadow: 0 3px 9px #0d575a22;
+        }
+        .login-btn:hover {
+            background: #217b9b;
+        }
+        .footer {
+            background: transparent;
+            color: #217b9b;
+            font-size: 0.98rem;
+            text-align: center;
+            padding: 24px 0 8px 0;
+            letter-spacing: 0.3px;
+        }
+        @media (max-width: 600px) {
+            .login-box {
+                padding: 30px 8px 28px 8px;
+                max-width: 95vw;
+            }
+            .login-logo img {
+                width: 120px;
+            }
+            .login-title {
+                font-size: 1.23rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="formbar">
+    </div>
+    <div class="login-wrapper">
+        <div class="login-box">
+            <div class="login-logo">
+                <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma">
+            </div>
+            <div class="login-title">Sistema de Gestión de Calibraciones</div>
+            <div class="login-subtitle">Acceso exclusivo para personal autorizado</div>
+            <form method="POST" action="backend/usuarios/login.php" autocomplete="off">
+                <input type="hidden" name="portal" value="internal">
+
+                <label class="form-label visually-hidden" for="loginCorreo">Correo electrónico o usuario</label>
+                <input type="text" class="form-control" id="loginCorreo" name="correo" placeholder="Correo electrónico o usuario" required>
+                <label class="form-label visually-hidden" for="loginContrasena">Contraseña</label>
+                <input type="password" class="form-control" id="loginContrasena" name="contrasena" placeholder="Contraseña" required>
+                <button type="submit" class="login-btn">Ingresar</button>
+            </form>
+            <a class="forgot-link" href="forgot_password.html">¿Olvidaste tu contraseña?</a>
+            <login class="access" onclick="window.location.href = BASE_URL + '/apps/internal/index.html'">
+
+            </login>
+            <div id="errorAlert" class="alert alert-danger mt-3 is-hidden" role="alert"></div>
+        </div>
+    </div>
+    <div class="footer">
+        © 2025 SBL Pharma | Sistema ISO 17025 - NOM-059
+    </div>
+    <script src="assets/scripts/topbar.js"></script>
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script>
+        // Muestra alerta de error si existe el parámetro ?error= en la URL
+        document.addEventListener('DOMContentLoaded', function () {
+            const params = new URLSearchParams(window.location.search);
+            const error = params.get('error');
+            if (error) {
+                const alertDiv = document.getElementById('errorAlert');
+                alertDiv.textContent = error;
+                alertDiv.classList.remove('is-hidden');
+                alertDiv.classList.add('is-visible');
+            }
+        });
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <title>Mi información | Portal de Servicio</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/styles.css">
+    <link rel="stylesheet" href="assets/styles/service-portal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            color: #0d575a;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+            transition: transform 0.3s ease-in-out;
+        }
+        .main-content {
+            margin-left: 200px;
+            min-height: 100vh;
+            padding: 0;
+            width: calc(100% - 200px);
+            display: flex;
+            flex-direction: column;
+        }
+        .profile-section {
+            padding: 36px 28px 48px;
+            display: flex;
+            justify-content: center;
+        }
+        .profile-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 12px 28px #0d575a14;
+            padding: 32px 36px;
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #e1ecec;
+            padding-bottom: 16px;
+        }
+        .profile-header i {
+            font-size: 2.4rem;
+            color: #0c8c98;
+        }
+        .profile-title {
+            margin: 0;
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #0d575a;
+        }
+        .profile-details {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .profile-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .profile-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #217b9b;
+        }
+        .profile-value {
+            font-size: 1.05rem;
+            color: #0d575a;
+        }
+        .profile-status {
+            font-size: 0.95rem;
+            color: #496064;
+        }
+        .profile-status.is-error {
+            color: #c0392b;
+        }
+        @media (max-width: 900px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .profile-section {
+                padding: 24px 16px 32px;
+            }
+            .profile-card {
+                padding: 28px 24px;
+            }
+        }
+    </style>
+</head>
+<body class="service-portal">
+    <aside id="sidebar" class="sidebar" aria-label="Menú lateral"></aside>
+    <div class="main-content">
+        <div id="topbarContainer"></div>
+        <section class="profile-section">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <i class="fa fa-user-circle" aria-hidden="true"></i>
+                    <h1 class="profile-title">Mi información</h1>
+                </div>
+                <p id="profileStatus" class="profile-status">Cargando datos del usuario…</p>
+                <div class="profile-details" aria-live="polite">
+                    <div class="profile-item">
+                        <span class="profile-label">Nombre completo</span>
+                        <span id="profileName" class="profile-value">—</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-label">Rol asignado</span>
+                        <span id="profileRole" class="profile-value">—</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-label">Correo electrónico</span>
+                        <span id="profileEmail" class="profile-value">—</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="assets/scripts/base-url.js"></script>
+    <script src="assets/scripts/scripts.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script src="assets/scripts/service-layout.js"></script>
+</body>
+</html>

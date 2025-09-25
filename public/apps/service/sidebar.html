@@ -1,0 +1,58 @@
+<!-- SIDEBAR SERVICE CONTENT -->
+<style>
+    .sidebar-nav[data-app-scope="service"] {
+        gap: 12px;
+    }
+
+    .sidebar-nav[data-app-scope="service"] .nav-link {
+        width: 90%;
+        padding: 16px 0 10px 0;
+        font-size: 1.02rem;
+        letter-spacing: 0.5px;
+    }
+
+    .sidebar-nav[data-app-scope="service"] .nav-link i {
+        font-size: 1.7rem;
+        margin-bottom: 6px;
+    }
+
+    @media (max-width: 900px) {
+        .sidebar-nav[data-app-scope="service"] .nav-link {
+            width: 92%;
+        }
+    }
+</style>
+<button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+<div class="sidebar-logo">
+    <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo" />
+</div>
+<nav class="sidebar-nav" data-app-scope="service">
+    <a class="nav-link" href="index.html" data-section="menu">
+        <i class="fa fa-gauge-high"></i>
+        <span>MENÚ</span>
+    </a>
+    <a class="nav-link" href="clientes/panel.html" data-section="clientes-servicio">
+        <i class="fa fa-handshake-angle"></i>
+        <span>CLIENTES</span>
+    </a>
+    <a class="nav-link" href="instrumentos/list_gages.html" data-section="instrumentos">
+        <i class="fa fa-screwdriver-wrench"></i>
+        <span>INSTRUMENTOS</span>
+    </a>
+    <a class="nav-link" href="calibraciones/list_calibrations.html" data-section="calibraciones-lista">
+        <i class="fa fa-balance-scale"></i>
+        <span>CALIBRACIONES</span>
+    </a>
+    <a class="nav-link" href="calibraciones/alert_notifications.html" data-section="calibraciones-alertas">
+        <i class="fa fa-bell"></i>
+        <span>ALERTAS</span>
+    </a>
+    <a class="nav-link" href="calibraciones/non_conformity_flow.html" data-section="calibraciones-nc">
+        <i class="fa fa-clipboard-check"></i>
+        <span>NO CONFORMIDADES</span>
+    </a>
+    <a class="nav-link" href="calidad/index.html" data-section="calidad">
+        <i class="fa fa-award"></i>
+        <span>CALIDAD</span>
+    </a>
+</nav>

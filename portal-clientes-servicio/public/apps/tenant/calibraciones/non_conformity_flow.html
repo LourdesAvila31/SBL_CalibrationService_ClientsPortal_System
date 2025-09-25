@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <title>Flujo correctivo de calibración | SISTEMA ISO 17025</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <style>
+        body {
+            background: #f6f8fa;
+            font-family: 'Montserrat', Arial, sans-serif;
+            color: #1f2933;
+        }
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        .card-flow {
+            max-width: 860px;
+            width: 100%;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 12px 35px rgba(15, 36, 70, 0.08);
+            padding: 2.5rem;
+        }
+        .card-flow h1 {
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: #0d575a;
+            margin-bottom: 1.2rem;
+        }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .meta-item {
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+        .meta-item span {
+            display: block;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.05em;
+        }
+        .meta-item strong {
+            display: block;
+            margin-top: 0.35rem;
+            font-size: 1.05rem;
+            color: #0d3b66;
+        }
+        .steps-list {
+            margin: 0;
+            padding-left: 1.1rem;
+        }
+        .steps-list li {
+            margin-bottom: 0.8rem;
+        }
+        .alert-info {
+            background: #e0f2fe;
+            border: none;
+            color: #0f172a;
+        }
+        .actions-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="card-flow">
+        <h1>Flujo correctivo de calibración</h1>
+        <p class="text-muted">Consulta los detalles de la no conformidad y sigue los pasos recomendados para cerrar la desviación.</p>
+        <div id="statusMessage" class="alert alert-info">Cargando información...</div>
+        <div id="nonConformityContent" class="d-none">
+            <div class="meta-grid">
+                <div class="meta-item"><span>Empresa</span><strong id="empresaNombre">—</strong></div>
+                <div class="meta-item"><span>Instrumento</span><strong id="instrumentoNombre">—</strong></div>
+                <div class="meta-item"><span>Código interno</span><strong id="instrumentoCodigo">—</strong></div>
+                <div class="meta-item"><span>Estado</span><strong id="estadoNc">—</strong></div>
+                <div class="meta-item"><span>Resultado</span><strong id="resultadoNc">—</strong></div>
+                <div class="meta-item"><span>Fecha detección</span><strong id="fechaDeteccion">—</strong></div>
+                <div class="meta-item"><span>Fecha calibración</span><strong id="fechaCalibracion">—</strong></div>
+            </div>
+            <div class="mb-4">
+                <h2 class="h5 text-primary">Descripción</h2>
+                <p id="descripcionNc" class="mb-0">—</p>
+            </div>
+            <div class="alert alert-info">
+                <strong>Pasos sugeridos:</strong>
+                <ol class="steps-list mt-2">
+                    <li>Analiza la causa raíz junto con el responsable de mantenimiento o calidad.</li>
+                    <li>Define acciones correctivas documentadas y asigna responsables con fechas compromiso.</li>
+                    <li>Registra las acciones en el sistema o el formato correspondiente para seguimiento.</li>
+                    <li>Verifica la efectividad de la acción y actualiza el estado de la no conformidad.</li>
+                </ol>
+            </div>
+            <div class="actions-bar">
+                <a id="verCalibracion" class="btn btn-primary" href="#" target="_blank" rel="noopener">Revisar registro de calibración</a>
+                <a id="abrirPlanAccion" class="btn btn-outline-secondary d-none" href="#" target="_blank" rel="noopener">Abrir plan de acción asociado</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    (function () {
+        const params = new URLSearchParams(window.location.search);
+        const nonConformityId = params.get('nc_id');
+        const statusMessage = document.getElementById('statusMessage');
+        const content = document.getElementById('nonConformityContent');
+        const BASE_URL = window.BASE_URL || '';
+
+        if (!nonConformityId) {
+            statusMessage.classList.remove('alert-info');
+            statusMessage.classList.add('alert-danger');
+            statusMessage.textContent = 'No se proporcionó un identificador de no conformidad.';
+            return;
+        }
+
+        fetch(`${BASE_URL}/backend/calibraciones/get_nonconformity.php?id=${encodeURIComponent(nonConformityId)}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('No se pudo obtener la información de la no conformidad.');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (!data || data.error) {
+                    throw new Error(data && data.error ? data.error : 'No conformidad no encontrada.');
+                }
+                statusMessage.classList.add('d-none');
+                content.classList.remove('d-none');
+
+                document.getElementById('empresaNombre').textContent = data.empresa_nombre || '—';
+                document.getElementById('instrumentoNombre').textContent = data.instrumento_nombre || '—';
+                document.getElementById('instrumentoCodigo').textContent = data.instrumento_codigo || '—';
+                document.getElementById('resultadoNc').textContent = data.resultado || '—';
+                document.getElementById('fechaCalibracion').textContent = data.fecha_calibracion || '—';
+                document.getElementById('descripcionNc').textContent = data.descripcion || '—';
+                document.getElementById('fechaDeteccion').textContent = data.detected_at ? new Date(data.detected_at).toLocaleString('es-MX') : '—';
+
+                const estado = (data.estado || '').toString();
+                document.getElementById('estadoNc').textContent = estado === '' ? '—' : estado.charAt(0).toUpperCase() + estado.slice(1);
+
+                const enlaceCalibracion = `${BASE_URL}/apps/tenant/calibraciones/edit_calibration.html?id=${encodeURIComponent(data.calibracion_id || '')}`;
+                document.getElementById('verCalibracion').setAttribute('href', enlaceCalibracion);
+
+                if (data.corrective_url) {
+                    try {
+                        const targetUrl = new URL(data.corrective_url, window.location.origin);
+                        if (targetUrl.pathname !== window.location.pathname) {
+                            const planBtn = document.getElementById('abrirPlanAccion');
+                            planBtn.classList.remove('d-none');
+                            planBtn.setAttribute('href', targetUrl.toString());
+                        }
+                    } catch (e) {
+                        console.warn('No se pudo interpretar la URL correctiva:', e);
+                    }
+                }
+            })
+            .catch((error) => {
+                statusMessage.classList.remove('alert-info');
+                statusMessage.classList.add('alert-danger');
+                statusMessage.textContent = error.message;
+            });
+    })();
+</script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+</body>
+</html>

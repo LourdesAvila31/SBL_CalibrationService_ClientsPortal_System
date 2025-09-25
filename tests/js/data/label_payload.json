@@ -1,0 +1,26 @@
+{
+  "1": {
+    "instrument_id": 1,
+    "name": "Báscula analítica",
+    "code": "BAS-001",
+    "serial": "SN-12345",
+    "department": "Laboratorio",
+    "location": "Sala de pesaje",
+    "certificate_url": "backend/calibraciones/share_certificate.php?token=abc.def",
+    "certificate_issued_at": "2024-03-12",
+    "certificate_expires_at": "2025-03-11T00:00:00Z",
+    "generated_at": "2025-01-01T00:00:00Z"
+  },
+  "2": {
+    "instrument_id": 2,
+    "name": "Termómetro",
+    "code": "TH-200",
+    "serial": "SN-67890",
+    "department": "Producción",
+    "location": "Línea A",
+    "certificate_url": "backend/calibraciones/share_certificate.php?token=ghi.jkl",
+    "certificate_issued_at": "2024-05-05",
+    "certificate_expires_at": "2025-05-04T00:00:00Z",
+    "generated_at": "2025-01-10T08:30:00Z"
+  }
+}

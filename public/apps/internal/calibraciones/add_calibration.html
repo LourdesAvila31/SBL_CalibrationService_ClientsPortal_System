@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    
+    <title>Registrar resultado de calibración | SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Bootstrap, FontAwesome, Montserrat -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <style>
+        :root {
+            --sidebar-bg: #0d575a;
+            --sidebar-active: #0c8c98;
+            --sidebar-hover: #17b6c1;
+            --table-header-bg: #0d575a;
+            --table-header-color: #fff;
+            --page-bg: #f4f6f8;
+            --actionbar-bg: #ececec;
+            --actionbar-icon-bg: #176d72;
+        }
+        body {
+            background: var(--page-bg);
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img {
+            width: 140px;
+            margin-bottom: 22px;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-nav .nav-link {
+            width: 92%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0 8px 0;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s;
+            position: relative;
+        }
+        .sidebar-nav .nav-link.active,
+        .sidebar-nav .nav-link:hover {
+            background: #0c8c98;
+            color: #fff;
+        }
+        .sidebar-nav .nav-link i {
+            font-size: 1.85rem;
+            margin-bottom: 8px;
+        }
+        .sidebar-nav .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 4px;
+            height: 32px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .main-content {
+            margin-left: 200px;
+            min-height: 100vh;
+            padding: 0;
+        }
+        .topbar {
+            background: #fff;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px 0 28px;
+            box-shadow: 0 1px 8px #0001;
+        }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+        .topbar-logo {
+            width: 140px;
+            padding-top: 6px;
+        }
+        .topbar-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #217b9b;
+            letter-spacing: 1px;
+        }
+        .topbar-user {
+            font-size: 1rem;
+            color: #217b9b;
+            font-weight: 400;
+            margin-left: 24px;
+        }
+        .topbar-icons {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .topbar-icons i {
+            font-size: 1.2rem;
+            color: #217b9b;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .formbar {
+            background: var(--actionbar-bg);
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .formbar-title {
+            font-weight: 500;
+            color: #217b9b;
+            font-size: 1.1rem;
+            margin-right: 18px;
+        }
+        .formbar .btn-back {
+            background: var(--actionbar-icon-bg);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 32px; height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .reference-builder {
+            background: #f9fbfc;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .reference-builder .builder-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .reference-builder .builder-row select,
+        .reference-builder .builder-row input {
+            flex: 1 1 180px;
+            min-width: 150px;
+        }
+        .reference-builder .builder-row button {
+            background: #227b9b;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .reference-builder .builder-row button:hover {
+            background: #0c8c98;
+        }
+        .references-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-height: 28px;
+        }
+        .references-list.empty {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        .reference-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e0f2f8;
+            color: #0f4a5a;
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+        .reference-pill .reference-meta {
+            font-size: 0.75rem;
+            color: #0d576a;
+        }
+        .reference-pill .reference-link {
+            color: #0c8c98;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .reference-pill .reference-link:hover {
+            text-decoration: underline;
+        }
+        .reference-pill .reference-remove {
+            background: transparent;
+            border: none;
+            color: #0f4a5a;
+            cursor: pointer;
+            font-size: 0.9rem;
+            line-height: 1;
+        }
+        .reference-pill .reference-remove:hover {
+            color: #0c8c98;
+        }
+        .formbar .btn-back:hover {
+            background: #218fa1;
+        }
+        .form-container { background:#fff; border-radius:10px; box-shadow:0 2px 14px rgba(60,60,100,0.11); padding:28px 24px; max-width:920px; margin:16px auto; }
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #217b9b;
+            margin-bottom: 18px;
+        }
+        form label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #217b9b;
+        }
+        form .form-group {
+            margin-bottom: 18px;
+        }
+        .form-row {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .form-col {
+            flex: 1 1 200px;
+            min-width: 220px;
+        }
+        form input, form select, form textarea {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 1rem;
+            border: 1px solid #b0bec5;
+            border-radius: 6px;
+            background: #f9fafb;
+            margin-bottom: 2px;
+            transition: border-color 0.2s;
+        }
+        form input:focus, form select:focus, form textarea:focus {
+            border-color: #217b9b;
+            outline: none;
+            background: #fff;
+        }
+        .form-actions {
+            margin-top: 22px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .form-actions .btn {
+            background: #217b9b;
+            color: #fff;
+            border: none;
+            border-radius: 22px;
+            padding: 10px 34px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        .form-actions .btn:hover {
+            background: #08536a;
+        }
+        .form-actions .btn-cancel {
+            background: #fff;
+            color: #217b9b;
+            border: 1px solid #217b9b;
+        }
+        .msg {
+            font-weight: 600;
+            margin-top: 18px;
+            color: #e53e3e;
+        }
+        @media (max-width: 900px) {
+            .main-content { margin-left: 0; }
+            .sidebar { position: static; width: 100%; height: auto; flex-direction: row; padding-top: 10px;}
+        }
+    </style>
+</head>
+<body>
+     <!-- SIDEBAR -->
+        <aside id="sidebar" class="sidebar">
+        <!-- SIDEBAR CONTENT -->
+        <style>
+            .sidebar-nav {
+                gap: 12px;
+            }
+        
+            .sidebar-nav .nav-link {
+                width: 90%;
+                padding: 16px 0 10px 0;
+                font-size: 1.02rem;
+                letter-spacing: 0.5px;
+            }
+        
+            .sidebar-nav .nav-link i {
+                font-size: 1.7rem;
+                margin-bottom: 6px;
+            }
+        
+            @media (max-width: 900px) {
+                .sidebar-nav .nav-link {
+                    width: 92%;
+                }
+            }
+        </style>
+        <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+        <div class="sidebar-logo">
+            <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-link active" href="apps/internal/index.html" data-section="menu">
+                <i class="fa fa-tachometer-alt"></i>
+                <span>MENÚ</span>
+            </a>
+            <a class="nav-link" href="apps/internal/instrumentos/list_gages.html" data-section="instrumentos">
+                <i class="fa fa-boxes-stacked"></i>
+                <span>INSTRUMENTOS</span>
+            </a>
+            <a class="nav-link" href="apps/internal/planeacion/list_planning.html" data-section="planeacion">
+                <i class="fa fa-calendar-alt"></i>
+                <span>PLANEACIÓN</span>
+            </a>
+            <a class="nav-link" href="apps/internal/calibraciones/list_calibrations.html" data-section="calibraciones">
+                <i class="fa fa-balance-scale"></i>
+                <span>CALIBRACIONES</span>
+            </a>
+            <a class="nav-link" href="apps/internal/reportes/reports.html" data-section="reportes">
+                <i class="fa fa-file-alt"></i>
+                <span>REPORTES</span>
+            </a>
+            <a class="nav-link" href="apps/internal/configuracion/api_tokens.html" data-section="configuracion" data-requires-api-tokens="manage">
+                <i class="fa fa-key"></i>
+                <span>TOKENS API</span>
+            </a>
+            <a class="nav-link" href="apps/internal/ayuda/help_center.html" data-section="ayuda">
+                <i class="fa fa-circle-question"></i>
+                <span>AYUDA</span>
+            </a>
+            <a class="nav-link" href="apps/internal/calidad/index.html" data-section="calidad">
+                <i class="fa fa-award"></i>
+                <span>CALIDAD</span>
+            </a>
+        </nav>
+        </aside>
+     <!-- FIN SIDEBAR -->
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+        <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Registro de Calibraciones</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/internal/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <!-- FormBar -->
+        <div class="formbar">
+            <button class="btn-back" onclick="window.location.href = BASE_URL + '/apps/internal/calibraciones/list_calibrations.html'">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+            <div class="formbar-title">Calibración &gt; Registrar resultado</div>
+        </div>
+        <!-- Formulario -->
+        <div class="form-container">
+            <div class="form-title">Registrar resultado de calibración</div>
+            <form id="calibrationForm" autocomplete="off" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="instrument">Instrumento</label>
+                        <select id="instrument" name="instrumento_id" required></select>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="tecnico_id">Técnico responsable</label>
+                        <select id="tecnico_id" name="tecnico_id" required>
+                            <option value="">Seleccione técnico</option>
+                        </select>
+                        <small class="text-muted-sm">Solo se muestran perfiles con evidencia vigente de competencia.</small>
+                        <div class="alert-warning is-hidden" id="technicianWarning" style="margin-top:8px;"></div>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="tecnico_id">Técnico responsable</label>
+                        <select id="tecnico_id" name="tecnico_id" required>
+                            <option value="">Seleccione técnico</option>
+                        </select>
+                        <small class="text-muted-sm">Solo se muestran perfiles con evidencia vigente de competencia.</small>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="tecnico_id">Técnico responsable</label>
+                        <select id="tecnico_id" name="tecnico_id" required>
+                            <option value="">Seleccione técnico</option>
+                        </select>
+                        <small class="text-muted-sm">Solo se muestran perfiles con evidencia vigente de competencia.</small>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="record_no">Folio</label>
+                        <input type="text" id="record_no" name="record_no" required placeholder="Automático o manual">
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="calibration_date">Fecha de calibración</label>
+                        <input type="date" id="calibration_date" name="calibration_date" required>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="result">Resultado</label>
+                        <select id="result" name="result" required>
+                            <option value="">Seleccione resultado</option>
+                            <option value="Conforme">Conforme</option>
+                            <option value="No conforme">No conforme</option>
+                            <option value="En proceso">En proceso</option>
+                        </select>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="periodo">Periodo</label>
+                        <select id="periodo" name="periodo" required>
+                            <option value="">Seleccione periodo</option>
+                            <option value="P1">Periodo 1</option>
+                            <option value="P2">Periodo 2</option>
+                            <option value="EXTRA">Extraordinario</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="pattern">Patrón de referencia <span id="patternRequiredIndicator" class="text-danger" hidden>*</span></label>
+                        <select id="pattern" name="patron_id">
+                            <option value="">Sin patrón</option>
+                        </select>
+                        <small class="text-muted-sm">Selecciona el patrón utilizado durante la calibración.</small>
+                        <div id="patternExpiryAlert" class="mt-1 text-muted-sm"></div>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="pattern_certificate">Certificado del patrón</label>
+                        <input type="text" id="pattern_certificate" name="patron_certificado" placeholder="Número o referencia del certificado">
+                        <small class="text-muted-sm">Si se deja vacío se tomará el registrado en el catálogo.</small>
+                        <div id="patternCertificateLink" class="mt-1 text-muted-sm"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="serial_no">Número de serie</label>
+                        <input type="text" id="serial_no" name="serial_no" required>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="control_no">Número de control</label>
+                        <input type="text" id="control_no" name="control_no">
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="type">Modalidad</label>
+                        <select id="type" name="type" required>
+                            <option value="Interna" selected>Interna</option>
+                            <option value="Externa">Externa</option>
+                        </select>
+                        <small class="text-muted-sm">Seleccione si la calibración fue interna o externa.</small>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="duration_hours">Duración (horas)</label>
+                        <input type="number" id="duration_hours" name="duration_hours" min="0" step="0.1" placeholder="0.0">
+                        <small class="text-muted-sm">Tiempo total invertido en la calibración.</small>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="cost_total">Costo total (MXN)</label>
+                        <input type="number" id="cost_total" name="cost_total" min="0" step="0.01" placeholder="0.00">
+                        <small class="text-muted-sm">Registrar el monto facturado o estimado.</small>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="u_value">Incertidumbre expandida (U)</label>
+                        <input type="number" id="u_value" name="u_value" min="0" step="0.000001" placeholder="0.000000">
+                        <small class="text-muted-sm">Valor de incertidumbre expandida del resultado.</small>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="u_k">Factor de cobertura (k)</label>
+                        <input type="number" id="u_k" name="u_k" min="0.0001" step="0.0001" placeholder="2.0000">
+                        <small class="text-muted-sm">Indica el factor k utilizado para estimar la incertidumbre.</small>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="u_coverage">Cobertura / nivel de confianza</label>
+                        <input type="text" id="u_coverage" name="u_coverage" maxlength="255" placeholder="p.ej. 95% (k=2)">
+                        <small class="text-muted-sm">Describe la probabilidad o nivel de confianza asociado.</small>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="u_method">Método para estimar la incertidumbre</label>
+                        <input type="text" id="u_method" name="u_method" maxlength="255" placeholder="Guía o procedimiento aplicado">
+                        <small class="text-muted-sm">Referencia al método, guía o documento utilizado.</small>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="manufacturer">Fabricante</label>
+                        <input type="text" id="manufacturer" name="manufacturer">
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="next_calibration_date">Fecha de Próxima Calibración</label>
+                        <input type="date" id="next_calibration_date" name="next_calibration_date">
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="certificate">Certificado</label>
+                        <input type="file" id="certificate" name="certificate" accept="application/pdf,image/*">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="notes">Notas</label>
+                        <textarea id="notes" name="notes" rows="2" placeholder="Observaciones, procedimiento, etc"></textarea>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col form-group" style="flex: 1 1 100%;">
+                        <label for="references_payload">Referencias vinculadas</label>
+                        <div class="reference-builder" id="referenceBuilder">
+                            <div class="builder-row">
+                                <select id="referenceType" class="form-select">
+                                    <option value="">Tipo de referencia</option>
+                                    <option value="documento_calidad">Documento de calidad</option>
+                                    <option value="capacitacion">Capacitación</option>
+                                    <option value="accion_correctiva">Acción correctiva</option>
+                                </select>
+                                <input type="text" id="referenceLabel" class="form-control" placeholder="Etiqueta o descripción">
+                                <input type="number" id="referenceId" class="form-control" min="0" placeholder="ID relacionado (opcional)">
+                                <input type="text" id="referenceLink" class="form-control" placeholder="URL o ruta (opcional)">
+                                <button type="button" id="addReferenceBtn">Agregar</button>
+                            </div>
+                            <div id="referencesList" class="references-list empty">Sin referencias vinculadas.</div>
+                        </div>
+                        <input type="hidden" id="references_payload" name="references_payload" value="[]">
+                        <small class="text-muted-sm">Asocia documentos de calidad, capacitaciones o acciones correctivas relacionadas con la calibración.</small>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Guardar resultado</button>
+                    <button type="button" class="btn btn-cancel" onclick="window.location.href = BASE_URL + '/apps/internal/calibraciones/list_calibrations.html'">Cancelar</button>
+                </div>
+                <div class="msg" id="msg"></div>
+            </form>
+        </div>
+    </div>
+    <script>
+    const form = document.getElementById('calibrationForm');
+    const msgBox = document.getElementById('msg');
+    const referenceTypeLabels = {
+        documento_calidad: 'Documento de calidad',
+        capacitacion: 'Capacitación',
+        accion_correctiva: 'Acción correctiva'
+    };
+    const referencesInput = document.getElementById('references_payload');
+    const referencesList = document.getElementById('referencesList');
+    const referenceType = document.getElementById('referenceType');
+    const referenceLabel = document.getElementById('referenceLabel');
+    const referenceId = document.getElementById('referenceId');
+    const referenceLink = document.getElementById('referenceLink');
+    const addReferenceBtn = document.getElementById('addReferenceBtn');
+    const referencesData = [];
+    const instrumentSelect = document.getElementById('instrument');
+    const technicianSelect = document.getElementById('tecnico_id');
+    const technicianWarning = document.getElementById('technicianWarning');
+    const instrumentCatalogMap = new Map();
+    const technicianOptionsCache = new Map();
+
+    function escapeHtml(value) {
+        if (value === null || value === undefined) {
+            return '';
+        }
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function syncReferencesField() {
+        if (referencesInput) {
+            referencesInput.value = JSON.stringify(referencesData);
+        }
+        if (!referencesList) {
+            return;
+        }
+        if (!referencesData.length) {
+            referencesList.classList.add('empty');
+            referencesList.innerHTML = 'Sin referencias vinculadas.';
+            return;
+        }
+        referencesList.classList.remove('empty');
+        referencesList.innerHTML = referencesData.map((ref, index) => {
+            const typeLabel = referenceTypeLabels[ref.type] || ref.type;
+            const labelText = ref.label ? ref.label : typeLabel;
+            const idTag = typeof ref.reference_id === 'number' ? `<span class="reference-meta">#${escapeHtml(ref.reference_id)}</span>` : '';
+            const linkTag = ref.link ? `<a href="${escapeHtml(ref.link)}" target="_blank" rel="noopener noreferrer" class="reference-link">ver</a>` : '';
+            return `<span class="reference-pill" data-index="${index}">` +
+                `<span>${escapeHtml(typeLabel)} · ${escapeHtml(labelText)}</span>` +
+                (idTag ? ` ${idTag}` : '') +
+                (linkTag ? ` ${linkTag}` : '') +
+                `<button type="button" class="reference-remove" data-index="${index}" aria-label="Eliminar referencia">&times;</button>` +
+            `</span>`;
+        }).join('');
+    }
+
+    function clearReferenceInputs() {
+        if (referenceType) referenceType.value = '';
+        if (referenceLabel) referenceLabel.value = '';
+        if (referenceId) referenceId.value = '';
+        if (referenceLink) referenceLink.value = '';
+    }
+
+    function showTechnicianWarning(message) {
+        if (!technicianWarning) {
+            return;
+        }
+        if (!message) {
+            technicianWarning.classList.add('is-hidden');
+            technicianWarning.textContent = '';
+            return;
+        }
+        technicianWarning.classList.remove('is-hidden');
+        technicianWarning.textContent = message;
+    }
+
+    function renderTechnicians(technicians) {
+        if (!technicianSelect) {
+            return;
+        }
+        const selected = technicianSelect.value;
+        technicianSelect.innerHTML = '<option value="">Seleccione técnico</option>';
+        if (!Array.isArray(technicians) || technicians.length === 0) {
+            showTechnicianWarning('No hay técnicos con evidencia vigente para este instrumento.');
+            return;
+        }
+        technicians.forEach((tech) => {
+            if (!tech || typeof tech !== 'object') {
+                return;
+            }
+            const id = Number.parseInt(tech.id, 10);
+            if (Number.isNaN(id)) {
+                return;
+            }
+            const option = document.createElement('option');
+            option.value = String(id);
+            option.textContent = tech.nombre || `Usuario #${id}`;
+            if (tech.vigente_hasta) {
+                option.dataset.vigenteHasta = tech.vigente_hasta;
+            }
+            if (tech.vigencia_activa !== undefined) {
+                option.dataset.vigenciaActiva = tech.vigencia_activa ? '1' : '0';
+            }
+            option.dataset.catalogoId = tech.catalogo_id != null ? String(tech.catalogo_id) : '';
+            technicianSelect.appendChild(option);
+        });
+        if (selected) {
+            technicianSelect.value = selected;
+        }
+        updateTechnicianStatus();
+    }
+
+    function updateTechnicianStatus() {
+        if (!technicianSelect) {
+            return;
+        }
+        const selectedOption = technicianSelect.options[technicianSelect.selectedIndex];
+        if (!selectedOption || !selectedOption.value) {
+            showTechnicianWarning('Selecciona un técnico con evidencia vigente para continuar.');
+            return;
+        }
+        const vigenteHasta = selectedOption.dataset.vigenteHasta || '';
+        const esVigente = selectedOption.dataset.vigenciaActiva !== '0';
+        if (!esVigente) {
+            showTechnicianWarning(`La evidencia del técnico expiró el ${vigenteHasta}. Elige otro perfil o actualiza la competencia.`);
+        } else if (vigenteHasta) {
+            showTechnicianWarning(`Evidencia vigente hasta ${vigenteHasta}.`);
+        } else {
+            showTechnicianWarning('Evidencia sin fecha de vencimiento.');
+        }
+    }
+
+    async function loadTechniciansForInstrument(catalogoId) {
+        showTechnicianWarning('Validando competencias del equipo seleccionado...');
+        let url = `${BASE_URL}/backend/calibraciones/list_technicians.php`;
+        if (catalogoId) {
+            url += `?catalogo_id=${encodeURIComponent(catalogoId)}`;
+        }
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('No fue posible obtener los técnicos disponibles.');
+            }
+            const data = await response.json();
+            const list = Array.isArray(data?.technicians) ? data.technicians : [];
+            if (catalogoId) {
+                technicianOptionsCache.set(String(catalogoId), list);
+            } else {
+                technicianOptionsCache.set('general', list);
+            }
+            renderTechnicians(list);
+        } catch (error) {
+            console.error(error);
+            renderTechnicians([]);
+            showTechnicianWarning(error.message || 'No fue posible cargar a los técnicos.');
+        }
+    }
+
+    function addReference() {
+        if (!referenceType || !addReferenceBtn) {
+            return;
+        }
+        const type = referenceType.value;
+        if (!type) {
+            if (msgBox) {
+                msgBox.textContent = 'Selecciona el tipo de referencia a vincular.';
+            }
+            return;
+        }
+        const label = referenceLabel ? referenceLabel.value.trim() : '';
+        const link = referenceLink ? referenceLink.value.trim() : '';
+        const idRaw = referenceId ? referenceId.value.trim() : '';
+        let numericId = null;
+        if (idRaw !== '') {
+            const parsed = Number(idRaw);
+            if (!Number.isInteger(parsed) || parsed < 0) {
+                if (msgBox) {
+                    msgBox.textContent = 'El identificador relacionado debe ser un número entero positivo.';
+                }
+                return;
+            }
+            numericId = parsed;
+        }
+
+        referencesData.push({
+            type,
+            label: label !== '' ? label : null,
+            link: link !== '' ? link : null,
+            reference_id: numericId
+        });
+        if (msgBox) {
+            msgBox.textContent = '';
+        }
+        clearReferenceInputs();
+        syncReferencesField();
+    }
+
+    if (addReferenceBtn) {
+        addReferenceBtn.addEventListener('click', addReference);
+    }
+
+    if (referencesList) {
+        referencesList.addEventListener('click', (event) => {
+            const trigger = event.target.closest('.reference-remove');
+            if (!trigger) {
+                return;
+            }
+            const index = Number(trigger.getAttribute('data-index'));
+            if (!Number.isNaN(index)) {
+                referencesData.splice(index, 1);
+                syncReferencesField();
+            }
+        });
+    }
+
+    syncReferencesField();
+    if (patternSelect) {
+        patternSelect.addEventListener('change', updatePatternDetails);
+    }
+
+    if (typeSelect) {
+        typeSelect.addEventListener('change', () => {
+            togglePatternRequirement();
+            updatePatternDetails();
+        });
+    }
+
+    togglePatternRequirement();
+    loadPatterns();
+    updatePatternDetails();
+
+    if (instrumentSelect) {
+        instrumentSelect.addEventListener('change', () => {
+            const selectedId = instrumentSelect.value;
+            const catalogoId = selectedId ? instrumentCatalogMap.get(selectedId) : null;
+            if (catalogoId && technicianOptionsCache.has(String(catalogoId))) {
+                renderTechnicians(technicianOptionsCache.get(String(catalogoId)) || []);
+            } else if (!catalogoId && technicianOptionsCache.has('general')) {
+                renderTechnicians(technicianOptionsCache.get('general') || []);
+            } else {
+                loadTechniciansForInstrument(catalogoId);
+            }
+        });
+    }
+
+    if (technicianSelect) {
+        technicianSelect.addEventListener('change', updateTechnicianStatus);
+    }
+
+    if (instrumentSelect) {
+        instrumentSelect.addEventListener('change', () => {
+            const selectedId = instrumentSelect.value;
+            const catalogoId = selectedId ? instrumentCatalogMap.get(selectedId) : null;
+            if (catalogoId && technicianOptionsCache.has(String(catalogoId))) {
+                renderTechnicians(technicianOptionsCache.get(String(catalogoId)) || []);
+            } else if (!catalogoId && technicianOptionsCache.has('general')) {
+                renderTechnicians(technicianOptionsCache.get('general') || []);
+            } else {
+                loadTechniciansForInstrument(catalogoId);
+            }
+        });
+    }
+
+    if (technicianSelect) {
+        technicianSelect.addEventListener('change', updateTechnicianStatus);
+    }
+
+    if (instrumentSelect) {
+        instrumentSelect.addEventListener('change', () => {
+            const selectedId = instrumentSelect.value;
+            const catalogoId = selectedId ? instrumentCatalogMap.get(selectedId) : null;
+            if (catalogoId && technicianOptionsCache.has(String(catalogoId))) {
+                renderTechnicians(technicianOptionsCache.get(String(catalogoId)) || []);
+            } else if (!catalogoId && technicianOptionsCache.has('general')) {
+                renderTechnicians(technicianOptionsCache.get('general') || []);
+            } else {
+                loadTechniciansForInstrument(catalogoId);
+            }
+        });
+    }
+
+    if (technicianSelect) {
+        technicianSelect.addEventListener('change', updateTechnicianStatus);
+    }
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            syncReferencesField();
+            if (technicianSelect) {
+                const selectedOption = technicianSelect.options[technicianSelect.selectedIndex];
+                if (!selectedOption || !selectedOption.value) {
+                    if (msgBox) {
+                        msgBox.textContent = 'Selecciona un técnico con evidencia vigente.';
+                    }
+                    showTechnicianWarning('Selecciona un técnico con evidencia vigente.');
+                    return;
+                }
+                if (selectedOption.dataset.vigenciaActiva === '0') {
+                    if (msgBox) {
+                        msgBox.textContent = 'La evidencia del técnico está vencida. Asigna a otra persona o actualiza la competencia antes de continuar.';
+                    }
+                    showTechnicianWarning('La evidencia del técnico está vencida. No es posible registrar la calibración.');
+                    return;
+                }
+            }
+            const datos = new FormData(this);
+
+            fetch(BASE_URL + '/backend/calibraciones/add_calibration.php', {
+                method: 'POST',
+                body: datos
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = BASE_URL + "/apps/internal/calibraciones/list_calibrations.html";
+                } else if (msgBox) {
+                    msgBox.textContent = data.message || "Error al guardar la calibración.";
+                }
+            })
+            .catch(() => {
+                if (msgBox) {
+                    msgBox.textContent = "Error del servidor. Intenta nuevamente.";
+                }
+            });
+        });
+    }
+    // Cargar instrumentos programados
+    fetch(BASE_URL + '/backend/calibraciones/list_calibrations.php')
+        .then(r => r.json())
+        .then(data => {
+            if (!instrumentSelect) return;
+            instrumentCatalogMap.clear();
+            instrumentSelect.innerHTML = '<option value="">Seleccione...</option>';
+            data.forEach((item) => {
+                if (!item || !item.instrumento_id) {
+                    return;
+                }
+                const option = document.createElement('option');
+                option.value = String(item.instrumento_id);
+                option.textContent = item.instrumento || `Instrumento #${item.instrumento_id}`;
+                instrumentSelect.appendChild(option);
+                const catalogoId = item.catalogo_id != null ? String(item.catalogo_id) : null;
+                instrumentCatalogMap.set(option.value, catalogoId);
+            });
+            instrumentSelect.dispatchEvent(new Event('change'));
+        })
+        .catch(() => {
+            if (technicianWarning) {
+                technicianWarning.classList.remove('is-hidden');
+                technicianWarning.textContent = 'No se pudieron cargar los instrumentos programados.';
+            }
+        });
+    </script>
+    <script src="assets/scripts/base-url.js"></script>
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function() {
+    fetch(BASE_URL + '/apps/internal/sidebar.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('sidebar').innerHTML = html;
+        if (typeof initSidebar === 'function') initSidebar();
+        if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+            if (typeof window.applyApiTokenVisibility === 'function') window.applyApiTokenVisibility();
+            if (typeof window.activateApiTokensIfAvailable === 'function') window.activateApiTokensIfAvailable();
+      });
+  });
+  // Usuario dinámico simple
+  (function(){
+    const el = document.getElementById('userName');
+    if(!el) return;
+    fetch(BASE_URL + '/backend/usuarios/get_actual_user.php')
+      .then(r=>r.json())
+      .then(u=>{ el.innerHTML = `${u?.nombre||'Invitado'} <span style=\"color:#447a8b;\">(${u?.role_id||'Sin rol'})</span>`; });
+  })();
+</script>
+</body>
+</html>

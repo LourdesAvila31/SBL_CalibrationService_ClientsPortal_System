@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <title>Alertas de Calibración | Panel interno</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            color: #1f2933;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img { width: 140px; margin-bottom: 22px; }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-nav .nav-link {
+            width: 92%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0 8px 0;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 1.02rem;
+            font-weight: 600;
+            border-radius: 10px;
+            margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s;
+            position: relative;
+        }
+        .sidebar-nav .nav-link.active,
+        .sidebar-nav .nav-link:hover {
+            background: #0c8c98;
+            color: #fff;
+        }
+        .sidebar-nav .nav-link i { font-size: 1.85rem; margin-bottom: 8px; }
+        .sidebar-nav .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 4px;
+            height: 32px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .main-content {
+            margin-left: 200px;
+            min-height: 100vh;
+            width: calc(100% - 200px);
+            padding: 0;
+        }
+        .topbar {
+            background: #fff;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px 0 28px;
+            box-shadow: 0 1px 8px #0001;
+        }
+        .topbar-left { display:flex; align-items:center; gap:20px; }
+        .topbar-title { font-size: 1.4rem; font-weight: 700; color:#217b9b; }
+        .topbar-user-box { display:flex; align-items:center; gap:10px; color:#217b9b; }
+        .filters-bar {
+            background:#e9eff1;
+            padding:18px 28px;
+            display:flex;
+            flex-wrap:wrap;
+            gap:14px;
+            align-items:center;
+        }
+        .filters-bar label { font-size:0.95rem; font-weight:600; color:#244c5a; }
+        .filters-bar select,
+        .filters-bar button {
+            font-size:0.95rem;
+            padding:6px 12px;
+            border-radius:8px;
+            border:1px solid #cfd8dc;
+        }
+        .filters-bar button {
+            background:#217b9b;
+            color:#fff;
+            border:none;
+            cursor:pointer;
+        }
+        .filters-bar button:hover { background:#0c617a; }
+        .summary-cards {
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+            gap:16px;
+            padding:22px 28px 10px 28px;
+        }
+        .summary-card {
+            background:#fff;
+            border-radius:12px;
+            padding:18px;
+            box-shadow:0 2px 10px rgba(15,23,42,0.08);
+        }
+        .summary-card h3 { margin:0; font-size:0.95rem; font-weight:600; color:#475569; text-transform:uppercase; }
+        .summary-card span { font-size:1.6rem; font-weight:700; color:#0f172a; }
+        .alerts-table {
+            margin:8px 28px 34px 28px;
+            background:#fff;
+            border-radius:12px;
+            box-shadow:0 3px 12px rgba(15,23,42,0.08);
+            overflow-x:auto;
+        }
+        table { width:100%; border-collapse:collapse; font-size:0.95rem; }
+        th { background:#f1f5f9; padding:14px; text-transform:uppercase; font-size:0.75rem; color:#475569; letter-spacing:0.6px; }
+        td { padding:14px; border-top:1px solid #e2e8f0; vertical-align:top; }
+        tr:hover { background:#f8fafc; }
+        .instrument-name { font-weight:600; color:#1e3a8a; margin-bottom:4px; }
+        .instrument-meta { font-size:0.82rem; color:#64748b; }
+        .alert-type, .status-badge { display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:4px 10px; font-size:0.78rem; font-weight:600; color:#fff; }
+        .alert-type.upcoming { background:#0d6efd; }
+        .alert-type.overdue { background:#dc3545; }
+        .status-badge.pendiente { background:#ffc107; color:#1f2937; }
+        .status-badge.reconocida { background:#0d6efd; }
+        .status-badge.cerrada { background:#198754; }
+        .actions-cell button { border:none; border-radius:6px; padding:6px 12px; font-size:0.85rem; font-weight:600; cursor:pointer; margin-right:6px; display:inline-flex; align-items:center; gap:6px; color:#fff; }
+        .btn-ack { background:#2563eb; }
+        .btn-close { background:#0f766e; }
+        .btn-reopen { background:#f97316; }
+        .btn-disabled { background:#94a3b8 !important; cursor:not-allowed; }
+        .message-area { margin:0 28px 16px 28px; padding:12px 18px; border-radius:10px; display:none; font-size:0.95rem; }
+        .message-area.success { background:#dcfce7; color:#166534; border:1px solid #86efac; }
+        .message-area.error { background:#fee2e2; color:#991b1b; border:1px solid #fecaca; }
+        .empty-row td { text-align:center; padding:32px; color:#64748b; font-size:1rem; }
+        @media(max-width:992px) {
+            .sidebar { display:none; }
+            .main-content { margin-left:0; width:100%; }
+            .topbar { padding:0 18px; }
+            .filters-bar { padding:16px; }
+            .summary-cards { padding:18px 16px 6px 16px; }
+            .alerts-table { margin:8px 16px 26px 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+<!-- SIDEBAR CONTENT -->
+<style>
+    .sidebar-nav {
+        gap: 12px;
+    }
+
+    .sidebar-nav .nav-link {
+        width: 90%;
+        padding: 16px 0 10px 0;
+        font-size: 1.02rem;
+        letter-spacing: 0.5px;
+    }
+
+    .sidebar-nav .nav-link i {
+        font-size: 1.7rem;
+        margin-bottom: 6px;
+    }
+
+    @media (max-width: 900px) {
+        .sidebar-nav .nav-link {
+            width: 92%;
+        }
+    }
+</style>
+<button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+<div class="sidebar-logo">
+    <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+</div>
+<nav class="sidebar-nav">
+    <a class="nav-link" href="apps/internal/index.html" data-section="menu">
+        <i class="fa fa-tachometer-alt"></i>
+        <span>MENÚ</span>
+    </a>
+    <a class="nav-link" href="apps/internal/instrumentos/list_gages.html" data-section="instrumentos">
+        <i class="fa fa-boxes-stacked"></i>
+        <span>INSTRUMENTOS</span>
+    </a>
+    <a class="nav-link" href="apps/internal/planeacion/list_planning.html" data-section="planeacion">
+        <i class="fa fa-calendar-alt"></i>
+        <span>PLANEACIÓN</span>
+    </a>
+    <a class="nav-link" href="apps/internal/calibraciones/list_calibrations.html" data-section="calibraciones">
+        <i class="fa fa-balance-scale"></i>
+        <span>CALIBRACIONES</span>
+    </a>
+    <a class="nav-link active" href="apps/internal/calibraciones/alert_notifications.html" data-section="alertas">
+        <i class="fa fa-bell"></i>
+        <span>ALERTAS</span>
+    </a>
+    <a class="nav-link" href="index.php?app=service" data-section="clientes-servicio" data-service-clientes="true">
+        <i class="fa fa-handshake-angle"></i>
+        <span>SERVICIO CLIENTES</span>
+    </a>
+    <a class="nav-link" href="apps/internal/reportes/reports.html" data-section="reportes">
+        <i class="fa fa-file-alt"></i>
+        <span>REPORTES</span>
+    </a>
+    <a class="nav-link" href="apps/internal/configuracion/api_tokens.html" data-section="configuracion" data-requires-api-tokens="manage">
+        <i class="fa fa-key"></i>
+        <span>TOKENS API</span>
+    </a>
+    <a class="nav-link" href="apps/internal/ayuda/help_center.html" data-section="ayuda">
+        <i class="fa fa-circle-question"></i>
+        <span>AYUDA</span>
+    </a>
+    <a class="nav-link" href="apps/internal/calidad/index.html" data-section="calidad">
+        <i class="fa fa-award"></i>
+        <span>CALIDAD</span>
+    </a>
+</nav>
+</div>
+<div class="main-content">
+    <div class="topbar">
+        <div class="topbar-left">
+            <span class="topbar-title">Alertas de Calibración</span>
+        </div>
+        <div class="topbar-user-box">
+            <i class="fa fa-user-circle"></i>
+            <span id="userName">Usuario</span>
+        </div>
+    </div>
+
+    <div class="filters-bar">
+        <label for="filterAlertType">Tipo de alerta</label>
+        <select id="filterAlertType">
+            <option value="all">Todas</option>
+            <option value="upcoming">Próximas</option>
+            <option value="overdue">Vencidas</option>
+        </select>
+        <label for="filterAttentionStatus">Estado de atención</label>
+        <select id="filterAttentionStatus">
+            <option value="all">Todos</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="reconocida">Reconocida</option>
+            <option value="cerrada">Cerrada</option>
+        </select>
+        <button id="refreshAlerts"><i class="fa fa-rotate"></i> Actualizar</button>
+        <button id="resetFilters" style="color:#217b9b;border:1px solid #217b9b;background:#fff;">Restablecer</button>
+    </div>
+
+    <div class="summary-cards">
+        <div class="summary-card"><h3>Total de alertas</h3><span id="summaryTotal">0</span></div>
+        <div class="summary-card"><h3>Pendientes</h3><span id="summaryPending">0</span></div>
+        <div class="summary-card"><h3>Reconocidas</h3><span id="summaryAck">0</span></div>
+        <div class="summary-card"><h3>Cerradas</h3><span id="summaryClosed">0</span></div>
+        <div class="summary-card"><h3>Vencidas</h3><span id="summaryOverdue">0</span></div>
+    </div>
+
+    <div id="alertsMessage" class="message-area"></div>
+
+    <div class="alerts-table">
+        <table>
+            <thead>
+            <tr>
+                <th>Instrumento</th>
+                <th>Empresa</th>
+                <th>Fecha límite</th>
+                <th>Días</th>
+                <th>Tipo</th>
+                <th>Atención</th>
+                <th>Responsable</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="alertsTableBody">
+            <tr class="empty-row"><td colspan="8">Cargando alertas...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+(function(){
+    const basePath = (window.BASE_URL || '').replace(/\/$/, '');
+    const apiBase = basePath + '/backend/calibraciones';
+    const tableBody = document.getElementById('alertsTableBody');
+    const filterType = document.getElementById('filterAlertType');
+    const filterStatus = document.getElementById('filterAttentionStatus');
+    const messageArea = document.getElementById('alertsMessage');
+    const summaryTotal = document.getElementById('summaryTotal');
+    const summaryPending = document.getElementById('summaryPending');
+    const summaryAck = document.getElementById('summaryAck');
+    const summaryClosed = document.getElementById('summaryClosed');
+    const summaryOverdue = document.getElementById('summaryOverdue');
+    const refreshButton = document.getElementById('refreshAlerts');
+    const resetButton = document.getElementById('resetFilters');
+
+    const typeLabels = {
+        upcoming: { text: 'Próxima', className: 'upcoming', icon: 'fa-clock' },
+        overdue: { text: 'Vencida', className: 'overdue', icon: 'fa-triangle-exclamation' }
+    };
+    const statusLabels = {
+        pendiente: { text: 'Pendiente', className: 'pendiente', icon: 'fa-hourglass-half' },
+        reconocida: { text: 'Reconocida', className: 'reconocida', icon: 'fa-eye' },
+        cerrada: { text: 'Cerrada', className: 'cerrada', icon: 'fa-circle-check' }
+    };
+
+    function escapeHtml(value){
+        if(value === null || value === undefined){ return ''; }
+        return String(value).replace(/[&<>"']/g, function(match){
+            switch(match){
+                case '&': return '&amp;';
+                case '<': return '&lt;';
+                case '>': return '&gt;';
+                case '"': return '&quot;';
+                case '\'': return '&#39;';
+                default: return match;
+            }
+        });
+    }
+
+    function setMessage(text, type){
+        if(!messageArea){return;}
+        if(!text){
+            messageArea.style.display='none';
+            messageArea.textContent='';
+            messageArea.classList.remove('success','error');
+            return;
+        }
+        messageArea.textContent=text;
+        messageArea.classList.remove('success','error');
+        messageArea.classList.add(type==='error'?'error':'success');
+        messageArea.style.display='block';
+    }
+
+    function resetSummary(){
+        if(summaryTotal) summaryTotal.textContent='0';
+        if(summaryPending) summaryPending.textContent='0';
+        if(summaryAck) summaryAck.textContent='0';
+        if(summaryClosed) summaryClosed.textContent='0';
+        if(summaryOverdue) summaryOverdue.textContent='0';
+    }
+
+    function renderTable(data){
+        if(!Array.isArray(data) || data.length===0){
+            tableBody.innerHTML='<tr class="empty-row"><td colspan="8">No se encontraron alertas con los filtros seleccionados.</td></tr>';
+            return;
+        }
+
+        const rows = data.map((alert, index)=>{
+            const typeInfo = typeLabels[String(alert.alert_type||'upcoming').toLowerCase()] || typeLabels.upcoming;
+            const statusInfo = statusLabels[String(alert.attention_status||'pendiente').toLowerCase()] || statusLabels.pendiente;
+            const dueDate = alert.due_date ? new Date(alert.due_date).toLocaleDateString('es-MX') : 'Sin fecha';
+            const dias = typeof alert.dias_restantes === 'number' ? alert.dias_restantes : '';
+            const instrumentoDetalle = [
+
+                alert.instrumento_codigo ? 'Código: ' + escapeHtml(alert.instrumento_codigo) : null,
+                alert.instrumento_serie ? 'Serie: ' + escapeHtml(alert.instrumento_serie) : null
+            ].filter(Boolean).join(' · ');
+            const responsable = alert.attention_user_nombre
+                ? `${escapeHtml(alert.attention_user_nombre)}${alert.attention_user_correo ? ' (' + escapeHtml(alert.attention_user_correo) + ')' : ''}`
+                : '—';
+            const rawNote = alert.attention_notes;
+            const hasNote = rawNote !== null && rawNote !== undefined && rawNote !== '';
+            const attentionNotes = hasNote ? `<div class="instrument-meta attention-notes" data-row-index="${index}" style="margin-top:6px;"></div>` : '';
+            const recognizeDisabled = statusInfo.className === 'reconocida' || statusInfo.className === 'cerrada';
+            const closeDisabled = statusInfo.className === 'cerrada';
+            const reopenDisabled = statusInfo.className === 'pendiente';
+            return {
+                html: `
+                <tr data-id="${alert.id}">
+                    <td><div class="instrument-name">${escapeHtml(alert.instrumento_nombre || ('Instrumento #' + alert.instrumento_id))}</div><div class="instrument-meta">${instrumentoDetalle || 'Sin detalles adicionales'}</div></td>
+                    <td>${escapeHtml(alert.empresa_nombre || '')}</td>
+                    <td>${dueDate}</td>
+                    <td>${dias !== '' ? dias : '—'}</td>
+                    <td><span class="alert-type ${typeInfo.className}"><i class="fa ${typeInfo.icon}"></i> ${typeInfo.text}</span></td>
+                    <td><span class="status-badge ${statusInfo.className}"><i class="fa ${statusInfo.icon}"></i> ${statusInfo.text}</span>${attentionNotes}</td>
+                    <td>${responsable}</td>
+                    <td class="actions-cell">
+                        <button class="btn-ack ${recognizeDisabled?'btn-disabled':''}" data-action="acknowledge" ${recognizeDisabled?'disabled':''}><i class="fa fa-eye"></i> Reconocer</button>
+                        <button class="btn-close ${closeDisabled?'btn-disabled':''}" data-action="close" ${closeDisabled?'disabled':''}><i class="fa fa-circle-check"></i> Cerrar</button>
+                        <button class="btn-reopen ${reopenDisabled?'btn-disabled':''}" data-action="reopen" ${reopenDisabled?'disabled':''}><i class="fa fa-rotate-left"></i> Reabrir</button>
+                    </td>
+
+                </tr>`,
+                note: hasNote ? String(rawNote) : ''
+            };
+        });
+        tableBody.innerHTML = rows.map((row) => row.html).join('');
+        rows.forEach((row, index) => {
+            if(!row.note){ return; }
+            const noteNode = tableBody.querySelector(`.attention-notes[data-row-index="${index}"]`);
+            if(noteNode){
+                noteNode.textContent = `Nota: ${row.note}`;
+            }
+        });
+    }
+
+    function updateSummary(summary){
+        resetSummary();
+        if(!summary || typeof summary !== 'object'){ return; }
+        if(summaryTotal) summaryTotal.textContent = String(summary.total ?? 0);
+        if(summaryPending) summaryPending.textContent = String(summary.by_status?.pendiente ?? 0);
+        if(summaryAck) summaryAck.textContent = String(summary.by_status?.reconocida ?? 0);
+        if(summaryClosed) summaryClosed.textContent = String(summary.by_status?.cerrada ?? 0);
+        if(summaryOverdue) summaryOverdue.textContent = String(summary.by_type?.overdue ?? 0);
+    }
+
+    async function loadAlerts(){
+        setMessage('', 'success');
+        resetSummary();
+        tableBody.innerHTML='<tr class="empty-row"><td colspan="8">Cargando alertas...</td></tr>';
+        const params = new URLSearchParams();
+        if(filterType && filterType.value !== 'all'){ params.append('alert_type', filterType.value); }
+        if(filterStatus && filterStatus.value !== 'all'){ params.append('attention_status', filterStatus.value); }
+        try {
+            const response = await fetch(`${apiBase}/get_alert_notifications.php?${params.toString()}`);
+            if(!response.ok){ throw new Error('No se pudo obtener la información de alertas.'); }
+            const data = await response.json();
+            renderTable(data.data || []);
+            updateSummary(data.summary || {});
+        } catch (error) {
+            tableBody.innerHTML='<tr class="empty-row"><td colspan="8">Error al cargar las alertas.</td></tr>';
+            setMessage(error.message || 'Ocurrió un error inesperado.', 'error');
+        }
+    }
+
+    async function handleAction(id, action, button){
+        if(!id || !action){ return; }
+        let notesValue;
+        if(action === 'close'){
+            notesValue = window.prompt('Escribe una nota (opcional) para cerrar la alerta:', '');
+            if(notesValue === null){ return; }
+        }
+        if(action === 'reopen' && !window.confirm('¿Deseas reabrir esta alerta?')){ return; }
+        if(action === 'acknowledge' && !window.confirm('¿Marcar la alerta como reconocida?')){ return; }
+
+        if(button){ button.disabled = true; button.classList.add('btn-disabled'); }
+
+        try {
+            const payload = { id: id, action: action };
+            if(typeof notesValue === 'string'){ payload.notes = notesValue; }
+            const response = await fetch(`${apiBase}/update_alert_notification.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            if(!response.ok || !result.success){
+                throw new Error(result.error || 'No se pudo actualizar la alerta.');
+            }
+            setMessage('La alerta se actualizó correctamente.', 'success');
+            await loadAlerts();
+        } catch(error) {
+            setMessage(error.message || 'No se pudo procesar la acción solicitada.', 'error');
+        } finally {
+            if(button){ button.disabled = false; button.classList.remove('btn-disabled'); }
+        }
+    }
+
+    if(refreshButton){ refreshButton.addEventListener('click', () => loadAlerts()); }
+    if(resetButton){ resetButton.addEventListener('click', () => { if(filterType) filterType.value='all'; if(filterStatus) filterStatus.value='all'; loadAlerts(); }); }
+    if(tableBody){
+        tableBody.addEventListener('click', (event)=>{
+            const target = event.target.closest('button[data-action]');
+            if(!target){ return; }
+            const row = target.closest('tr');
+            const id = row ? parseInt(row.getAttribute('data-id'), 10) : 0;
+            const action = target.getAttribute('data-action');
+            if(id>0 && action){ handleAction(id, action, target); }
+        });
+    }
+
+    loadAlerts();
+})();
+</script>
+<script type="module" src="assets/scripts/scripts-internal.js"></script>
+<script src="assets/scripts/topbar.js"></script>
+<script>
+(function(){
+    function cargarUsuarioActual(){
+        fetch(BASE_URL + '/backend/usuarios/get_actual_user.php')
+          .then(r=>r.json())
+          .then(u=>{
+            const nombre=u?.nombre||'Invitado';
+            const role_id=u?.role_id||'Sin rol';
+            const userName=document.getElementById('userName');
+            if(userName){
+              userName.innerHTML = `${nombre} <span class="text-accent">(${role_id})</span>`;
+            }
+          });
+    }
+    if(document.getElementById('userName')){ cargarUsuarioActual(); }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <title>Mensajería con soporte</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .messaging-wrapper {
+            display: flex;
+            gap: 20px;
+            padding: 24px 32px 32px 32px;
+        }
+        .conversations-panel {
+            width: 320px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 22px rgba(13, 87, 90, 0.12);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .conversations-header {
+            padding: 20px 24px 12px 24px;
+            border-bottom: 1px solid rgba(13, 87, 90, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .conversations-header h2 {
+            font-size: 1.1rem;
+            color: #0d575a;
+            margin: 0;
+        }
+        .conversation-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .conversation-item {
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(13, 87, 90, 0.05);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .conversation-item:hover {
+            background: rgba(12, 140, 152, 0.08);
+        }
+        .conversation-item.active {
+            background: rgba(12, 140, 152, 0.18);
+        }
+        .conversation-item h3 {
+            font-size: 1rem;
+            margin: 0 0 4px 0;
+            color: #0d575a;
+            font-weight: 600;
+        }
+        .conversation-item .conversation-meta {
+            font-size: 0.8rem;
+            color: #5f7a82;
+            margin-bottom: 6px;
+        }
+        .conversation-item .conversation-preview {
+            font-size: 0.85rem;
+            color: #49636a;
+            margin: 0;
+            line-height: 1.35;
+        }
+        .conversation-item .badge-unread {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #ff4d4f;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 999px;
+            padding: 0 6px;
+            margin-left: 8px;
+        }
+        .conversation-detail {
+            flex: 1;
+            min-height: 620px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 12px 28px rgba(13, 87, 90, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .conversation-header {
+            padding: 22px 28px 14px 28px;
+            border-bottom: 1px solid rgba(13, 87, 90, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        .conversation-header h1 {
+            font-size: 1.25rem;
+            margin: 0;
+            color: #0d575a;
+        }
+        .conversation-header .conversation-info {
+            font-size: 0.85rem;
+            color: #5f7a82;
+        }
+        .messages-panel {
+            flex: 1;
+            padding: 24px 28px 18px 28px;
+            overflow-y: auto;
+            background: linear-gradient(180deg, rgba(244,246,248,0.6) 0%, rgba(255,255,255,0.9) 40%);
+        }
+        .message-bubble {
+            max-width: 72%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            margin-bottom: 18px;
+            position: relative;
+            background: #e2f4f6;
+            color: #0d575a;
+        }
+        .message-bubble.support {
+            background: #0d575a;
+            color: #fff;
+            margin-left: auto;
+        }
+        .message-bubble .message-author {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .message-bubble .message-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .message-bubble .message-footer {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            opacity: 0.85;
+        }
+        .message-bubble .attachments {
+            margin-top: 10px;
+        }
+        .message-bubble .attachments a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.2);
+            color: inherit;
+            text-decoration: none;
+            margin-right: 8px;
+        }
+        .message-bubble:not(.support) .attachments a {
+            background: rgba(13,87,90,0.12);
+            color: #0d575a;
+        }
+        .empty-state {
+            text-align: center;
+            color: #5f7a82;
+            margin-top: 60px;
+            font-size: 0.95rem;
+        }
+        .message-form,
+        .conversation-form {
+            border-top: 1px solid rgba(13, 87, 90, 0.08);
+            padding: 18px 28px 24px 28px;
+            background: #f8fbfb;
+        }
+        .message-form textarea,
+        .conversation-form textarea {
+            width: 100%;
+            resize: vertical;
+            border-radius: 10px;
+            border: 1px solid rgba(13, 87, 90, 0.2);
+            padding: 12px 14px;
+            font-size: 0.95rem;
+        }
+        .message-form textarea:focus,
+        .conversation-form textarea:focus,
+        .conversation-form input:focus {
+            outline: none;
+            border-color: #0c8c98;
+            box-shadow: 0 0 0 2px rgba(12,140,152,0.15);
+        }
+        .conversation-form input[type="text"] {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid rgba(13, 87, 90, 0.2);
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .form-actions .btn-primary {
+            background: #0d575a;
+            border-color: #0d575a;
+        }
+        .attachments-summary {
+            font-size: 0.8rem;
+            color: #5f7a82;
+        }
+        .is-hidden { display: none !important; }
+        @media (max-width: 1200px) {
+            .messaging-wrapper {
+                flex-direction: column;
+                padding: 18px;
+            }
+            .conversations-panel {
+                width: 100%;
+                max-height: 320px;
+            }
+            .conversation-detail {
+                width: 100%;
+            }
+        }
+        @media (max-width: 768px) {
+            .message-bubble {
+                max-width: 100%;
+            }
+            .conversation-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar" class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link" href="apps/tenant/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+            <i class="fa fa-user-shield"></i>
+            <span>ROLES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+            <i class="fa fa-circle-question"></i>
+            <span>TUTORIAL</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </div>
+    <div class="main-content">
+        <header class="topbar" data-feedback-url="feedback_externos.html">
+            <div class="topbar-left">
+                <button id="toggleSidebar" class="btn btn-link text-decoration-none text-reset"><i class="fa fa-bars"></i></button>
+                <div class="topbar-title">Mensajería</div>
+            </div>
+            <div class="topbar-icons" data-feedback-url="feedback_externos.html">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <i class="fa fa-comment-dots" id="btnFeedback" data-feedback-url="feedback_externos.html"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span id="userName" class="topbar-user"></span>
+                    <div id="userMenu" class="dropdown-panel is-hidden"></div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel is-hidden"></div>
+            </div>
+        </header>
+        <div class="messaging-wrapper">
+            <aside class="conversations-panel">
+                <div class="conversations-header">
+                    <h2>Tus conversaciones</h2>
+                    <button id="btnNuevaConversacion" class="btn btn-sm btn-outline-primary"><i class="fa fa-plus"></i> Nuevo hilo</button>
+                </div>
+                <div id="conversationList" class="conversation-list">
+                    <div class="empty-state" id="conversationEmpty">Sin conversaciones activas. ¡Inicia una nueva!</div>
+                </div>
+            </aside>
+            <section class="conversation-detail">
+                <div class="conversation-header">
+                    <div>
+                        <h1 id="conversationSubject">Selecciona una conversación</h1>
+                        <div id="conversationMeta" class="conversation-info">Aquí verás los detalles del hilo seleccionado.</div>
+                    </div>
+                    <button id="btnNuevaConversacionHeader" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i> Nuevo hilo</button>
+                </div>
+                <div id="messagesPanel" class="messages-panel">
+                    <div class="empty-state" id="messagesEmpty">Selecciona un hilo para ver los mensajes o crea uno nuevo.</div>
+                </div>
+                <form id="newConversationForm" class="conversation-form is-hidden" enctype="multipart/form-data">
+                    <input type="text" id="nuevoAsunto" name="asunto" placeholder="Asunto del nuevo hilo" required maxlength="180">
+                    <textarea id="nuevoMensaje" name="mensaje" rows="4" placeholder="Describe brevemente tu consulta" required></textarea>
+                    <div class="form-actions mt-3">
+                        <label class="btn btn-light mb-0">
+                            <i class="fa fa-paperclip"></i> Adjuntar
+                            <input type="file" id="nuevoAdjuntos" name="adjuntos[]" class="d-none" multiple>
+                        </label>
+                        <span id="nuevoAdjuntosResumen" class="attachments-summary flex-grow-1"></span>
+                        <button type="submit" class="btn btn-primary">Crear hilo</button>
+                        <button type="button" id="cancelarNuevoHilo" class="btn btn-outline-secondary">Cancelar</button>
+                    </div>
+                    <div id="nuevoEstado" class="attachments-summary mt-2"></div>
+                </form>
+                <form id="messageForm" class="message-form is-hidden" enctype="multipart/form-data">
+                    <textarea id="mensajeTexto" name="mensaje" rows="3" placeholder="Escribe tu respuesta" required></textarea>
+                    <div class="form-actions mt-3">
+                        <label class="btn btn-light mb-0">
+                            <i class="fa fa-paperclip"></i> Adjuntar
+                            <input type="file" id="mensajeAdjuntos" name="adjuntos[]" class="d-none" multiple>
+                        </label>
+                        <span id="mensajeAdjuntosResumen" class="attachments-summary flex-grow-1"></span>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                    <div id="mensajeEstado" class="attachments-summary mt-2"></div>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <script type="module" src="assets/scripts/scripts-tenant.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script src="apps/tenant/mensajeria/scripts.js"></script>
+</body>
+</html>

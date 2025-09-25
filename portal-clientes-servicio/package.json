@@ -1,0 +1,69 @@
+{
+  "name": "sistema-computarizado-iso-17025",
+  "version": "1.0.0",
+  "description": "Sistema computarizado de gestión de calibraciones bajo la norma ISO 17025 con frontend HTML5/Bootstrap y backend PHP.",
+  "main": "public/index.php",
+  "scripts": {
+    "start": "npm run serve",
+    "serve": "php -S localhost:8000 -t public",
+    "dev": "concurrently \"npm run serve\" \"lite-server\"",
+    "test": "node --test --test-concurrency=1 tests/js/*.test.js tests/validation/*.test.js",
+    "test:server": "node tools/scripts/test-server.js",
+    "alerts:scheduler": "php app/Modules/Calibraciones/alert_scheduler.php --daemon",
+    "calibrator:ingest": "node tools/scripts/calibrator_ingest.js"
+  },
+  "keywords": [
+    "calibraciones",
+    "iso 17025",
+    "php",
+    "bootstrap"
+  ],
+  "author": "Lourdes Marién Ávila López",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "serialport": "^12.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "lite-server": "^2.6.1"
+  },
+  "configurations": [
+    {
+      "type": "php",
+      "request": "launch",
+      "name": "Listen for Xdebug",
+      "port": 9003
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run Node.js Tests",
+      "program": "${workspaceFolder}/test/basic_test.js"
+    },
+    {
+      "type": "php",
+      "request": "launch",
+      "name": "Launch Built-in Web Server",
+      "program": "${workspaceFolder}/${input:phpEntryPoint}",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "php",
+      "runtimeArgs": [
+        "-S",
+        "localhost:8000"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "type": "pickString",
+      "id": "phpEntryPoint",
+      "description": "Select the PHP entry point to launch",
+      "options": [
+        "public/index.php",
+        "app/Core/auth.php",
+        "app/Core/db.php"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Imprimir etiqueta | Gestión de Instrumentos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var idx = path.indexOf(marker);
+            var base = idx !== -1 ? path.slice(0, idx + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <style>
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: #f5f7fb;
+            margin: 0;
+            padding: 16px;
+        }
+        .label-wrapper {
+            max-width: 520px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #dde3ed;
+            padding: 28px 32px;
+            box-shadow: 0 12px 32px rgba(15, 34, 58, 0.15);
+        }
+        .label-header {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .label-header h1 {
+            font-size: 1.5rem;
+            color: #114b5f;
+            margin: 0;
+        }
+        .label-info {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        @media (min-width: 576px) {
+            .label-info {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        .info-item {
+            font-size: 0.95rem;
+            color: #1f2937;
+        }
+        .info-item strong {
+            display: block;
+            color: #0f172a;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+        .qr-section {
+            display: flex;
+            justify-content: center;
+            padding: 12px 0 20px;
+        }
+        #qrContainer {
+            width: 180px;
+            height: 180px;
+        }
+        .link-section {
+            display: grid;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+        .link-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            color: #2563eb;
+            word-break: break-word;
+        }
+        .link-row strong {
+            color: #0f172a;
+            font-size: 0.85rem;
+        }
+        .print-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
+        }
+        #labelStatus {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            text-align: center;
+            color: #2563eb;
+        }
+        #labelStatus[data-type="error"] {
+            color: #b91c1c;
+        }
+        #labelStatus.hidden {
+            display: none;
+        }
+        @media print {
+            body {
+                background: #ffffff;
+                padding: 0;
+            }
+            .label-wrapper {
+                box-shadow: none;
+                border: none;
+                margin: 0;
+                width: 100%;
+                max-width: none;
+                padding: 16mm;
+            }
+            .print-actions, #labelStatus {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="label-wrapper">
+        <div class="label-header">
+            <h1 id="labelName">Instrumento</h1>
+            <div class="text-muted" id="labelIdentifier">ID</div>
+        </div>
+        <div class="label-info">
+            <div class="info-item">
+                <strong>Ubicación</strong>
+                <span id="labelLocation">Sin ubicación</span>
+            </div>
+            <div class="info-item">
+                <strong>Departamento</strong>
+                <span id="labelDepartment">Sin departamento</span>
+            </div>
+            <div class="info-item">
+                <strong>Marca</strong>
+                <span id="labelBrand">Sin marca</span>
+            </div>
+            <div class="info-item">
+                <strong>Modelo</strong>
+                <span id="labelModel">Sin modelo</span>
+            </div>
+            <div class="info-item">
+                <strong>Estado</strong>
+                <span id="labelInstrumentStatus">Sin estado</span>
+            </div>
+            <div class="info-item">
+                <strong>Próxima calibración</strong>
+                <span id="labelNextCalibration">-</span>
+            </div>
+            <div class="info-item">
+                <strong>Último certificado</strong>
+                <span id="labelIssuedAt">-</span>
+            </div>
+            <div class="info-item">
+                <strong>Vigencia</strong>
+                <span id="labelExpiresAt">-</span>
+            </div>
+            <div class="info-item">
+                <strong>Vigencia del QR</strong>
+                <span id="labelDetailExpiresAt">-</span>
+            </div>
+        </div>
+        <div class="qr-section">
+            <div id="qrContainer" aria-label="Código QR de la ficha digital"></div>
+        </div>
+        <div class="link-section">
+            <div class="link-row">
+                <strong>Ficha detallada:</strong>
+                <a id="labelDetailLink" href="#" target="_blank" rel="noopener">Cargando...</a>
+            </div>
+            <div class="link-row">
+                <strong>Certificado:</strong>
+                <a id="labelCertificateLink" href="#" target="_blank" rel="noopener">Cargando...</a>
+            </div>
+        </div>
+        <div class="print-actions">
+            <button id="printLabelButton" class="btn btn-primary">Imprimir</button>
+        </div>
+        <div id="labelStatus" class="hidden" data-type="info"></div>
+    </div>
+    <script src="assets/scripts/vendor/qrcode.min.js"></script>
+    <script src="assets/scripts/labels.js"></script>
+</body>
+</html>

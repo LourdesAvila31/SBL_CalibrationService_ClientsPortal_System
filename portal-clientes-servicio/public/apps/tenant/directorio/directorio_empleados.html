@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = (base === '/') ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <meta charset="UTF-8">
+    <title>Directorio SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            color: #0d575a;
+        }
+
+        .directory-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 18px 48px;
+        }
+
+        .directory-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .directory-title {
+            font-size: clamp(1.8rem, 3vw, 2.4rem);
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #0d575a;
+        }
+
+        .directory-subtitle {
+            font-size: clamp(1rem, 1.4vw, 1.2rem);
+            margin-bottom: 18px;
+            color: #217b9b;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #217b9b;
+            margin-bottom: 12px;
+        }
+
+        .back-link:hover {
+            color: #0c8c98;
+        }
+
+        .directory-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .directory-search {
+            width: min(360px, 100%);
+            border-radius: 24px;
+            border: 1px solid #0c8c9822;
+            padding: 10px 16px;
+            font-size: 1rem;
+        }
+
+        .directory-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px #0d575a22;
+        }
+
+        .directory-table thead {
+            background: #0d575a;
+            color: #fff;
+        }
+
+        .directory-table th,
+        .directory-table td {
+            padding: 14px 18px;
+            text-align: left;
+            font-size: clamp(0.9rem, 1vw, 1.02rem);
+        }
+
+        .directory-table tbody tr:nth-child(odd) {
+            background: #f1fbfd;
+        }
+
+        .directory-table tbody tr:hover {
+            background: #e6f7fa;
+        }
+
+        .contact-link {
+            color: #217b9b;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-link:hover {
+            color: #0c8c98;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .directory-table thead {
+                display: none;
+            }
+
+            .directory-table,
+            .directory-table tbody,
+            .directory-table tr,
+            .directory-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .directory-table tr {
+                margin-bottom: 18px;
+                border-radius: 12px;
+                box-shadow: 0 1px 6px #0d575a22;
+            }
+
+            .directory-table td {
+                text-align: right;
+                padding: 12px 16px;
+                position: relative;
+            }
+
+            .directory-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 16px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: #0d575a;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="directory-wrapper">
+        <header class="directory-header">
+            <a class="back-link" href="apps/tenant/index.html"><i class="fa fa-arrow-left"></i> Regresar al portal</a>
+            <h1 class="directory-title">Directorio de colaboradores SBL Pharma</h1>
+            <p class="directory-subtitle">Consulta rápida de contactos clave para seguimiento de calibraciones, logística y atención al cliente.</p>
+            <div class="directory-controls">
+                <input type="search" id="directorySearch" class="directory-search" placeholder="Buscar por nombre, área o correo" aria-label="Buscar colaborador">
+            </div>
+        </header>
+        <section aria-labelledby="tabla-directorio">
+            <div class="table-responsive">
+                <table class="directory-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Área</th>
+                            <th scope="col">Cargo</th>
+                            <th scope="col">Teléfono</th>
+                            <th scope="col">Correo electrónico</th>
+                        </tr>
+                    </thead>
+                    <tbody id="directoryBody">
+                        <tr>
+                            <td data-label="Nombre">María Fernanda López</td>
+                            <td data-label="Área">Calibraciones</td>
+                            <td data-label="Cargo">Coordinadora de proyectos</td>
+                            <td data-label="Teléfono">+52 55 1234 5601</td>
+                            <td data-label="Correo"><a class="contact-link" href="mailto:maria.lopez@sblpharma.com">maria.lopez@sblpharma.com</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="Nombre">Carlos Hernández</td>
+                            <td data-label="Área">Laboratorio</td>
+                            <td data-label="Cargo">Especialista en metrología</td>
+                            <td data-label="Teléfono">+52 55 1234 5624</td>
+                            <td data-label="Correo"><a class="contact-link" href="mailto:carlos.hernandez@sblpharma.com">carlos.hernandez@sblpharma.com</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="Nombre">Adriana Martínez</td>
+                            <td data-label="Área">Atención a clientes</td>
+                            <td data-label="Cargo">Ejecutiva de cuenta</td>
+                            <td data-label="Teléfono">+52 55 1234 5688</td>
+                            <td data-label="Correo"><a class="contact-link" href="mailto:adriana.martinez@sblpharma.com">adriana.martinez@sblpharma.com</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="Nombre">Luis Alberto Gómez</td>
+                            <td data-label="Área">Logística</td>
+                            <td data-label="Cargo">Coordinador de recolecciones</td>
+                            <td data-label="Teléfono">+52 55 1234 5694</td>
+                            <td data-label="Correo"><a class="contact-link" href="mailto:luis.gomez@sblpharma.com">luis.gomez@sblpharma.com</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="Nombre">Paola Sánchez</td>
+                            <td data-label="Área">Calidad</td>
+                            <td data-label="Cargo">Supervisora de aseguramiento</td>
+                            <td data-label="Teléfono">+52 55 1234 5702</td>
+                            <td data-label="Correo"><a class="contact-link" href="mailto:paola.sanchez@sblpharma.com">paola.sanchez@sblpharma.com</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="Nombre">Ricardo Torres</td>
+                            <td data-label="Área">Dirección técnica</td>
+                            <td data-label="Cargo">Director de operaciones</td>
+                            <td data-label="Teléfono">+52 55 1234 5715</td>
+                            <td data-label="Correo"><a class="contact-link" href="mailto:ricardo.torres@sblpharma.com">ricardo.torres@sblpharma.com</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script>
+        const searchInput = document.getElementById('directorySearch');
+        const directoryRows = Array.from(document.querySelectorAll('#directoryBody tr'));
+
+        const normalizar = texto => texto
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+
+        searchInput?.addEventListener('input', event => {
+            const termino = normalizar(event.target.value.trim());
+
+            directoryRows.forEach(row => {
+                const texto = normalizar(row.innerText);
+                row.style.display = texto.includes(termino) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

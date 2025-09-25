@@ -1,0 +1,62 @@
+<!-- SIDEBAR CONTENT -->
+<style>
+    .sidebar-nav {
+        gap: 12px;
+    }
+
+    .sidebar-nav .nav-link {
+        width: 90%;
+        padding: 16px 0 10px 0;
+        font-size: 1.02rem;
+        letter-spacing: 0.5px;
+    }
+
+    .sidebar-nav .nav-link i {
+        font-size: 1.7rem;
+        margin-bottom: 6px;
+    }
+
+    @media (max-width: 900px) {
+        .sidebar-nav .nav-link {
+            width: 92%;
+        }
+    }
+</style>
+<button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+<div class="sidebar-logo">
+    <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+</div>
+<nav class="sidebar-nav">
+    <a class="nav-link" href="apps/internal/index.html" data-section="menu">
+        <i class="fa fa-tachometer-alt"></i>
+        <span>MENÚ</span>
+    </a>
+    <a class="nav-link" href="apps/internal/instrumentos/list_gages.html" data-section="instrumentos">
+        <i class="fa fa-boxes-stacked"></i>
+        <span>INSTRUMENTOS</span>
+    </a>
+    <a class="nav-link" href="apps/internal/planeacion/list_planning.html" data-section="planeacion">
+        <i class="fa fa-calendar-alt"></i>
+        <span>PLANEACIÓN</span>
+    </a>
+    <a class="nav-link" href="apps/internal/calibraciones/list_calibrations.html" data-section="calibraciones">
+        <i class="fa fa-balance-scale"></i>
+        <span>CALIBRACIONES</span>
+    </a>
+    <a class="nav-link" href="apps/internal/reportes/reports.html" data-section="reportes">
+        <i class="fa fa-file-alt"></i>
+        <span>REPORTES</span>
+    </a>
+    <a class="nav-link" href="apps/internal/configuracion/api_tokens.html" data-section="configuracion" data-requires-api-tokens="manage">
+        <i class="fa fa-key"></i>
+        <span>TOKENS API</span>
+    </a>
+    <a class="nav-link" href="apps/internal/ayuda/help_center.html" data-section="ayuda">
+        <i class="fa fa-circle-question"></i>
+        <span>AYUDA</span>
+    </a>
+    <a class="nav-link" href="apps/internal/calidad/index.html" data-section="calidad">
+        <i class="fa fa-award"></i>
+        <span>CALIDAD</span>
+    </a>
+</nav>

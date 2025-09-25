@@ -1,0 +1,429 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <title>Registrar Planeación | SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Bootstrap, FontAwesome, Montserrat -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <style>
+        :root {
+            --sidebar-bg: #0d575a;
+            --sidebar-active: #0c8c98;
+            --sidebar-hover: #17b6c1;
+            --table-header-bg: #0d575a;
+            --table-header-color: #fff;
+            --page-bg: #f4f6f8;
+            --actionbar-bg: #ececec;
+            --actionbar-icon-bg: #176d72;
+        }
+        body {
+            background: var(--page-bg);
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img { width: 140px; margin-bottom: 22px; }
+        .sidebar-nav { width:100%; display:flex; flex-direction:column; align-items:center; gap:8px; }
+        .sidebar-nav .nav-link {
+            width:92%; display:flex; flex-direction:column; align-items:center;
+            padding:20px 0 8px 0; color:#cfd8dc; text-decoration:none;
+            font-size:1.08rem; font-weight:600; letter-spacing:1px;
+            border-radius:10px; margin-bottom:2px; transition:background 0.2s,color 0.2s;
+            position:relative;
+        }
+        .sidebar-nav .nav-link.active,
+        .sidebar-nav .nav-link:hover { background:#0c8c98; color:#fff; }
+        .sidebar-nav .nav-link i { font-size:1.85rem; margin-bottom:8px; }
+        .sidebar-nav .nav-link.active::after {
+            content:""; position:absolute; left:0; top:16px; width:4px; height:32px;
+            background:#fff; border-radius:2px;
+        }
+        .main-content { margin-left:200px; min-height:100vh; padding:0; }
+        .topbar {
+            background:#fff; height:64px; display:flex; align-items:center;
+            justify-content:space-between; padding:0 34px 0 28px; box-shadow:0 1px 8px #0001;
+        }
+        .topbar-left { display:flex; align-items:center; gap:26px; }
+        .topbar-title { font-size:1.45rem; font-weight:700; color:#217b9b; letter-spacing:1px; }
+        .topbar-user { font-size:1rem; color:#217b9b; font-weight:400; margin-left:24px; }
+        .topbar-icons { display:flex; align-items:center; gap:18px; }
+        .topbar-icons i { font-size:1.2rem; color:#217b9b; cursor:pointer; margin-top:5px; }
+        .formbar { background:var(--actionbar-bg); padding:14px 32px; display:flex; align-items:center; gap:14px; border-bottom:1px solid #e2e8f0; }
+        .formbar-title { font-weight:500; color:#217b9b; font-size:1.1rem; margin-right:18px; }
+        .formbar .btn-back {
+            background:var(--actionbar-icon-bg); color:#fff; border:none; border-radius:50%;
+            width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+            font-size:1.15rem; cursor:pointer; transition:background 0.2s;
+        }
+        .formbar .btn-back:hover { background:#218fa1; }
+        .form-container { max-width:860px; margin:28px auto; background:#fff; border-radius:16px; box-shadow:0 4px 18px #0d575a11; padding:30px 38px 22px 38px; }
+        .form-title { font-size:1.32rem; color:#0d575a; font-weight:700; margin-bottom:26px; text-align:left; }
+        form .form-group { margin-bottom:18px; }
+        .form-row { display:flex; gap:24px; flex-wrap:wrap; }
+        .form-col { flex:1 1 200px; min-width:220px; }
+        form input, form select, form textarea {
+            width:100%; padding:10px 14px; font-size:1rem; border:1px solid #b0bec5;
+            border-radius:6px; background:#f9fafb; margin-bottom:2px; transition:border-color 0.2s;
+        }
+        form input:focus, form select:focus, form textarea:focus { border-color:#217b9b; outline:none; background:#fff; }
+        .form-actions { margin-top:22px; }
+        .form-actions .btn { background:#0d575a; color:#fff; border:none; padding:10px 24px; border-radius:8px; font-weight:600; margin-right:14px; transition:background 0.2s; }
+        .form-actions .btn:hover { background:#0c8c98; }
+        .form-actions .btn.btn-cancel { background:#fff; color:#217b9b; border:2px solid #217b9b; }
+        .msg { margin-top:14px; font-weight:600; color:#217b9b; text-align:center; }
+        .msg-success { background:#e9ffe4; color:#097a3d; border:1.5px solid #097a3d; padding:10px; border-radius:8px; margin-top:14px; }
+        .msg-error { background:#ffeded; color:#c00; border:1.5px solid #c00; padding:10px; border-radius:8px; margin-top:14px; }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link active" href="apps/internal/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link" href="apps/internal/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/internal/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/internal/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link" href="apps/internal/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/internal/configuracion/api_tokens.html" data-section="configuracion" data-requires-api-tokens="manage">
+            <i class="fa fa-key"></i>
+            <span>TOKENS API</span>
+        </a>
+        <a class="nav-link" href="apps/internal/ayuda/help_center.html" data-section="ayuda">
+            <i class="fa fa-circle-question"></i>
+            <span>AYUDA</span>
+        </a>
+        <a class="nav-link" href="apps/internal/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </aside>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Gestión de Calibraciones</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/internal/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <!-- FormBar -->
+        <div class="formbar">
+            <button class="btn-back" onclick="window.location.href = BASE_URL + '/apps/internal/planeacion/list_planning.html'">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+            <div class="formbar-title">Planeación &gt; Registrar Planeación</div>
+        </div>
+        <!-- Formulario -->
+        <div class="form-container">
+            <div class="form-title">Registrar Plan de Calibración</div>
+            <form id="planningForm" autocomplete="off">
+                <div class="form-row">
+                    <div class="form-col form-group">
+                         <label for="instrumentId">ID del Instrumento</label>
+                        <input type="text" id="instrumentId" list="instrumentIds">
+                        <datalist id="instrumentIds"></datalist>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="instrumentCode">Código</label>
+                        <input type="text" id="instrumentCode" list="instrumentCodes">
+                        <datalist id="instrumentCodes"></datalist>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="instrumentName">Nombre</label>
+                        <input type="text" id="instrumentName" readonly>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="instrumentBrand">Marca</label>
+                        <input type="text" id="instrumentBrand" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="instrumentModel">Modelo</label>
+                        <input type="text" id="instrumentModel" readonly>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="instrumentSerial">Serie</label>
+                        <input type="text" id="instrumentSerial" readonly>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="instrumentDepartment">Departamento</label>
+                        <input type="text" id="instrumentDepartment" readonly>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="instrumentLocation">Ubicación</label>
+                        <input type="text" id="instrumentLocation" readonly>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="date">Fecha programada</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="provider">Proveedor</label>
+                        <select id="provider" name="provider" required>
+                            <option value="">Seleccione proveedor...</option>
+                        </select>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="responsible">Responsable</label>
+                        <select id="responsible" name="responsible" required>
+                            <option value="">Seleccione nombre...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-col form-group">
+                        <label for="status">Estado</label>
+                        <select id="status" name="status" required>
+                            <option value="">Selecciona estado...</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Programada">Programada</option>
+                            <option value="Completada">Completada</option>
+                            <option value="Cancelada">Cancelada</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="registrarPlaneacion()">Guardar Planeación</button>
+                    <button type="button" class="btn btn-cancel" onclick="window.location.href = BASE_URL + '/apps/internal/planeacion/list_planning.html'">Cancelar</button>
+                </div>
+                <div id="msg-box"></div>
+            </form>
+        </div>
+    </div>
+    <script>
+    let instrumentos = [];
+    const params = new URLSearchParams(window.location.search);
+    const preselect = params.get('instrumentos');
+    function registrarPlaneacion() {
+         const instrumentId = document.getElementById('instrumentId').value.trim();
+        const instrumentCode = document.getElementById('instrumentCode').value.trim();
+        const fecha = document.getElementById('date').value;
+        const responsable = document.getElementById('responsible').value.trim();
+        const estado = document.getElementById('status').value;
+        if (!instrumentId) return mostrarMsg('Proporciona el ID del instrumento.', false);
+        if (!fecha) return mostrarMsg('Selecciona la fecha programada.', false);
+        if (!responsable) return mostrarMsg('El responsable es obligatorio.', false);
+        if (!estado) return mostrarMsg('Selecciona el estado.', false);
+
+        fetch(BASE_URL + '/backend/planeacion/add_planning.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ instrumento_id: instrumentId, fecha_programada: fecha, responsable_id: responsable, estado })
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.success) {
+                mostrarMsg('¡Planeación registrada correctamente!', true);
+                setTimeout(()=>{ window.location.href = BASE_URL + '/apps/internal/planeacion/list_planning.html'; }, 1000);
+            } else {
+                mostrarMsg(res.message || 'Error al registrar planeación.', false);
+            }
+        })
+        .catch(() => mostrarMsg('Error de conexión.', false));
+    }
+
+    function mostrarMsg(msg, ok) {
+        document.getElementById('msg-box').innerHTML = `<div class="${ok?'msg-success':'msg-error'}">${msg}</div>`;
+    }
+
+     function buscarInstrumento() {
+        const idVal = document.getElementById('instrumentId').value.trim();
+        const codeVal = document.getElementById('instrumentCode').value.trim();
+        const inst = instrumentos.find(i => (idVal && i.id == idVal) || (codeVal && i.codigo === codeVal));
+        if (inst) {
+            document.getElementById('instrumentId').value = inst.id;
+            document.getElementById('instrumentCode').value = inst.codigo || '';
+            document.getElementById('instrumentName').value = inst.instrumento || '';
+            document.getElementById('instrumentBrand').value = inst.marca || '';
+            document.getElementById('instrumentModel').value = inst.modelo || '';
+            document.getElementById('instrumentSerial').value = inst.serie || '';
+            document.getElementById('instrumentDepartment').value = inst.departamento || '';
+            document.getElementById('instrumentLocation').value = inst.ubicacion || '';
+            document.getElementById('date').value = inst.fecha_proxima || '';
+        } else {
+            document.getElementById('instrumentName').value = '';
+            document.getElementById('instrumentBrand').value = '';
+            document.getElementById('instrumentModel').value = '';
+            document.getElementById('instrumentSerial').value = '';
+            document.getElementById('instrumentDepartment').value = '';
+            document.getElementById('instrumentLocation').value = '';
+        }
+    }
+
+    document.getElementById('instrumentId').addEventListener('change', buscarInstrumento);
+    document.getElementById('instrumentCode').addEventListener('change', buscarInstrumento);
+
+    // Cargar proveedores
+    fetch(BASE_URL + '/backend/proveedores/list_providers.php')
+        .then(r => r.json())
+        .then(list => {
+            const select = document.getElementById('provider');
+            list.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = p.nombre;
+                select.appendChild(option);
+            });
+        });
+
+    // Cargar responsables (solo administradores)
+    fetch(BASE_URL + '/backend/usuarios/list_admins.php')
+        .then(r => r.ok ? r.json() : [])
+        .then(list => {
+            const select = document.getElementById('responsible');
+            select.innerHTML = '<option value="">Seleccione nombre...</option>';
+            if (!Array.isArray(list)) return;
+            list.forEach(u => {
+                const option = document.createElement('option');
+                option.value = u.id;
+                const nombre = [u.nombre, u.apellidos].filter(Boolean).join(' ').trim();
+                option.textContent = nombre || u.usuario || u.correo || `Administrador ${u.id}`;
+                select.appendChild(option);
+            });
+        })
+        .catch(() => {
+            const select = document.getElementById('responsible');
+            select.innerHTML = '<option value="">No fue posible cargar administradores</option>';
+        });
+
+    // Cargar instrumentos próximos a calibrar
+    fetch(BASE_URL + '/backend/planeacion/list_planning.php')
+        .then(r => r.json())
+        .then(list => {
+            instrumentos = list;
+            const dlIds = document.getElementById('instrumentIds');
+            const dlCodes = document.getElementById('instrumentCodes');
+            list.forEach(i => {
+                dlIds.innerHTML += `<option value="${i.id}">${i.codigo} - ${i.instrumento}</option>`;
+                dlCodes.innerHTML += `<option value="${i.codigo}">${i.id} - ${i.instrumento}</option>`;
+            });
+            if (preselect) {
+                const first = preselect.split(',')[0];
+                document.getElementById('instrumentId').value = first;
+                buscarInstrumento();
+            }
+    
+        });
+    </script>
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        fetch(BASE_URL + '/apps/internal/sidebar.html')
+          .then(response => response.text())
+          .then(html => {
+            document.getElementById('sidebar').innerHTML = html;
+            if (typeof initSidebar === 'function') initSidebar();
+            if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+            if (typeof window.applyApiTokenVisibility === 'function') window.applyApiTokenVisibility();
+            if (typeof window.activateApiTokensIfAvailable === 'function') window.activateApiTokensIfAvailable();
+          });
+      });
+      (function(){
+        const el = document.getElementById('userName');
+        if(!el) return;
+        fetch(BASE_URL + '/backend/usuarios/get_actual_user.php')
+          .then(r=>r.json())
+          .then(u=>{ el.innerHTML = `${u?.nombre||'Invitado'} <span class="text-accent">(${u?.role_id||'Sin rol'})</span>`; });
+      })();
+    </script>
+</body>
+</html>

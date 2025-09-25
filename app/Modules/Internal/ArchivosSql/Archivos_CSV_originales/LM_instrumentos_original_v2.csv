@@ -1,0 +1,705 @@
+Instrumento,Marca,Modelo,Serie,Código,Departamento responsable,Ubicación,Fecha de alta,Fecha de baja
+Aerotest,Dräger,Alpha,ARLL-9115,AER-VA-01,Validación,"Móvil, Almacén de Validación",16-Abr-19,NA
+Agitador magnético,Corning,PC-410,350401334703,AGM-LC-01,Control de Calidad,Análisis Fisicoquímicos,ND,NA
+Agitador magnético,Corning,PC-410,350401009669,AGM-LC-02,NA,NA,ND,14-Abr-22
+Agitador magnético,VWR,97042-626,181213005,AGM-LC-03,NA,NA,01-Mar-19,08-Abr-19
+Agitador magnético,VWR,97042-626,180907006,AGM-LC-04,NA,NA,01-Mar-19,08-Abr-19
+Agitador magnético,VWR,97042-626,181213005,AGM-LC-05,Control de Calidad,Análisis Fisicoquímicos,28-Mar-19,NA
+Agitador magnético,VWR,97042-626,180907006,AGM-LC-06,Control de Calidad,Análisis Fisicoquímicos,28-Mar-19,NA
+Agitador magnético,VWR,986920,181221010,AGM-LC-07,NA,NA,28-Mar-19,14-Abr-25
+Agitador magnético,VWR,986920,181221011,AGM-LC-08,Control de Calidad,Disolución,28-Mar-19,NA
+Agitador magnético,Corning,PC-410,350401334757,AGM-DF-01,Desarrollo Farmacéutico,Desarrollo Farmacéutico,ND,NA
+Agitador magnético,Corning,PC-410D,1534 21027189,AGM-DA-01,Desarrollo Analítico,Análisis Fisicoquímicos ,09-Ago-21,NA
+Agitador propela,Heidolph,RZR2020,40810741,AGP-PR-01,NA,NA,06-Mar-18,11-Dic-23
+Agitador propela,ND,ND,ND,AGP-FR-02,Fabricación,"Recubrimiento, en REC-FR-02",02-Feb-24,NA
+Agitador Vortex,Thomas Scientific,Digital Genie2 120V,A3-2746,VOR-DA-01,Desarrollo Analítico,Análisis Fisicoquímicos,ND,NA
+Agitador Vortex,Corning,LSE,000020226027,AGV-LC-01,Microbiología,Microbiología,04-Nov-20,NA
+Agitador Vortex,Corning,LSE,000020226028,AGV-LC-02,NA,NA,04-Nov-20,04-Dic-23
+Agitador Vortex,Scientific Industries,Digital Vortex-Genie 2,A3-5600,AGV-LC-03,Control de Calidad,Análisis Fisicoquímicos,04-Dic-23,NA
+Amperímetro,Fluke,323,25900289,AMP-MA-01,NA,NA,ND,26-Ago-22
+Amperímetro,Fluke,325,47367667MV,AMP-MA-02,Mantenimiento,"Móvil, Taller de Mantenimiento",26-Ago-22,NA
+Anemómetro,VWR,Traceable Hot Wire,80114311,ANE-VA-01,Validación ,"Móvil, Almacén de Validación",ND,NA
+Anemómetro,Extech Instrument,Field Master,451112,ANE-VA-02,Validación ,"Móvil, Almacén de Validación",ND,NA
+Balanza analítica,CAS,XB420HW,D604100010,BAA-AL-01,Almacén,Pesado,03-Oct-24,NA
+Balanza analítica,Ohaus,Adventurer PRO,8026191114,BAA-CP-01,NA,NA,ND,24-Ago-21
+Balanza analítica,OHAUS,AX124,B824999566,BAA-CP-02,Gestión de la Calidad,Control en Proceso,24-Ene-19,NA
+Balanza analítica,Ohaus,PA224,B650434148,BAA-CP-03,NA,NA,24-May-19,24-Jun-24
+Balanza analítica,OHAUS,PX224/E,C104035295,BAA-CP-04,Gestión de la Calidad,Muestreo de Materia Prima,27-Ago-21,NA
+Balanza analítica,OHAUS,PX224/E,C3025547933,BAA-CP-05,Gestión de la Calidad,Control en Proceso,26-Jul-24,NA
+Balanza analítica,AND,HR-120,12327074,BAA-DA-01,Desarrollo Analítico,Área de Balanzas,ND,NA
+Balanza analítica,ADAM,ABL 225,ITA1702001,BAA-DA-02,Desarrollo Analítico,Área de Balanzas,21-Dic-18,NA
+Balanza analítica,AND,HR-120,12323474,BAA-LC-01,Control de Calidad,Área de Balanzas,ND,NA
+Balanza analítica,OHAUS,AX223,B830176127,BAA-DF-01,Desarrollo Farmacéutico,Desarrollo Farmacéutico,ND,NA
+Balanza electrónica,Ohaus,Scout Pro SP601,7129250596,BAE-LC-01,Microbiología,Preparación Microbiológica,ND,NA
+Balanza electrónica,Ohaus,SPX222,B822913116,BAE-LC-02,Control de Calidad,Área de Balanzas,02-Oct-18,NA
+Balanza electrónica,OHAUS,SPX222,C204465423,BAE-MI-01,Microbiología,Microbiología,08-May-24,NA
+Balanza semi-microanalítica,AND,GH-202,15110595,BSM-LC-01,Control de Calidad,Área de Balanzas,25-Ene-21,NA
+Balanza semi-microanalítica,OHAUS,PX225D,C412794367,BSM-LC-02,Control de Calidad,Área de Balanzas,23-Oct-24,NA
+Balómetro,Alnor TSI Incorporated,Loflo 6200D,19263602,BAL-VA-02,NA,NA,ND,19-Jun-20
+Balómetro,Alnor,6200,71229675,BAL-VA-03,Validación,"Móvil, Almacén de Validación",09-Jun-20,NA
+Baño de agua,VWR,142665-PC,500803,BAM-LC-01,Microbiología,Microbiología,ND,NA
+Baño de agua,VWR,5L,1F1120228,BAM-LC-02,Control de Calidad,Análisis Fisicoquímicos ,ND,NA
+Báscula digital,CAS,EC-II,1603EC300415,BAS-AL-01,NA,NA,ND,10-Abr-23
+Báscula digital,CAS,EC-II,1306EC300879,BAS-AL-02,NA,NA,ND,07-Nov-22
+Báscula digital,CAS,DBB Jr. ,141152930,BAS-AL-04,Ambiental,Almacén de Residuos,ND,NA
+Báscula digital,CAS,EC-II,1603EC300416,BAS-AL-05,NA,NA,03-Abr-19,23-Ago-21
+Báscula digital,CAS,DBB Jr. ,141152942,BAS-AL-06,Almacén,Recepción Materia Prima,05-Mar-21,NA
+Báscula digital,OHAUS,RC301P30,8342246159,BAS-AL-07,Almacén,Pesado,15-Oct-21,NA
+Báscula digital,CAS,HD,210654307,BAS-AL-08,Almacén,Pesado,15-Feb-22,NA
+Báscula digital,OHAUS,Ranger 3000,8343142254,BAS-AL-09,Almacén,Surtido de Material de Acondicionamiento,17-Ene-23,NA
+Báscula digital,OHAUS,RC31P30,8343142289,BAS-AL-10,Almacén,Recepción Materia Prima,10-Abr-23,NA
+Báscula digital,CAS,DBB Jr. ,141152942,BAS-AM-01,NA,NA,02-Ago-19,05-Mar-21
+Báscula digital,CAS,XE-6000,160851840,BAS-DF-01,Desarrollo Farmacéutico,Desarrollo Farmacéutico,17-Dic-18,NA
+Báscula digital,CAS,DBB-Jr,121040486,BAS-PR-05,NA,NA,ND,22-Mar-18
+Báscula digital,CAS,HDI,170853393,BAS-PR-06,Fabricación ,Encapsulado y Abrillantado 1,15-Nov-17,NA
+Báscula digital,CAS,HDI,170853368,BAS-PR-07,NA,NA,13-Dic-17,11-Abr-24
+Báscula digital,CAS,HDI/SPS 4050,170853416,BAS-PR-08,Ambiental,Almacén Temporal de Residuos Peligrosos (Sólidos),21-May-18,NA
+Báscula digital,CAS,HDL-SPS4050,170853407,BAS-PR-09,NA,NA,19-Jul-18,21-Feb-24
+Báscula digital,CAS,HDI,170863400,BAS-PR-10,NA,NA,31-Oct-18,30-Ago-24
+Báscula digital,CAS,HDI,170863311,BAS-PR-11,Fabricación ,Recubrimiento,31-Oct-18,NA
+Báscula digital,CAS,HDI,170853364,BAS-PR-12,NA,NA,31-Oct-18,20-Feb-25
+Báscula digital,CAS,HDI,190383084,BAS-PR-13,NA,NA,02-Sep-19,21-Feb-24
+Báscula digital,CAS,HDI,190363073,BAS-PR-14,NA,NA,28-Ene-20,19-Ene-22
+Báscula digital,CAS,HDI/SPS4050,210654286,BAS-PR-15,NA,NA,11-Nov-21,20-Feb-25
+Báscula digital,CAS,HDI/SPS4051,210654288,BAS-PR-16,Fabricación ,Detección de Metales,11-Nov-21,NA
+Báscula digital,CAS,HD,220151911,BAS-FR-17,Fabricación,Acondicionamiento Primario Blíster,21-Feb-24,NA
+Báscula digital,CAS,HD,220151926,BAS-FR-18,Fabricación ,Encapsulado y Abrillantado 4,21-Feb-24,NA
+Báscula digital,CAS,HD,231150292,BAS-FR-19,Fabricación,Encapsulado y Abrillantado #5  ,08-Abr-24,NA
+Bascula digital,CAS,HD,231150291,BAS-FR-20,Fabricación,Acondicionamiento Primario Llenado de Frascos,09-Jul-24,NA
+Báscula digital,CAS,HDI,240755468,BAS-FR-21,Fabricación,Tableteado 1,20-Ene-25,NA
+Báscula digital,CAS,HDI,240755469,BAS-FR-22,Fabricación,Tableteado 2,20-Ene-25,NA
+Báscula digital,CAS,HDI,240755485,BAS-FR-23,Fabricación,Mezclado y Tamizado 1,01-Abr-25,NA
+Bomba peristáltica,Watson Marlow,1205/DV,170221-102287,BOP-DF-01,Desarrollo Farmacéutico,Desarrollo Farmacéutico,02-Ene-20,NA
+Bomba peristáltica,Watson marlow,323,J120411,BOP-PR-01,NA,NA,06-Mar-18,11-Dic-23
+Calefactor,ND,ND,ND,CAL-DA-01,Desarrollo Analítico,"Estabilidades, en CAC-DA-01",10-Ago-18,NA
+Calefactor,ND,ND,ND,CAL-DA-02,Desarrollo Analítico,"Estabilidades, en CAC-DA-02",10-Ago-18,NA
+Calefactor,ND,ND,ND,CAL-DA-03,Desarrollo Analítico,"Análisis Instrumental II, en ESE-DA-01",14-Jul-23,NA
+Calefactor,ND,ND,ND,CAL-DF-01,Desarrollo Farmacéutico,"Móvil, en DES-DF-01",06-Nov-23,NA
+Calefactor,ND,ND,ND,CAL-GC-02,Gestión de la Calidad,"Control en Proceso, en DES-CP-01",ND,NA
+Calefactor,ND,ND,ND,CAL-LC-01,Control de Calidad,"Análisis Instrumental IV, en MUF-LC-02",10-Ago-18,NA
+Calefactor,ND,ND,ND,CAL-LC-02,NA,NA,10-Ago-18,14-Jun-23
+Calefactor,ND,ND,ND,CAL-LC-03,Control de Calidad,"Estabilidades, en CAC-LC-01",10-Ago-18,NA
+Calefactor,ND,ND,ND,CAL-LC-04,Control de Calidad,"Estabilidades, en CAC-LC-02",10-Ago-18,NA
+Calefactor,ND,ND,ND,CAL-LC-05,Microbiología,"Preparación Microbiológica, en INC-LC-01",10-Ago-18,NA
+Calefactor,ND,ND,ND,CAL-LC-06,Microbiología,"Preparación Microbiológica, en INC-LC-04",10-Ago-18,NA
+Calefactor,ND,ND,ND,CAL-LC-07,Microbiología,"Preparación Microbiológica, en INC-LC-05",10-Ago-18,NA
+Calefactor,NA,NA,NA,CAL-LC-08,NA,NA,17-Oct-18,17-Ago-21
+Calefactor,ND,ND,ND,CAL-LC-09,Microbiología,"Preparación Microbiológica, en INC-LC-06",30-Mar-21,NA
+Calefactor,ND,ND,ND,CAL-LC-10,Microbiología,"Preparación Microbiológica, en INC-LC-07",30-Mar-21,NA
+Calefactor,ND,ND,ND,CAL-LC-11,Control de Calidad,"Análisis Instrumental IV, en ESE-LC-03",10-Ene-22,NA
+Calefactor,ND,ND,ND,CAL-CP-01,NA,NA,10-Ago-18,01-Abr-19
+Contador de partículas,Lighthouse,SOLAIR 3100+,0-80104003,COP-VA-01,NA,NA,ND,02-Dic-21
+Contador de partículas,Lighthouse,S3100,2108044049,COP-VA-02,Validación ,"Móvil, Almacén de Validación",27-Oct-21,NA
+Controlador de temperatura de formado,OMRON,ESCWL-RITC,29X21MC,CTF-FR-01,Fabricación,"Acondicionamiento Primario Blíster, en BLI-FR-02",16-Dic-22,NA
+Controlador de temperatura de sellado,OMRON,ESCWL-RITC,29X21MC,CTS-FR-01,Fabricación,"Acondicionamiento Primario Blíster, en BLI-FR-02",16-Dic-22,NA
+Criotermostato de recirculación,Julabo,CORIO CD-201F,10431845,CRI-DA-01,Desarrollo Analítico,"Móvil (Análisis Instrumental I, Análisis Instrumental II y Análisis Fisicoquímicos)",07-Jul-23,NA
+Cronómetro,Control company,1235D46,181572470,CRO-DA-01,Desarrollo Analítico,Disolución,21-Dic-18,NA
+Cronómetro,Control company,1235D46,181572465,CRO-DA-02,NA,NA,27-Ene-22,16-Mar-23
+Cronómetro,Extech,365510,ND,CRO-DF-01,Desarrollo Farmacéutico,Desarrollo Farmacéutico,04-Oct-24,NA
+Cronómetro,Control company,5017,170601004,CRO-CP-01,Gestión de la Calidad,Control en Proceso ,19-Dic-17,NA
+Cronómetro,Fisher Scientific,5008,21017839,CRO-LC-01,NA,NA,ND,12-Abr-22
+Cronómetro,VWR,62344-912,91215421,CRO-LC-02,NA,NA,18-Ene-21,05-Abr-22
+Cronómetro,Control company,8788V77,200518836,CRO-LC-03,NA,NA,10-Feb-21,13-Oct-21
+Cronómetro,Control company,8788V77,200518830,CRO-LC-04,NA,NA,10-Feb-21,13-Oct-21
+Cronómetro,Control company,1043,160141915,CRO-PR-01,NA,NA,ND,23-Sep-22
+Cronómetro,General Tools,SW888L,ND,CRO-FR-02,Fabricación,Mezclado y Tamizado 1,23-Ago-22,NA
+Cronómetro,General Tools,SW888L,ND,CRO-FR-03,Validación,"Móvil, Almacén de Validación",23-Ago-22,NA
+Cronómetro,VWR,Fingertip,ND,CRO-VA-01,NA,NA,ND,02-Mar-20
+Cronómetro,Extech Instrument,365510,NA,CRO-VA-02,Control de Calidad,Análisis Instrumental II,25-Ene-18,NA
+Cronómetro,Hanhart,Compact 2,19A18,CRO-VA-03,NA,NA,16-Abr-19,12-Jul-23
+Cronómetro,Control company,8788V77,200518836,CRO-VA-04,Validación,"Móvil, Almacén de Validación",13-Oct-21,NA
+Cronómetro,Control company,8788V77,200518830,CRO-VA-05,NA,NA,13-Oct-21,02-Dic-21
+Cronómetro,Control company,5CVT8,230027989,CRO-VA-06,Validación,"Móvil, Almacén de Validación",01-Jun-23,NA
+Cronómetro,Control company,5CVT8,221856015,CRO-VA-07,NA,NA,01-Jun-23,18-Sep-24
+Cronómetro,Control company,8788V77,200518830,CRO-MI-01,Microbiología,Preparación Microbiológica,02-Dic-21,NA
+Densímetro,Pharma Alliance,TD-12,PAG0502034,DEN-DF-01,Desarrollo Farmacéutico,Desarrollo Farmacéutico,17-Dic-18,NA
+Durómetro,Dillon,MHT-100,05-0106-01,DUR-CP-01,NA,NA,ND,01-Jun-22
+Durómetro,ELECTROLAB,ETB-2PRL,2109049,DUR-CP-02,NA,NA,01-Nov-21,23-Dic-22
+Durómetro,HARTEK,PHT-500P,4112206430,DUR-CP-03,Gestión de la Calidad,Control en Proceso,11-Nov-22,NA
+Durómetro,HARTEK,PHT-500P,4111608066,DUR-DF-01,Desarrollo Farmacéutico,Desarrollo Farmacéutico,02-Ene-20,NA
+Electrodo,HANNA instruments,Halo HI11102,0CAE7DFACEDE,ELE-DA-01,NA,NA,24-Jul-23,01-Ago-25
+Electrodo,Mettler Toledo,perfectION comb F- Lemo,BU1-11977,ELE-DA-02,Desarrollo Analítico,"Área de Balanzas, en TIT-LC-01",03-Abr-25,NA
+Electrodo,Mettler Toledo,DM143-SC,C442896093,ELE-DA-03,Desarrollo Analítico,"Área de Balanzas, en TIT-LC-01",03-Abr-25,NA
+Electrodo,HANNA instruments,HI76330,K81N04E6T,ELE-DA-04,Desarrollo Analítico,"Instrumental II, en TIT-DA-01",21-May-25,NA
+Electrodo,HANNA Instruments,Halo HI11102,E0FFF144DD8E,ELE-DA-05,Desarrollo Analítico,"Móvil (Análisis Instrumental I, Análisis Fisicoquímico)",02-Jul-25,NA
+Electrodo,HANNA Instruments,Halo HI11102,E0FFF1450C90,ELE-DA-06,Desarrollo Analítico,Almacén de Validación,02-Jul-25,NA
+Electrodo,HANNA instruments,HI 1053P,043897DN,ELE-LC-01,NA,NA,31-Mar-20,16-Dic-22
+Electrodo,HANNA instruments,HI 1131P,05060D8N,ELE-LC-02,NA,NA,31-Mar-20,16-Dic-22
+Electrodo,OAKTON,35805-04,38653,ELE-LC-03,NA,NA,04-Nov-20,29-Ene-25
+Electrodo,OAKTON,35411-00,01X466601,ELE-LC-04,NA,NA,04-Nov-20,20-Dic-23
+Electrodo,OAKTON,3002742,93X218819,ELE-LC-05,NA,NA,29-Jul-21,01-Mar-23
+Electrodo,OAKTON,ND,ND,ELE-LC-06,NA,NA,01-Mar-23,08-Ago-24
+Electrodo,OAKTON,Electrode WD-35805-04,EQ230426-69 2/5,ELE-LC-07,Control de Calidad,Análisis Fisicoquímicos,12-Jul-23,NA
+Electrodo,Mettler Toledo,DM143-SC,0433092,ELE-LC-08,Control de Calidad,"Área de Balanzas, en TIT-LC-01",18-Ago-23,NA
+Electrodo,Mettler Toledo,DM141-SC,5173193,ELE-LC-09,Control de Calidad,"Área de Balanzas, en TIT-LC-01",18-Ago-23,NA
+Electrodo,Mettler Toledo,DGi 113-SC,0421057,ELE-LC-10,Control de Calidad,"Área de Balanzas, en TIT-LC-01",18-Ago-23,NA
+Electrodo,Mettler Toledo,DGi 111-SC,8126635,ELE-LC-11,Control de Calidad,"Área de Balanzas, en TIT-LC-01",18-Ago-23,NA
+Electrodo,Hanna Instruments,HALO HI11102,0CAE7DFADDEC,ELE-LC-12,Control de Calidad,Análisis Físicoquímicos ,12-Oct-23,NA
+Electrodo,Thermo Eutech ,ND,303640,ELE-MI-01,Microbiología,Microbiología,21-Sep-23,NA
+Electrodo,Oakton,35805-04,EQ240814-27,ELE-MI-02,Microbiología,"Preparación Microbiológica, en POT-LC-02",29-Ene-25,NA
+Filtro HEPA 24*26*5 7/8,VECOFLOW,HE9T16SAMA,NA,FIL-MA-03,Mantenimiento,Microbiología,03-Ene-18,NA
+Filtro HEPA 510 x 510 x 305 MM,Freudenberg,510 X 510 X 305 MM,SO2122000258/3000/D110026170/294/4/1,FIL-MA-10,Mantenimiento,"Piso Técnico, en UMA-MA-03",24-Mar-22,NA
+Filtro HEPA 510 x 510 x 305 MM,Freudenberg,510 X 510 X 305 MM,SO2122000258/3000/D110026170/294/4/2,FIL-MA-11,Mantenimiento,"Piso Técnico, en UMA-MA-03",24-Mar-22,NA
+"Filtro HEPA 24"" x 24"" x 11.5"" inyección",Greenfilt,ND,ND,FIL-MA-12,Mantenimiento,"Tercer piso, en UMA-MA-04",07-Jun-24,NA
+"Filtro HEPA 24"" x 24"" x 11.5"" extracción",Greenfilt,ND,ND,FIL-MA-13,Mantenimiento,"Tercer piso, en UMA-MA-04",07-Jun-24,NA
+Fusiómetro,Thermo Scientific,1101D,1877090373510,FUS-LC-01,Control de Calidad,Análisis Fisicoquímicos,ND,NA
+Humidostato,Honeywell,H6062A1000,2409,HUM-MA-01,Mantenimiento,"Tercer piso, en UMA-MA-04",07-Jun-24,NA
+Lámpara UV,Analytik Jena US,UVP UVGL-58,95-0007-05,LUV-DA-01,Desarrollo Analítico,Móvil,21-Jun-21,NA
+Lámpara UV,Entela,UVGL-58,1010.1-92,LUV-LC-01,Control de Calidad,Análisis Fisicoquímicos,13-Jul-18,NA
+Lápiz de humo,Chimney ballon,Smoke pencil,NA,LAP-VA-01,Validación,"Móvil, Almacén de Validación",ND,NA
+Luxometro,Hanna Instruments,HI 97500,7500008101,LUX-DA-01,Desarrollo Analítico,Móvil,15-Dic-23,NA
+Luxómetro,HIOKI,FT3424,230734195,LUX-VA-01,Validación,"Móvil, Almacén de Validación",26-Sep-24,NA
+Manómetro ,USG,NA,NA,MAE-PR-01,NA,NA,ND,01-Abr-19
+Manómetro,C.A. NORGREEN CO.,NA,NA,MAE-PR-02,NA,NA,ND,01-Abr-19
+Manómetro,NA,NA,NA,MAE-PR-03,NA,NA,ND,03-Mar-22
+Manómetro,Ashcroft,NA,NA,MAE-PR-04,NA,NA,12-Abr-18,01-Abr-19
+Manómetro,MC,01 000127,4C65590658591,MAE-PR-05,NA,NA,12-Abr-18,04-Mar-21
+Manómetro,ND,ND,ND,MAN-LC-01,Control de Calidad,Almacén de Validación,04-Sep-18,NA
+Manómetro,ND,ND,ND,MAN-PR-01,NA,NA,09-Ago-18,02-Nov-23
+Manómetro,Winters,0-100 Psi,ND,MAN-VA-01,NA,NA,ND,08-Jun-22
+Manómetro ,SMC,PRESSURE GAGE,NA,MAB-PR-01,NA,NA,ND,04-Sep-20
+Manómetro ,SMC,PRESSURE GAGE,NA,MAB-PR-02,NA,NA,ND,03-Sep-21
+Manómetro de presión,NA,NA,NA,MAP-CP-01,Gestión de la Calidad,"Control en Proceso, en BOV-CP-01",19-Jul-18,NA
+Manómetro de presión,ND,1010,ND,MAP-DA-01,Desarrollo Analítico,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-DA-01",27-Jul-18,NA
+Manómetro de presión,ND,ND,ND,MAP-DA-02,Desarrollo Analítico,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-DA-02",29-Nov-18,NA
+Manómetro de presión,ND,ND,ND,MAP-DA-03,Validación,"Móvil, Almacén de Validación",29-Nov-18,NA
+Manómetro de presión,ND,ND,ND,MAP-DA-04,NA,NA,01-Feb-19,05-Mar-21
+Manómetro de presión,ND,ND,ND,MAP-DA-05,Desarrollo Analítico,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-DA-03",01-Feb-19,NA
+Manómetro de presión,Ashcroft,ND,ND,MAP-LC-01,Control de Calidad,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-LC-01",27-Jul-18,NA
+Manómetro de presión,TRU-FLATE,ND,ND,MAP-LC-02,NA,NA,27-Jul-18,12-Nov-18
+Manómetro de presión,ND,ND,ND,MAP-LC-03,NA,NA,10-Ago-18,20-Ago-18
+Manómetro de presión,ND,ND,ND,MAP-LC-04,Microbiología,"Preparación Microbiológica, en EST-LC-01",17-Sep-18,NA
+Manómetro de presión,Tube&Socket,"304SS Case, 316SS",ND,MAP-LC-05,Control de Calidad,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-LC-02",31-Oct-18,NA
+Manómetro de presión,Tube&Socket,"304SS Case, 316SS",ND,MAP-LC-06,NA,NA,31-Oct-18,22-Nov-24
+Manómetro de presión,NA,NA,NA,MAP-LC-07,NA,NA,28-Nov-18,31-May-23
+Manómetro de presión,NA,NA,NA,MAP-LC-08,Microbiología,"Microbiología, en BOV-LC-03",28-Nov-18,NA
+Manómetro de presión,ND,4CFE4A,ND,MAP-LC-09,NA,NA,05-Nov-19,05-ene-24
+Manómetro de presión,NA,NA,NA,MAP-LC-10,Microbiología,"Preparación Microbiológica, en MUE-LC-02",11-Sep-20,NA
+Manómetro de presión,ND,ND,ND,MAP-LC-11,Control de Calidad,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-LC-04",13-Abr-21,NA
+Manómetro de presión,Wika,ND,ND,MAP-MI-01,Microbiología,"Preparación Microbiológica, en EST-MI-01.",08-Abr-22,NA
+Manómetro de presión,NA,NA,NA,MAP-MA-01,NA,NA,15-May-18,12-Jul-23
+Manómetro de presión,Winters,NA,NA,MAP-MA-02,NA,NA,15-May-18,25-Jul-18
+Manómetro de presión,PRO-BLOCK,NA,NA,MAP-MA-03,NA,NA,22-Jun-18,25-Jul-19
+Manómetro de presión,PRO-BLOCK,NA,NA,MAP-MA-04,NA,NA,22-Jun-18,24-Jul-20
+Manómetro de presión,Puroflo,ND,ND,MAP-MA-05,NA,NA,22-Ago-18,02-Sep-22
+Manómetro de presión,Winters,ND,ND,MAP-MA-06,NA,NA,22-Ago-18,12-Nov-18
+Manómetro de presión,ND,ND,ND,MAP-MA-07,NA,NA,22-Ago-18,12-Nov-18
+Manómetro de presión,Dwyer Instruments,Minihelic II,194589-00,MAP-MA-08,Mantenimiento,"Piso Técnico, en Extractor de polvos",22-Ago-18,NA
+Manómetro de presión,ND,ND,ND,MAP-MA-09,NA,NA,02-Oct-18,12-Nov-18
+Manómetro de presión,ND,EN837.1,ND,MAP-MA-10,NA,NA,02-Oct-18,02-Sep-22
+Manómetro de presión,ND,EN837.1,ND,MAP-MA-11,NA,NA,02-Oct-18,02-Sep-22
+Manómetro de presión,NA,HT-K16,NA,MAP-MA-12,NA,NA,19-Oct-18,19-Oct-20
+Manómetro de presión,NA,HT-K16,NA,MAP-MA-13,Mantenimiento,Almacén de Validación,19-Oct-18,NA
+Manómetro de presión,Winters,PFQ-LF,Z1867,MAP-MA-14,NA,NA,01-Nov-18,11-Nov-19
+Manómetro de presión,Winters,PFQ-LF,Z2228,MAP-MA-15,NA,NA,01-Nov-18,02-Dic-21
+Manómetro de presión,Winters,PFQ-LF,Z222,MAP-MA-16,NA,NA,01-Nov-18,22-Nov-24
+Manómetro de presión,Winters,PFQ-LF,Z0958,MAP-MA-17,NA,NA,01-Nov-18,11-Nov-19
+Manómetro de presión,ND,ND,ND,MAP-MA-18,NA,NA,07-Dic-18,06-Dic-19
+Manómetro de presión,ND,ND,ND,MAP-MA-19,NA,NA,07-Dic-18,16-Mar-23
+Manómetro de presión,ND,ND,ND,MAP-MA-20,NA,NA,16-Abr-19,10-May-22
+Manómetro de presión,ND,ND,ND,MAP-MA-21,NA,NA,02-Oct-20,02-Dic-21
+Manómetro de presión,ND,ND,ND,MAP-MA-22,Mantenimiento,"Piso Técnico, en Tanque Hidroneumático #1",17-Nov-21,NA
+Manómetro de presión,ND,ND,ND,MAP-MA-23,Mantenimiento,"Cuarto Técnico, en Ósmosis Inversa",17-Nov-21,NA
+Manómetro de presión,ND,ND,ND,MAP-MA-24,Mantenimiento,"Cuarto Técnico, antes de filtros suavizadores.",17-Nov-21,NA
+Manómetro de presión,SMC,BG,ND,MAP-MA-25,Mantenimiento,"Encapsulado y Abrillantado 4, en AC-03",20-May-22,NA
+Manómetro de presión,SMC,BG,ND,MAP-MA-26,Mantenimiento,"Lavado, en AC-06",20-May-22,NA
+Manómetro de presión,SMC,BG,ND,MAP-MA-27,Mantenimiento,"Recubrimiento, en AC-11",20-May-22,NA
+Manómetro de presión,SMC,BG,ND,MAP-MA-28,Mantenimiento,"Recubrimiento, en AC-12",20-May-22,NA
+Manómetro de presión,SMC,BG,ND,MAP-MA-29,Mantenimiento,"Desarrollo Farmaceútico, en AC-10",20-May-22,NA
+Manómetro de presión,SMC,BG,ND,MAP-MA-30,Mantenimiento,"Acondicionamiento Primario Blíster, en AC-13",20-May-22,NA
+Manómetro de presión,ND,ND,ND,MAP-MA-31,NA,NA,20-May-22,15-Ago-22
+Manómetro de presión,SMC,BG,ND,MAP-MA-32,Mantenimiento,"Piso técnico, en Colector de polvos (AC-02)",30-Mar-23,NA
+Manómetro de presión,SMC,BG,ND,MAP-MA-33,NA,NA,11-Abr-23,12-Jul-23
+Manómetro de presión,SMC,BG,ND,MAP-MA-34,Mantenimiento,"Encapsulado y Abrillantado #5, en AC-04",12-Jul-23,NA
+Manómetro de presión,SMC,BG,ND,MAP-MA-35,Mantenimiento,"Encapsulado y Abrillantado 1, en AC-07",12-Jul-23,NA
+Manómetro de presión,ND,ND,ND,MAP-MA-36,NA,NA,12-Jul-23,15-Ene-24
+Manómetro de presión,Dewit,ND,ND,MAP-MA-37,Mantenimiento,"Cuarto Técnico, en salida del Tanque Pulmón de aire comprimido",02-Oct-23,NA
+Manómetro de presión,aquex,ND,ND,MAP-MA-38,Mantenimiento,"Cuarto Técnico, en Tanque hidroneumático (TH 02)",03-Dic-24,NA
+Manómetro de presión,SMC,150 PSI,ND,MAP-PR-01,NA,NA,09-Ago-18,08-Jun-22
+Manómetro de presión,ENERPAC,G2535L,180515,MAP-PR-02,NA,NA,19-Oct-18,11-Nov-19
+Manómetro de presión,ENERPAC,G2535L,180511,MAP-PR-03,NA,NA,19-Oct-18,18-Ene-21
+Manómetro de presión,ND,ND,ND,MAP-PR-04,NA,NA,25-Feb-19,04-Mar-21
+Manómetro de presión,ND,ND,ND,MAP-PR-05,NA,NA,25-Feb-19,04-Mar-21
+Manómetro de presión,ND,ND,ND,MAP-PR-06,NA,NA,25-Feb-19,06-Dic-19
+Manómetro de presión,ND,ND,ND,MAP-PR-07,NA,NA,25-Feb-19,09-Mar-20
+Manómetro de presión,ND,4CFL6A,ND,MAP-PR-08,Validación,"Móvil, Almacén de Validación",05-Nov-19,NA
+Manómetro de presión,ND,4CFL6A,ND,MAP-PR-09,NA,NA,05-Nov-19,17-Ene-23
+Manómetro de presión,NA,NA,NA,MAP-PR-10,Fabricación ,"Acondicionamiento Primario Llenado de Frascos, en TAP-AC-01",21-Abr-21,NA
+Manómetro de presión,NA,NA,NA,MAP-PR-11,Fabricación ,"Acondicionamiento Primario Llenado de Frascos, en CON-AC-02",21-Abr-21,NA
+Manómetro de presión,NA,NA,3,MAP-PR-12,NA,NA,21-Abr-21,14-Oct-21
+Manómetro de presión,NA,MPG-28,NA,MAP-PR-13,NA,NA,20-Ene-22,07-Jun-24
+Manómetro de presión,MASS,63-GFB-B-L-13-C-RANGE-KG/CM2-GR-UF,20BB7313,MAP-FR-14,Fabricación ,"Recubrimiento, en REC-FR-02",24-Mar-22,NA
+Manómetro de presión,MASS,63-GFB-B-L-13-C-RANGE-KG/CM2-GR-UF,20BB7320,MAP-FR-15,Fabricación ,"Recubrimiento, en REC-FR-02",24-Mar-23,NA
+Manómetro de presión,ND,ND,ND,MAP-FR-16,Fabricación,"Acondicionamiento Primario Blíster, en BLI-FR-02.",16-Dic-22,NA
+Manómetro de presión,SNS,ND,ND,MAP-FR-17,Fabricación,"Abrillantadora, ABR-FR-02",10-Ene-23,NA
+Manómetro de presión,SNS,ND,ND,MAP-FR-18,Fabricación,"Abrillantadora, ABR-FR-03",10-Ene-23,NA
+Manómetro de presión,ND,ND,ND,MAP-FR-19,Validación,"Móvil, Almacén de Validación",26-Ene-23,NA
+Manómetro de presión,ND,ND,ND,MAP-FR-20,Validación,"Móvil, Almacén de Validación",26-Ene-23,22-Jul-25
+Manómetro de presión,Power Team,9055,ND,MAP-FR-21,Fabricación,"Tableteado 1, en TAB-PR-01",24-Oct-23,NA
+Manómetro de presión,MC,KAOGEER,NA,MAP-FR-22,Fabricación,"Acondicionamiento Secundario Blíster, en ENA-FR-01",14-Feb-24,NA
+Manómetro de presión,DEWIT,2000CB,03220100758,MAP-FR-23,Fabricación,"Tableteado 2, en TAB-FR-02",31-May-24,NA
+Manómetro de presión,Dräger,B8336,4132290582,MAP-VA-01,Validación,"Móvil, Almacén de Validación",16-Abr-19,NA
+Manómetro de vacio,Instrutek,ND,ND,MAV-VA-01,Validación,"Móvil, Almacén de Validación",07-Nov-22,NA
+Manómetro de vacio,DEWIT,ND,ND,MAV-VA-02,Validación,"Móvil, Almacén de Validación",10-Ene-23,NA
+Manómetro de vacío,NA,NA,NA,MAV-CP-01,NA,NA,19-Jul-18,07-Sep-22
+Manómetro de vacío,ND,927,ND,MAV-DA-01,NA,NA,27-Jul-18,11-Oct-18
+Manómetro de vacío,Tube&Socket,"304SS Case, 316SS",4CFDA8A,MAV-DA-02,Desarrollo Analítico,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-DA-01",02-Oct-18,NA
+Manómetro de vacío,Tube&Socket,"304SS Case, 316SS",4CFD8A,MAV-DA-03,Control de Calidad,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-LC-01",29-Oct-18,NA
+Manómetro de vacío,ND,ND,ND,MAV-DA-04,NA,NA,01-Feb-19,05-Mar-21
+Manómetro de vacío,ND,ND,ND,MAV-DA-05,Desarrollo Analítico,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-DA-03",01-Feb-19,NA
+Manómetro de vacío,ND,4CFD8A,ND,MAV-DA-06,Desarrollo Analítico,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-DA-02",05-Nov-19,NA
+Manómetro de vacío,ND,ND,ND,MAV-DA-07,Desarrollo Analítico,"Análisis Instrumental II, en ESE-DA-01",14-Jul-23,NA
+Manómetro de vacio,Instrutek,ND,ND,MAV-FR-01,Fabricación,"Encapsulado y Abrillantado 4, en ENC-PR-04 (bomba)",19-Sep-22,NA
+Manómetro de vacio,DEWIT,255/63/VACIO,6211205373,MAV-FR-02,NA,NA,13-Oct-22,21-Jul-23
+Manómetro de vacio,Manometer,ND,ND,MAV-FR-03,Fabricación,"Acondicionamiento Primario Blíster, en BLI-FR-02 (Bomba de vacío)",16-Dic-22,NA
+Manómetro de vacio,Huayi,ND,ND,MAV-FR-04,Fabricación,"Encapsulado y Abrillantado #5, en ENC-FR-05",10-Ene-23,NA
+Manómetro de vacio,Huayi,ND,ND,MAV-FR-05,Fabricación,"Encapsulado y Abrillantado 4, en ENC-FR-06",16-Ago-23,NA
+Manómetro de vacío,Ashcroft,ND,ND,MAV-LC-01,NA,NA,27-Jul-18,15-Ago-19
+Manómetro de vacío,ND,927,ND,MAV-LC-02,NA,NA,27-Jul-18,16-Nov-18
+Manómetro de vacío,ND,ND,ND,MAV-LC-03,NA,NA,29-Nov-18,17-Dic-18
+Manómetro de vacío,ND,ND,ND,MAV-LC-04,Control de Calidad,"Análisis Fisicoquímicos, en BOV-LC-02",29-Nov-18,NA
+Manómetro de vacío,ND,ND,ND,MAV-LC-05,Microbiología,Microbiología,15-Ago-19,NA
+Manómetro de vacío,ND,4CFD8A,ND,MAV-LC-06,Gestión de la Calidad,"Control en Proceso, en BOV-CP-01",05-Nov-19,NA
+Manómetro de vacío,ND,ND,ND,MAV-LC-07,Control de Calidad,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución), en BOV-LC-04",13-Abr-21,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,R041020KM13,MAD-LC-01,NA,NA,NA,28-Sep-18
+Manómetro diferencial,Dwyer Instruments,2300-0,R051003GA13,MAD-LC-02,Microbiología,Microbiología ,ND,NA
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB37,MAD-LC-03,NA,NA,18-Jul-18,28-Sep-18
+Manómetro diferencial,Dwyer Instruments,2300-0,W12AD JH,MAD-LC-04,Microbiología,Preparación Microbiológica,11-Sep-18,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,W12AD KM,MAD-LC-05,Microbiología,Esclusa a Microbiología,11-Sep-18,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,R040618GA14,MAD-LC-06,Control de Calidad,Control de Calidad,ND,NA
+Manómetro diferencial,Dwyer Instruments,2002-C,R041019LM64,MAD-MA-01,Mantenimiento,"Piso Técnico, en Prefiltro corrugado (UMA-MA-01)",ND,NA
+Manómetro diferencial,Dwyer Instruments,2002-C,R041019LM90,MAD-MA-02,Mantenimiento,"Piso Técnico, en Filtro de bolsa (UMA-MA-01)",ND,NA
+Manómetro diferencial,Dwyer Instruments,2003,R041014LM33,MAD-MA-03,Mantenimiento,"Piso Técnico, en Filtro HEPA (UMA-MA-01)",ND,NA
+Manómetro diferencial,Dwyer Instruments,2001,R070503JD110,MAD-MA-04,Mantenimiento,"Piso Técnico, en Prefiltro corrugado (UMA-MA-02)",ND,NA
+Manómetro diferencial,Dwyer Instruments,2001-C,R070307JT94,MAD-MA-05,Mantenimiento,"Piso Técnico, en Filtro de bolsa (UMA-MA-02)",ND,NA
+Manómetro diferencial,Dwyer Instruments,2002-C,R070622JT92,MAD-MA-06,Mantenimiento,"Piso Técnico, en Filtro HEPA (UMA-MA-02)",ND,NA
+Manómetro diferencial,SENSOCON,S2000-1000MM,S17020071,MAD-MA-07,Mantenimiento,"Piso Técnico, en UMA-MA-03",24-Mar-22,NA
+Manómetro diferencial,SENSOCON,S2000-1000MM,S17020071,MAD-MA-08,Mantenimiento,"Piso Técnico, en UMA-MA-03",24-Mar-22,NA
+Manómetro diferencial,Dwyer Instruments,Minihelic II 2-5005,ND,MAD-MA-09,Mantenimiento,"Tercer Piso, en UMA-MA-04",07-Jun-24,NA
+Manómetro diferencial,Dwyer Instruments,Minihelic II 2-5005,ND,MAD-MA-10,Mantenimiento,"Tercer Piso, en UMA-MA-04",07-Jun-24,NA
+Manómetro diferencial,Dwyer Instruments,Minihelic II 2-5005,ND,MAD-MA-11,Mantenimiento,"Tercer Piso, en UMA-MA-04",07-Jun-24,NA
+Manómetro diferencial,Dwyer Instruments,Minihelic II 2-5005,ND,MAD-MA-12,Mantenimiento,"Tercer Piso, en UMA-MA-04",07-Jun-24,NA
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB6,MAD-PR-01,Validación,"Móvil, Almacén de Validación",ND,NA
+Manómetro diferencial,Dwyer Instruments,2302,R041104L2,MAD-PR-02,Validación,"Móvil, Almacén de Validación",ND,NA
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB12,MAD-PR-03,Fabricación,Acondicionamiento Secundario,03-Ene-19,NA
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB37,MAD-PR-05,NA,NA,ND,17-Abr-18
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB31,MAD-PR-09,Almacén,Almacén de Materia Prima Aprobada y Cuarentena,03-Ene-19,04-Jul-25
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB43,MAD-PR-10,NA,NA,ND,17-Abr-18
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB32,MAD-PR-12,Almacén,Preesclusa de Material de Acondicionamiento,03-Ene-19,NA
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB27,MAD-PR-13,NA,NA,ND,17-Abr-18
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB3,MAD-PR-14,NA,NA,ND,11-Mar-24
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB9,MAD-PR-15,NA,NA,ND,17-Abr-18
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB23,MAD-PR-16,Gestión de la Calidad,Preesclusa de Muestreo de Materia Prima,ND,NA
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB5,MAD-PR-17,Validación,"Móvil, Almacén de Validación",ND,NA
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB10,MAD-PR-18,NA,NA,ND,17-Abr-18
+Manómetro diferencial,Dwyer Instruments,2300-0,R050202LB38,MAD-PR-19,NA,NA,ND,03-Sep-21
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB11,MAD-PR-20,Fabricación,Acondicionamiento Primario Blíster,ND,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-PR-21,Fabricación,Acondicionamiento Primario Llenado de Frascos,ND,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-PR-22,Fabricación,Tableteado 1,ND,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-PR-23,Fabricación,Encapsulado y Abrillantado 1,ND,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-PR-24,Validación,"Móvil, Almacén de validación",ND,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-PR-25,NA,NA,ND,03-Sep-24
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-PR-26,Validación,"Móvil, Almacén de validación",ND,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,W23VRG,MAD-PR-27,Fabricación,Control en Proceso,ND,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-PR-28,Fabricación,Tableteado 2,ND,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-PR-29,Gestión de la Calidad,Muestreo de Materia Prima,ND,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,R041104LB36,MAD-PR-30,Validación,"Móvil, Almacén de validación",ND,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,R041104LB47,MAD-PR-31,Validación,"Móvil, Almacén de validación",ND,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,R041104LB29,MAD-PR-34,Validación,"Móvil, Almacén de validación",ND,NA
+Manómetro diferencial,Dwyer Instruments,2302,R041104LB46,MAD-PR-35,NA,NA,ND,03-Mar-22
+Manómetro diferencial,Dwyer Instruments,2300,ND,MAD-PR-36,Fabricación,Preesclusa 1,10-Abr-18,NA
+Manómetro diferencial,Dwyer Instruments,2300,W20Y KC,MAD-PR-37,Fabricación,Esclusa 1,10-Abr-18,NA
+Manómetro diferencial,Dwyer Instruments,2300,W05AD KM,MAD-PR-38,Validación,"Móvil, Almacén de validación",10-Abr-18,NA
+Manómetro diferencial,Dwyer Instruments,2300,ND,MAD-PR-39,Fabricación,Recubrimiento ,10-Abr-18,NA
+Manómetro diferencial,Dwyer Instruments,2300,W46AC JH,MAD-PR-40,Fabricación,Cuarentena de Graneles,10-Abr-18,NA
+Manómetro diferencial,Dwyer Instruments,2300,W19Y JH,MAD-PR-41,Desarrollo Farmacéutico,Desarrollo Farmacéutico,10-Abr-18,NA
+Manómetro diferencial,Dwyer Instruments,2300,W46AC JH,MAD-PR-42,NA,NA,10-Abr-18,20-Dic-23
+Manómetro diferencial,Dwyer Instruments,2300,ND,MAD-PR-43,Fabricación,Almacén de Material de Empaque,10-Abr-18,NA
+Manómetro diferencial,Dwyer Instruments,2300-1,R041020KM13,MAD-PR-44,Validación,"Móvil, Almacén de validación",27-Ago-19,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,R041104LB9,MAD-PR-45,Validación,"Móvil, Almacén de Validación",03-Sep-21,NA
+Manómetro diferencial,SENSOCON,S2300-200MM,S20020790,MAD-FR-46,Fabricación,"Recubrimiento, en REC-FR-02",24-Mar-22,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-FR-47,Gestión de la Calidad,Esclusa de Muestreo de Materia Prima,24-Oct-23,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-FR-48,Fabricación,Surtido de Materia Prima para Fabricación,24-Oct-23,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-FR-49,Fabricación,Pre esclusa 2,24-Oct-23,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-FR-50,Fabricación,Pasillo A,24-Oct-23,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-FR-51,Fabricación,Encapsulado y Abrillantado 4,24-Oct-23,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-FR-52,Fabricación,Surtido de Material de Acondicionamiento,24-Oct-23,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,R0208286A12,MAD-VA-01,Validación,"Móvil, Almacén de validación",22-Nov-18,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-VA-02,Validación,"Móvil, Almacén de Validación",24-Oct-23,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-VA-03,Validación,"Móvil, Almacén de Validación",24-Oct-23,NA
+Manómetro diferencial,Dwyer Instruments,2300-0,ND,MAD-VA-04,Validación,"Móvil, Almacén de Validación",24-Oct-23,NA
+Manómetro Diferencial Digital,Dwyer,DHC-202,06PRBV,MDI-MA-01,Mantenimiento,Mezclado y Tamizado 1,04-Jul-25,NA
+Manómetro Diferencial Digital,Dwyer,DHC-202,06PRBS,MDI-MA-02,Mantenimiento,Pesado,04-Jul-25,NA
+Manómetro Diferencial Digital,Dwyer,DHC-202,06PRC5,MDI-MA-03,Mantenimiento,Utensilios y Aditamentos de Fabricación,04-Jul-25,NA
+Manómetro Diferencial Digital,Dwyer,DHC-202,06PRBW,MDI-MA-04,Mantenimiento,Lavado,04-Jul-25,NA
+Manómetro Diferencial Digital,Dwyer,DHC-202,06PRBX,MDI-MA-05,Mantenimiento,Órdenes Surtidas,04-Jul-25,NA
+Manómetro Diferencial Digital,Dwyer,DHC-202,06PRC2,MDI-MA-06,Mantenimiento,Esclusa 2,04-Jul-25,NA
+Manómetro Diferencial Digital,Dwyer,DHC-202,06PRC0,MDI-MA-07,Mantenimiento,Encapsulado y Abrillantado #5,04-Jul-25,NA
+Manómetro Diferencial Digital,Dwyer,DHC-202,06PRBT,MDI-MA-08,Mantenimiento,Detección de Metales,04-Jul-25,NA
+Marco de masas,Ohaus,STO-A-WEIGH,ND,MAS-CP-01,Almacén,Recepción de Material de Envase y Empaque ,ND,NA
+Marco de masas,TROEMNER,ASTM 100G-1MG CL4,ND,MAS-CP-02,Control de Calidad,Área de balanzas,27-Jun-22,NA
+Marco de masas,TROEMNER,OIML R 111,ND,MAS-DA-01,Desarrollo Analítico,Área de Balanzas,08-Ene-19,NA
+Marco de masas,TROEMNER,OIML R 111,ND,MAS-LC-01,Gestión de la Calidad,Control en Proceso,12-Ene-18,NA
+Masa,TROEMNER,1g,1000150790,MAS-LC-02,Microbiología,Preparación Microbiológica,08-Mar-18,NA
+Masa,TROEMNER,50g,1000150791,MAS-LC-03,Microbiología,Preparación Microbiológica,08-Mar-18,NA
+Masa,TROEMNER,100g,1000150792,MAS-LC-04,Microbiología,Preparación Microbiológica,08-Mar-18,NA
+Masa,TROEMNER,200,1000150793,MAS-LC-05,NA,NA,08-Mar-18,08-Feb-22
+Masa,TROEMNER,10g,1000194589,MAS-LC-06,Microbiología,Preparación Microbiológica,09-Oct-20,NA
+Masa 1 mg,SUMIMET,11124401PM1,255455456,MAS-DA-02,Validación,"Móvil, Almacén de Validación",07-Jun-22,NA
+Medidor multiparamétrico,Oakton,PCS Testr35,544319,CON-LC-01,NA,NA,ND,01-Oct-18
+Micrometro,Mitutoyo,293-344-30,67910529,MIM-MA-01,Mantenimiento,"Móvil, Taller de Mantenimiento",13-May-21,NA
+Micrometro,Mitutoyo,"MDC-1""SXF",76018721,MIM-CP-01,Gestión de la Calidad,Control en Proceso,05-Jul-23,NA
+Micropipeta,VWR,VE100,942742204,MIP-DA-01,Desarrollo Analítico,Análisis Fisicoquímicos,ND,NA
+Micropipeta,VWR,VE1000,942766165,MIP-DA-02,NA,NA,ND,23-Dic-22
+Micropipeta,VWR,VE5000,942780818,MIP-DA-03,Desarrollo Analítico,Análisis Fisicoquímicos,ND,02-Jul-25
+Micropipeta,Thermo Scientific,FinnPipette F1,JH92140,MIP-DA-04,Desarrollo Analítico,Análisis Fisicoquímicos,ND,NA
+Micropipeta,Thermo Scientific,Finnpipette F1,JJ06794,MIP-DA-05,Desarrollo Analítico,Análisis Fisicoquímicos,ND,NA
+Micropipeta,Eppendorf,0.5 - 5 mL,L27403L,MIP-DA-06,Desarrollo Analítico,Análisis Fisicoquímicos,21-Dic-22,NA
+Micropipeta,Eppendorf,100 - 1000 μL,I38256L,MIP-DA-07,NA,NA,21-Dic-22,25-Jun-24
+Micropipeta,Eppendorf,100 - 1000 μL,I37928L,MIP-DA-08,NA,NA,21-Dic-22,18-Sep-24
+Micropipeta,Eppendorf,Research plus 100 - 1000 μL,P17135J,MIP-DA-09,Desarrollo Analítico,Análisis Fisicoquímicos,21-Jun-24,NA
+Micropipeta,Eppendorf,Research plus 100 - 1000 μL,P17139J,MIP-DA-10,Desarrollo Analítico,Análisis Fisicoquímicos,21-Jun-24,NA
+Micropipeta,VWR,VWR EHP1000 1CH,E42762007,MIP-DA-11,Desarrollo Analítico,Análisis Fisicoquímicos,20-Ene-25,NA
+Micropipeta,VWR,VWR EHP1000 1CH,E42762017,MIP-DA-12,Desarrollo Analítico,Análisis Fisicoquímicos,20-Ene-25,NA
+Micropipeta,Thermo Scientific,Finnpipette F1,JH36377,MIP-LC-01,NA,NA,ND,27-Ene-20
+Micropipeta,Thermo Scientific,Finnpipette F1,JH54815,MIP-LC-02,Microbiología,Microbiología,ND,NA
+Micropipeta,VWR,VE100,842740197,MIP-LC-03,NA,NA,26-Oct-18,05-Ago-24
+Micropipeta,VWR,VE1000,742766379,MIP-LC-04,Control de Calidad,Análisis Fisicoquímicos,26-Oct-18,06-May-25
+Micropipeta,VWR,VE5000,842780399,MIP-LC-05,Control de Calidad,Análisis Fisicoquímicos,26-Oct-18,NA
+Micropipeta,VWR,VE1000,842764274,MIP-LC-06,NA,NA,13-Jun-19,17-Ene-23
+Micropipeta,VWR,VE1000,A42760223,MIP-LC-07,Control de Calidad,Análisis Fisicoquímicos,03-Ago-20,NA
+Micropipeta,VWR,VE5000,A42780452,MIP-LC-08,Control de Calidad,Análisis Fisicoquímicos,09-Abr-21,NA
+Micropipeta,Brand,Transferpette,704780,MIP-LC-09,Control de Calidad,Analisis Fisicoquímicos,29-Sep-21,NA
+Micropipeta,Thermo Scientific,Finnpipette F2 0.5-5 mL,UU06703,MIP-LC-10,Control de Calidad,Analisis Fisicoquímicos,12-Jul-23,NA
+Micropipeta,Thermo Scientific,Finnpipette F2 100-1000 μL,TU09335,MIP-LC-11,Control de Calidad,Analisis Fisicoquímicos,12-Jul-23,NA
+Micropipeta,Thermo Scientific,Finnpipette F2 10-100 μL,SU33609,MIP-LC-12,Control de Calidad,Analisis Fisicoquímicos,12-Jul-23,NA
+Micropipeta,VWR,VE100,D42741588,MIP-LC-13,Control de Calidad,Análisis Fisicoquímicos,05-Ago-24,NA
+Micropipeta,VWR,VE1000,C42762074,MIP-MI-01,Microbiología,Microbiología,17-Feb-23,NA
+Micropipeta,VWR,VE1000,C42762480,MIP-MI-02,Microbiología,Microbiología,17-Feb-23,NA
+Microscopio,VWR,82026-622,936794,MIC-LC-01,Control de Calidad,Análisis Fisicoquímicos,ND,NA
+Microscopio,LABOMED,CxL,ND,MIC-LC-02,Microbiología,Preparación Microbiológica,01-Nov-18,NA
+Muestreador de aire,TRIO.BAS,MONO,2720012,MUE-LC-01,Microbiología,Preparación Microbiológica,27-Ago-20,NA
+Muestreador de aire,TRIO.BAS,GAS,2720004,MUE-LC-02,Microbiología,Preparación Microbiológica,11-Sep-20,NA
+Multimetro,Truper,MUT-039,10402,MUT-MA-01,Mantenimiento,"Móvil, Taller de Mantenimiento",01-Oct-21,NA
+Multiparamétrico,HATCH,Pocket Pro+Multi2,170728001234,MUL-DA-01,NA,NA,21-Dic-18,07-May-24
+Multiparamétrico,HATCH,Pocket Pro+Multi2,190728001089,MUL-DA-02,NA,NA,14-Oct-19,08-Sep-21
+Multiparamétrico,HATCH,Pocket Pro+Multi2,191228001077,MUL-DA-03,NA,NA,31-Mar-20,05-May-23
+Multiparamétrico,HACH,Pocket Pro + Multi 2,170628001260,MUL-LC-01,NA,NA,03-Ago-18,14-Jun-23
+Multiparamétrico,HACH,Pocket Pro + Multi 2,170628001233,MUL-LC-02,NA,NA,03-Ago-18,03-Sep-20
+Medidor multiparamétrico ,HACH,POCKET PRO TESTER,220727001068,MUL-LC-03,Control de Calidad,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución)",01-Feb-24,NA
+Nivel,SPI-TRONIC,PRO 3600,31-040-9,NIV-VA-01,Mantenimiento,"Móvil, Taller de Mantenimiento",ND,NA
+Parrilla con agitador,Corning,PC-420D,1535 21040240,PAA-DA-01,Desarrollo Analítico,Móvil,21-Jun-21,NA
+Parrilla con agitador,Corning,PC-420D,NW23BAA0002429,PAA-DA-02,Desarrollo Analítico,Móvil,25-Jun-24,NA
+Parrilla con agitador,VWR,12365-452,0-90914007,PAA-LC-01,NA,NA,ND,14-Jun-23
+Parrilla con agitador,Corning,PC-420D,NW23AAA0000620,PAA-LC-02,Control de Calidad,Análisis Fisicoquímicos,08-Ago-24,NA
+Parrilla con agitador,Corning,PC-420D,NW23AAA0000607,PAA-LC-03,Control de Calidad,Análisis Fisicoquímicos,08-Ago-24,NA
+Parilla con agitador,DLAB,ND,ND,PAA-MI-01,Microbiología,Preparación Microbiológica,25-Jul-22,NA
+Parilla con agitador,DLAB,ND,ND,PAA-MI-02,Microbiología,Preparación Microbiológica,25-Jul-22,NA
+Parrilla eléctrica,Thomas Scientific,10x10,120201001,PAE-LC-01,NA,NA,ND,12-Abr-22
+Parrilla eléctrica,VWR,984VW0CHPUSP,190107002,PAE-LC-02,Microbiología,Preparación Microbiológica,28-Mar-19,NA
+Parrilla eléctrica,VWR,10x10,181008001,PAE-LC-03,NA,NA,20-Sep-19,16-Oct-24
+Pesa 5Kg,RICE LAKE,Clase F,15F054,PES-VA-01,Validación ,"Móvil, Almacén de Validación",19-Dic-17,NA
+Pesa 10Kg,RICE LAKE,Clase F,15F075,PES-VA-02,Fabricación,Utensilios y Aditamentos de Fabricación,19-Dic-17,NA
+Pesa 25Kg,RICE LAKE,Clase F,15F069,PES-VA-03,Fabricación,Utensilios y Aditamentos de Fabricación,19-Dic-17,NA
+Pesa 50Kg,RICE LAKE,Clase F,15F065,PES-VA-04,NA,NA,03-Ene-18,13-Dic-19
+Pesa 50Kg,RICE LAKE,Clase F,15F065,PES-VA-05,NA,NA,03-Ene-18,13-Dic-19
+Pistola de recubrimiento,BINKS,BBR HVLP,NA,PIR-PR-01,NA,NA,08-Mar-18,11-Dic-23
+Punzón 6 mm,ND,ND,ND,PUN-DF-01,Desarrollo Farmacéutico,Desarrollo Farmacéutico,09-Jul-21,NA
+Punzón 8 mm,ND,ND,ND,PUN-DF-02,Desarrollo Farmacéutico,Desarrollo Farmacéutico,09-Jul-21,NA
+Punzón 10 mm,ND,ND,ND,PUN-DF-03,Desarrollo Farmacéutico,Desarrollo Farmacéutico,09-Jul-21,NA
+Punzón 11.1 mm x 5.5 mm,ND,ND,ND,PUN-DF-04,Desarrollo Farmacéutico,Desarrollo Farmacéutico,09-Jul-21,NA
+Purificador de agua,ELGA Purelab,Ultra ANMK2,UAF268T31,PUR-LC-01,Control de Calidad,Disolución,ND,NA
+Registrador de temperatura ,Graphtec,GL220,ND,REG-VA-01,Validación ,"Móvil, Almacén de Validación",ND,NA
+Registrador de temperatura ,Omega,OM-EL-USB-1-PRO-A,10025143,REG-VA-02,Validación ,"Móvil, Almacén de Validación",ND,NA
+Registrador de temperatura,Omega,OM-EL-USB-1-PRO-A,68001028,REG-VA-03,Validación,"Móvil, Almacén de Validación",17-Jul-20,NA
+Registrador de temperatura y humedad,Amprobe,TB300,16070001,DAT-LO-01,NA,NA,ND,12-May-18
+Registrador de temperatura y humedad,CEM,DT-171,180106970,DAT-LO-02,NA,NA,08-Mar-18,03-Mar-20
+Registrador de temperatura y humedad,CEM,DT-171,180106971,DAT-LO-03,NA,NA,08-Mar-18,22-Abr-20
+Registrador de temperatura y humedad,CEM,DT-171,180106977,DAT-LO-04,NA,NA,07-May-18,26-Ago-25
+Registrador de temperatura y humedad,CEM,DT-171,180106972,DAT-LO-05,NA,NA,07-May-18,22-Abr-20
+Registrador de temperatura y humedad,CEM,DT-171,180106976,DAT-LO-06,NA,NA,07-May-18,26-Ago-25
+Registrador de temperatura y humedad,CEM,DT-171,180106973,DAT-LO-07,Validación ,"Móvil, Almacén de Validación",16-May-18,NA
+Registrador de temperatura y humedad,CEM,DT-171,180106975,DAT-LO-08,NA,NA,16-May-18,01-May-24
+Registrador de temperatura y humedad,CEM,DT-171,180106974,DAT-LO-09,Validación ,"Móvil, Almacén de Validación",16-May-18,NA
+Registrador de temperatura y humedad,CEM,DT-171,181004511,DAT-VA-01,NA,NA,13-Nov-18,07-Dic-18
+Registrador de temperatura y humedad,CEM,DT-171,181004514,DAT-VA-02,Validación,"Móvil, Almacén de Validación",13-Nov-18,NA
+Registrador de temperatura y humedad,CEM,DT-171,181004515,DAT-VA-03,Validación,"Móvil, Almacén de Validación",13-Nov-18,NA
+Registrador de temperatura y humedad,CEM,DT-171,181004519,DAT-VA-04,Validación,"Móvil, Almacén de Validación",13-Nov-18,NA
+Registrador de temperatura y humedad,CEM,DT-171,181004516,DAT-VA-05,Validación,"Móvil, Almacén de Validación",13-Nov-18,NA
+Registrador de temperatura y humedad,CEM,DT-171,181004517,DAT-VA-06,Validación,"Móvil, Almacén de Validación",13-Nov-18,NA
+Registrador de temperatura y humedad,CEM,DT-171,181004518,DAT-VA-07,Validación,"Móvil, Almacén de Validación",13-Nov-18,NA
+Registrador de temperatura y humedad,CEM,DT-171,181004513,DAT-VA-08,Validación,"Móvil, Almacén de Validación",13-Nov-18,NA
+Registrador de temperatura y humedad,CEM,DT-171,181004510,DAT-VA-09,Validación,"Móvil, Almacén de Validación",13-Nov-18,NA
+Registrador de temperatura y humedad,CEM,DT-171,181004512,DAT-VA-10,Validación,"Móvil, Almacén de Validación",13-Nov-18,NA
+Registrador de temperatura y humedad,CEM,DT-171,181004520,DAT-VA-11,Validación,"Móvil, Almacén de Validación",28-Dic-18,NA
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065042284,DAT-VA-12,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065042212,DAT-VA-13,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065042822,DAT-VA-14,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065042851,DAT-VA-15,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065041750,DAT-VA-16,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065042000,DAT-VA-17,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065041436,DAT-VA-18,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065032335,DAT-VA-19,NA,NA,05-May-23,22-Jul-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065042582,DAT-VA-20,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065038891,DAT-VA-21,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065031284,DAT-VA-22,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065033029,DAT-VA-23,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065032586,DAT-VA-24,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065044633,DAT-VA-25,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Ampere,EL-USB-2,065041322,DAT-VA-26,NA,NA,05-May-23,26-Ago-25
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000000530,DAT-VA-27,NA,NA,01-May-24,26-Ago-25
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000002972,DAT-VA-28,NA,NA,01-May-24,26-Ago-25
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000000594,DAT-VA-29,NA,NA,01-May-24,26-Ago-25
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000000986,DAT-VA-30,NA,NA,01-May-24,26-Ago-25
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000002332,DAT-VA-31,NA,NA,01-May-24,26-Ago-25
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000000704,DAT-VA-32,NA,NA,01-May-24,26-Ago-25
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000000493,DAT-VA-33,NA,NA,01-May-24,26-Ago-25
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000000488,DAT-VA-34,NA,NA,01-May-24,26-Ago-25
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000002002,DAT-VA-35,NA,NA,01-May-24,26-Ago-25
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000001208,DAT-VA-36,NA,NA,01-May-24,26-Ago-25
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000005771,DAT-VA-37,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000001697,DAT-VA-38,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000005819,DAT-VA-39,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000005793,DAT-VA-40,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000002333,DAT-VA-41,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000002340,DAT-VA-42,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000001528,DAT-VA-43,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000002259,DAT-VA-44,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000005776,DAT-VA-45,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000002568,DAT-VA-46,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000005763,DAT-VA-47,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000000620,DAT-VA-48,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000002616,DAT-VA-49,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000005797,DAT-VA-50,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000005817,DAT-VA-51,Validación,"Móvil, Almacén de Validación",29-Jul-24,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014757,DAT-VA-52,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014779,DAT-VA-53,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014869,DAT-VA-54,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014786,DAT-VA-55,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014827,DAT-VA-56,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014854,DAT-VA-57,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014793,DAT-VA-58,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014767,DAT-VA-59,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014870,DAT-VA-60,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014801,DAT-VA-61,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014799,DAT-VA-62,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014761,DAT-VA-63,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014858,DAT-VA-64,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000006115,DAT-VA-65,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014760,DAT-VA-66,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014829,DAT-VA-67,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000005806,DAT-VA-68,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000005809,DAT-VA-69,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014796,DAT-VA-70,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000005801,DAT-VA-71,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014874,DAT-VA-72,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000014856,DAT-VA-73,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000006508,DAT-VA-74,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000006125,DAT-VA-75,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000006123,DAT-VA-76,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000006114,DAT-VA-77,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000006490,DAT-VA-78,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000005818,DAT-VA-79,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000005798,DAT-VA-80,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Registrador de temperatura y humedad,Lascar Electronics,EL-USB-2,000006105,DAT-VA-81,Validación,"Móvil, Almacén de Validación",21-Jul-25,NA
+Inductor de calor,JORESTECH,IND-100HA,AX502204060176,SMI-FR-01,Fabricación,Acondicionamiento Primario Llenado de Frascos,12-Ago-25,NA
+Sensor de presión,ND,ND,ND,SEN-DA-01,Desarrollo Analítico,"Análisis Instrumental II, en BOV-DA-04",22-Ago-23,NA
+Sensor de punto de rocío,CS Instruments,FA-510,30210709,SEN-VA-01,Validación ,"Móvil, Almacén de Validación",13-Dic-21,NA
+Sensor de temperatura,SENSEWELL,"RTD,PT-100",R9513,SEN-FR-01,Fabricación,"Piso Técnico, en UMA-MA-03",24-Mar-22,NA
+Sensor de temperatura,SENSEWELL,"RTD,PT-100",R9507,SEN-FR-02,Fabricación,"Piso Técnico, en UMA-MA-03",24-Mar-22,NA
+Sensor de temperatura,NOVUS,RHT-DM,19191865,SEN-FR-03,Fabricación,"Recubrimiento, en REC-FR-02",07-Jul-22,NA
+Sensor de temperatura,ND,ND,ND,SEN-MI-01,Microbiología,"Preparación Microbiológica, en REF-MI-01",15-Jun-23,NA
+Sistema de filtros de agua,ND,ND,ND,FIL-MA-01,NA,NA,ND,16-Mar-23
+Sistema de filtros de UMA´s,VECOFLOW,"HET5SAML1C
+HET9SAML1C",NA,FIL-MA-02,Mantenimiento,"Piso Técnico, en UMA-MA-01 y UMA-MA-02",03-Ene-18,NA
+Sistema de filtros,ASTROCEL I,Tipo C,ND,FIL-MA-04,NA,NA,22-Sep-20,26-Mar-25
+Sistema de filtros de aire comprimido,FESTO,"MS9-LWS-G-U-V
+MS6-LF-1/2-CRM
+MS6-LFM-1/2-BUV-HF-DA
+MS6-LFM-1/2-AUV-HF-DA
+MS6-LFM-1/2-AR-HF-DA:*W",ND,FIL-MA-05,NA,NA,24-Sep-20,27-Jun-22
+Sistema de filtros de aire comprimido,SMC PNEUMATICS,"AW-20
+AM250C
+AMD250C",ND,FIL-MA-06,NA,NA,24-Sep-20,16-Mar-23
+Sistema de filtros de aire comprimido,SMC PNEUMATICS,"AW-20
+AM250C
+AMD250C",ND,FIL-MA-07,NA,NA,24-Sep-20,16-Mar-23
+Sistema de filtros de aire comprimido,TIANYU,"AFR 2000
+AL 2000",ND,FIL-MA-08,NA,NA,24-Sep-20,27-Jun-22
+Sistema de filtros de aire comprimido,FESTO,"MS6-LF-1/2-CRV
+MS6-LFM-1/2-BRM-DA
+MS6-LFM-1/2-ARV-DA",ND,FIL-MA-09,NA,NA,24-Sep-20,27-Jun-22
+Sonicador,JAJA,575HTA,05HS62305,SON-DA-01,NA,NA,ND,09-Abr-21
+Sonicador,Branson,2510R-MTH,RLB0506053210,SON-LC-01,NA,NA,ND,17-Ago-21
+Sonicador,Branson,M8800,BGQ011948220B,SON-LC-02,NA,NA,28-Mar-19,18-Ago-21
+Sonicador,BRANSON,CPX8800H,BGS062121820B,SON-LC-03,Control de Calidad,Análisis Instrumental IV,08-Jul-21,NA
+Tacómetro,Amprobe,TACH-10,19060022,TAC-CP-01,Gestión de la Calidad,Control en Proceso ,18-Oct-19,NA
+Tacómetro,VWR,4060,72571817,TAC-VA-01,Validación ,"Móvil, Almacén de Validación",ND,NA
+Tambor,ND,ND,ND,TMB-DF-01,Desarrollo Farmacéutico,"Móvil, en FRI-DF-01",06-Nov-23,NA
+Tambor,ND,ND,ND,TMB-GC-01,Gestión de la Calidad,"Control en Proceso, en FRI-CP-01",ND,NA
+Temporizador,Autonics,LE4S,20031A,TPR-FR-01,Fabricación,"Mezclado y Tamizado 1, en PAN-FR-03.",17-May-23,NA
+Termobalanza,Mettler Toledo,HB43,1126120655,TEB-CP-01,Gestión de la Calidad,Control en Proceso ,ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-AL-01,Almacén,Almacén de Materia Prima Aprobada y Cuarentena,ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-AL-02,Almacén,Pesado,ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-AL-03,Almacén,Cuarentena de Producto Terminado,01-Nov-24,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-AL-04,Almacén,Producto Terminado Controlado,01-Nov-24,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-AL-05,Almacén,Almacén de Materia Prima Aprobada,04-Nov-24,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-AL-06,Almacén,Almacén de Validación,04-Nov-24,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-CP-01,NA,NA,ND,30-Sep-22
+Termohigrómetro,Extech Instrument,445702,ND,TER-CP-02,Microbiología,"Microbiología, en REF-LC-04",ND,NA
+Termohigrómetro,Extech Instrument,445703,ND,TER-CP-03,Gestión de la Calidad,Muestreo de Materia Prima,16-Ago-18,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-CP-04,Gestión de la Calidad,Museo de Muestras,ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-CP-05,Control de Calidad,Análisis Fisicoquímicos,ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-CP-06,Gestión de la Calidad,Órdenes Surtidas,ND,NA
+Termohigrómetro,Extech Instruments,445702,ND,TER-DF-01,Desarrollo Farmacéutico,Desarrollo Farmacéutico,03-Jul-24,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-LC-01,Control de Calidad,"Análisis Instrumental II, en DES-LC-01",ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-LC-02,Control de Calidad,"Área de Balanzas, en DES-LC-02",ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-LC-03,Microbiología,Preparación Microbiológica,ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-LC-04,Control de Calidad,"Disolución, en REF-LC-05",ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-LC-05,Fabricación,Encapsulado y Abrillantado 1,27-Jun-22,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-LC-06,NA,NA,ND,05-Ene-24
+Termohigrómetro,Extech Instrument,445702,ND,TER-LC-07,NA,NA,ND,01-Ago-19
+Termohigrómetro,Extech Instrument,445703,ND,TER-LC-08,Microbiología,Microbiología,ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-LC-10,NA,NA,ND,15-Abr-21
+Termohigrómetro,Extech Instrument,445702,ND,TER-LC-11,Control de Calidad,Almacén de Reactivos,ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-LC-12,Control de Calidad,Análisis Instrumental I,ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-LC-14,NA,NA,ND,11-Ene-24
+Termohigrómetro,Extech Instrument,445702,ND,TER-LC-15,Control de Calidad,Estabilidades,ND,NA
+Termohigrómetro,Extech Instrument,445703,NA,TER-LC-16,Validación,"Móvil, Almacén de Validación",20-Dic-23,NA
+Termohigrómetro,Extech Instrument,445703,NA,TER-LC-17,Validación,"Móvil, Almacén de Validación",21-Abr-21,NA
+Termohigrometro,Extech Instrument,445713,ND,TER-LC-18,NA,NA,17-Ene-24,10-Jul-24
+Termohigrometro,Extech Instruments,445713,ND,TER-LC-19,Control de Calidad,Almacén de Validación,29-Abr-24,N/A
+Termohigrometro,Extech Instruments,445702,ND,TER-LC-20,Control de Calidad,Área de Balanzas,29-Abr-24,N/A
+Termohigrometro,Extech Instruments,445702,ND,TER-LC-21,Control de Calidad,Análisis Instrumental IV,29-Abr-24,N/A
+Termohigrometro,Extech Instruments,445702,ND,TER-LC-22,Control de Calidad,"Análisis Fisicoquímicos, en Recepción de Muestras",18-Jul-24,N/A
+Termohigrometro,Extech Instruments,445702,ND,TER-LC-23,Control de Calidad,"Análisis Fisicoquímicos, en Muestras de Grupo I, II y III",18-Jul-24,N/A
+Termohigrometro,Sper Scientific,800027,ND,TER-LC-24,Control de Calidad,"Disolución, en REF-LC-05 (Congelador)",18-Jul-24,N/A
+Termohigrometro,Sper Scientific,800027,ND,TER-LC-25,Control de Calidad,Almacén de Validación,18-Jul-24,N/A
+Termohigrómetro,Extech Instruments,445702,ND,TER-LC-26,Control de Calidad,"Área de Balanzas, Estándares secundarios para grupos I, II y III",17-Jul-25,NA
+Termohigrómetro,Extech Instrument,445713,ND,TER-LO-01,NA,NA,ND,08-Feb-23
+Termohigrómetro,HUATO,A2000-EX,H2000JA095,TER-LO-02,Logística,"Móvil, Transporte",07-Jul-25,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-01,NA,NA,ND,09-Ene-19
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-03,NA,NA,ND,07-Sep-18
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-04,Fabricación,Almacén de Material de Empaque ,ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-05,NA,NA,ND,15-Abr-21
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-06,Validación,"Móvil, Almacén de Validación",ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-08,NA,NA,ND,15-Abr-21
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-10,NA,NA,ND,18-Oct-21
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-11,NA,NA,ND,14-May-19
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-12,Desarrollo Farmacéutico,Desarrollo Farmacéutico,ND,03-Jul-24
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-13,Validación,"Móvil, Almacén de Validación",15-Dic-23,NA
+Termohigrómetro,HUATO,A2000-EX,HT21161663,TER-PR-14,NA,NA,30-Nov-17,28-Mar-23
+Termohigrómetro,HUATO,A2000-EX,HT21161673,TER-PR-15,Logística,"Móvil, Transporte",08-Jun-22,04-Jul-25
+Termohigrómetro,HUATO,A2000-EX,HT21161660,TER-PR-16,NA,NA,30-Nov-17,06-Dic-22
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-17,NA,NA,ND,07-Sep-18
+Termohigrómetro,HUATO,A2000-EX,HT21161678,TER-PR-18,Validación,"Móvil, Almacén de Validación",30-Nov-17,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-19,NA,NA,ND,01-Nov-24
+Termohigrómetro,HUATO,A2000-EX,HT21161660,TER-PR-20,NA,NA,30-Nov-17,15-Dic-23
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-21,Fabricación ,Acondicionamiento Secundario Frasco,ND,NA
+Termohigrómetro,Extech Instrument,445701,ND,TER-PR-24,NA,NA,ND,07-Sep-18
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-25,Validación,"Móvil, Almacén de Validación",ND,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-26,NA,NA,ND,11-Ene-24
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-27,NA,NA,ND,01-Nov-24
+Termohigrómetro,Extech Instrument,445702,ND,TER-PR-28,NA,NA,ND,01-Nov-24
+Termohigrómetro,Extech Instrument,445703,ND,TER-PR-29,NA,NA,16-Ago-18,01-Ago-19
+Termohigrómetro,Extech Instrument,445703,ND,TER-PR-30,NA,NA,16-Ago-18,01-Ago-19
+Termohigrómetro,Extech Instrument,445703,ND,TER-PR-31,NA,NA,16-Ago-18,01-Ago-19
+Termohigrómetro,Extech Instrument,445703,ND,TER-PR-32,NA,NA,16-Ago-18,01-Ago-19
+Termohigrómetro,Extech Instrument,445703,ND,TER-PR-33,Validación,"Móvil, Almacén de Validación",10-Nov-22,NA
+Termohigrómetro,Extech Instrument,445703,ND,TER-PR-34,Validación,"Móvil, Almacén de Validación",10-Nov-22,NA
+Termohigrómetro,Extech Instrument,445703,ND,TER-PR-35,Validación,"Móvil, Almacén de Validación",10-Nov-22,NA
+Termohigrometro,Extech Instrument,445702,ND,TER-FR-36,Fabricación ,Tableteado 1,02-Ago-23,NA
+Termohigrometro,Extech Instrument,445702,NA,TER-FR-37,Fabricación,Acondicionamiento Primario Llenado de Frascos,11-Ene-24,NA
+Termohigrometro,Extech Instrument,445702,NA,TER-FR-38,Fabricación,Mezclado y Tamizado 1,11-Ene-24,NA
+Termohigrómetro,Extech Instruments,445702,ND,TER-FR-39,Fabricación,Tableteado 2,19-Nov-24,NA
+Termohigrómetro,Extech Instruments,445702,ND,TER-FR-40,Fabricación,Encapsulado y Abrillantado #5,19-Nov-24,NA
+Termohigrómetro,Extech Instruments,445702,ND,TER-FR-41,Fabricación,Recubrimiento,19-Nov-24,NA
+Termohigrómetro,Extech Instruments,445702,ND,TER-FR-42,Fabricación,Encapsulado y Abrillantado 4,19-Nov-24,NA
+Termohigrómetro,Extech Instrument,445703,ND,TER-VA-02,Validación,"Móvil, Almacén de Validación",ND,NA
+Termohigrómetro,Extech Instrument,445703,ND,TER-VA-03,Validación,"Móvil, Almacén de Validación",07-Sep-18,NA
+Termohigrómetro,Extech Instrument,445703,ND,TER-VA-04,Validación,"Móvil, Almacén de Validación",07-Sep-18,NA
+Termohigrómetro,Extech Instrument,445703,ND,TER-VA-05,Validación,"Móvil, Almacén de Validación",07-Sep-18,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-06,Validación,"Móvil, Almacén de Validación",17-Oct-18,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-07,Validación,"Móvil, Almacén de Validación",17-Oct-18,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-08,NA,NA,17-Oct-18,20-Dic-23
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-09,Validación,"Móvil, Almacén de Validación",17-Oct-18,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-10,Validación,"Móvil, Almacén de Validación",17-Oct-18,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-11,Validación,"Móvil, Almacén de Validación",17-Oct-18,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-12,NA,NA,17-Oct-18,22-Nov-24
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-13,Validación,"Móvil, Almacén de Validación",22-Ene-20,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-14,Fabricación,Detección de Metales,22-Ene-20,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-15,NA,NA,22-Ene-20,05-Ene-24
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-16,NA,NA,22-Ene-20,20-Ene-22
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-17,Fabricación,Acondicionamiento Secundario Blíster,23-Ene-20,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-18,Gestión de la Calidad,Cuarentena de Graneles,23-Ene-20,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-19,Validación,"Móvil, Almacén de Validación",01-Jun-23,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-20,Validación,"Móvil, Almacén de Validación",01-Jun-23,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-21,Validación,"Móvil, Almacén de Validación",01-Jun-23,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-22,Validación,"Móvil, Almacén de Validación",01-Jun-23,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-23,Validación,"Móvil, Almacén de Validación",01-Jun-23,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-24,Validación,"Móvil, Almacén de Validación",01-Jun-23,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-25,Validación,"Móvil, Almacén de Validación",01-Jun-23,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-26,Validación,"Móvil, Almacén de Validación",01-Jun-23,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-27,Validación,"Móvil, Almacén de Validación",01-Jun-23,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-VA-28,Validación,"Móvil, Almacén de Validación",01-Jun-23,NA
+Termohigrómetro,Sper Scientific,800027,ND,TER-VA-29,Validación,"Móvil, Almacén de Validación",04-Jul-25,NA
+Termohigrómetro,Extech Instrument,445702,ND,TER-SC-01,Fabricación,Acondicionamiento Primario Blíster,ND,NA
+Termómetro,Control company,4352,181628793,TEM-DA-01,Validación,"Móvil, Almacén de Validación",21-Dic-18,NA
+Termometro digital,VWR,Traceable,230335067,TEM-DA-02,Desarrollo Analítico,Disolución,24-Jul-23,NA
+Termómetro,ND,ND,ND,TEM-DF-01,NA,NA,09-Ene-19,11-Ago-25
+Termómetro,Alla France,55000P110-qp,ND,TEM-DF-02,Desarrollo Farmacéutico,Desarrollo Farmacéutico,11-Ago-25,NA
+Termómetro ,Sper Scientific,76mm,ND,TEM-LC-01,NA,NA,ND,21-Sep-18
+Termómetro ,Sper Scientific,76mm,ND,TEM-LC-02,NA,NA,ND,08-Feb-22
+Termómetro,Sper Scientific,76mm,ND,TEM-LC-03,Control de Calidad,Análisis Fisicoquímicos,ND,NA
+Termómetro ,STB-22,307055,3Y1753,TEM-LC-04,NA,NA,ND,20-Mar-19
+Termómetro,Sper Scientific,76mm,ND,TEM-LC-05,NA,NA,ND,06-Ago-18
+Termómetro,Alla France,76 mm,ND,TEM-LC-06,Control de Calidad,Análisis Fisicoquímicos,16-Feb-18,NA
+Termómetro,Alla France,76 mm,ND,TEM-LC-07,NA,NA,16-Feb-18,16-Feb-23
+Termómetro,Alla France,76 mm,ND,TEM-LC-08,Control de Calidad,Análisis Fisicoquímicos,16-Feb-18,NA
+Termómetro,Alla France,76 mm,ND,TEM-LC-09,Control de Calidad,Análisis Fisicoquímicos,16-Feb-18,NA
+Termómetro,Alla France,76 mm,ND,TEM-LC-10,Control de Calidad,Análisis Fisicoquímicos,08-Nov-18,NA
+Termómetro,Alla France,76 mm,ND,TEM-LC-11,Gestión de la Calidad,"Control en Proceso, en DES-CP-01",08-Nov-18,NA
+Termómetro,Alla France,76 mm,ND,TEM-LC-12,Microbiología,"Microbiología, en BAM-LC-01",08-Nov-18,NA
+Termómetro,Alla France,76 mm,ND,TEM-LC-13,Validación,"Móvil, Almacén de Validación",08-Nov-18,NA
+Termómetro,Alla France,76 mm,ND,TEM-LC-14,Control de Calidad,Analisis Fisicoquímicos,08-Nov-18,NA
+Termómetro,Alla France,76 mm,ND,TEM-LC-15,Control de Calidad,Análisis Fisicoquímicos,18-Ene-19,NA
+Termómetro digital,Fluke,51 II,97380401,TED-LC-01,Control de Calidad,Disolución,ND,NA
+Termometro IR,Fluke,62 max,49391283WS,TIR-DF-01,Desarrollo Farmacéutico,Desarrollo Farmacéutico,04-Jul-22,NA
+Termometro IR,Fluke,566,19220053,TIR-LC-01,NA,NA,ND,10-Ene-24
+Termómetro IR,Fluke,568,44280035WS,TIR-PR-02,NA,NA,08-Abr-19,15-Jun-22
+Termómetro IR,Fluke,62 MAX,56790737MV,TIR-FR-01,Fabricación,Recubrimiento,02-Ago-23,NA
+Termopar,Omega,K,3914008,TRK-LC-01,NA,NA,ND,09-Feb-23
+Termopar,Fluke,80PK-22,DE6448,TRK-LC-02,Control de Calidad,Disolución,ND,NA
+Termopar,OAKTON,35613-13,93X052911,TRK-LC-03,Microbiología,"Microbiología, en POT-LC-02",04-Nov-20,NA
+Termopar,OAKTON,93X052911,91,TRK-LC-04,NA,NA,29-Jul-21,30-Ago-24
+Termopar,ND,ND,ND,TRK-MI-01,Microbiología,"Microbiología, en POT-MI-01",21-Sep-23,NA
+Termopar,ND,ND,ND,TRK-PR-01,NA,NA,04-Feb-21,17-Ene-23
+Termopar,ND,ND,ND,TRK-PR-02,NA,NA,04-Feb-21,17-Ene-23
+Termopar,ND,ND,ND,TRK-PR-03,NA,NA,04-Feb-21,09-Feb-23
+Termopar,HANNA instruments,HI7662-T,05310F3N,TRT-LC-01,NA,NA,31-Mar-20,16-Dic-22
+Termostato programable,Carrier,KJR-12B/DP(T)-E,M115J28XQ13680002,TEP-AL-01,Almacén,Material impreso,22-Sep-25,NA
+Termostato programable,Carrier,KJR-12B/DP(T)-E,M115J28XQ134E0004,TEP-AL-02,Almacén,Almacén de material de envase y empaque aprobado,22-Sep-25,NA
+Termostato programable,Carrier,KJR-29B1/BK-E,M115Q56XQ147Q0026,TEP-AL-03,Almacén,Almacén de material de envase y empaque aprobado,22-Sep-25,NA
+Termostato programable,Carrier,KJR-12B/DP(T)-E,M115J28XQ134E0020,TEP-AL-04,Almacén,Cuarentena de material de envase y empaque,22-Sep-25,NA
+Termostato programable ,Honeywell,TH800,TH8320U1008,TEP-MA-01,NA,NA,ND,03-Sep-21
+Termostato programable ,Honeywell,TH800,TH8320U1008,TEP-MA-02,Mantenimiento,Esclusa 1,ND,NA
+Termostato programable ,Honeywell,TH4110U2005,1937JC461089,TEP-MA-03,Mantenimiento,Almacén de Materia Prima Aprobada,08-Jul-20,NA
+Termostato programable ,Honeywell,TH5110D1006,NA,TEP-MA-04,NA,NA,08-Jul-20,10-Feb-25
+Termostato programable ,Honeywell,TH4110U2005,2052JC965158,TEP-MA-05,Mantenimiento,Pasillo A,22-Mar-21,NA
+Termostato programable ,Honeywell,TH1110DV1009,79944011636992,TEP-MA-06,Mantenimiento,Preparación Microbiológica,07-Jun-24,NA
+Termostato programable ,Honeywell,TH4110U2005,2412JJB02456,TEP-MA-07,Mantenimiento,Microbiología,07-Jun-24,NA
+Termostato programable ,Honeywell,TH6220U2000,1827JB605273,TEP-MA-08,Mantenimiento,"Acondicionamiento Secundario, en UPA-MA-01",10-Feb-25,NA
+Termostato programable,Honeywell,TH2320U4006,2518JUE05650,TEP-MA-09,Mantenimiento,"Piso técnico, UMA-MA-05",05-Sep-25,NA
+Transmisor de temperatura y humedad,Novus,RHT-DM-485-LCD,N/A,TTH-FR-01,Fabricación,"Recubrimiento, en REC-FR-02",30-Mar-23,NA
+Vernier,Mitutoyo,"CD-6"" ASX",A17316342,VER-CP-01,Gestión de la Calidad,Control en Proceso ,05-Abr-18,NA
+Vernier,Neiko,01408A,20180818,VER-DF-01,Desarrollo Farmacéutico,Desarrollo Farmacéutico,17-Dic-18,NA
+Vernier,General Tools,No. 147,ND,VER-DF-02,Desarrollo Farmacéutico,Desarrollo Farmacéutico,11-Ago-25,NA
+Vernier,VWR,6 In,Y500875,VER-LC-01,Control de Calidad,Análisis Fisicoquímicos,ND,NA
+Vernier,Nachtman,E008,ND,VER-VA-01,Mantenimiento,Taller de Mantenimiento,ND,NA
+Vernier,Mitutoyo,"CD-8""ASX",A21151470,VER-MA-01,Mantenimiento,Taller de Mantenimiento,26-Abr-24,NA
+Viscosimetro,Fungilab,SMART series,TSMR 210022,VIS-DA-01,Desarrollo Analítico,"Móvil (Análisis Instrumental I, Análisis Instrumental II, Análisis Fisicoquímicos y Disolución)",07-Jul-23,NA
+
+"ND=No disponible
+NA=No aplica
+Rechazado, Dado de baja= Rechazado en su calibración
+Dado de baja=Pérdida, avería sin reparación, fuera de uso",,,,,,,,

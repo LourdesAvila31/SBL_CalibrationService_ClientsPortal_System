@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = (base === '/') ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <meta charset="UTF-8">
+    <title>Roles delegados | SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img { width: 140px; margin-bottom: 22px; }
+        .sidebar-nav { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .sidebar-nav .nav-link {
+            width: 92%; display: flex; flex-direction: column; align-items: center;
+            padding: 20px 0 8px 0; color: #cfd8dc; text-decoration: none; font-size: 1.08rem;
+            font-weight: 600; letter-spacing: 1px; border-radius: 10px; margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s; position: relative;
+        }
+        .sidebar-nav .nav-link.active,
+        .sidebar-nav .nav-link:hover { background: #0c8c98; color: #fff; }
+        .sidebar-nav .nav-link i { font-size: 1.85rem; margin-bottom: 8px; }
+        .sidebar-nav .nav-link.active::after {
+            content:""; position:absolute; left:0; top:16px; width:4px; height:32px; background:#fff; border-radius:2px;
+        }
+        .main-content { margin-left:200px; min-height:100vh; padding:0; }
+        .topbar {
+            background:#fff; height:64px; display:flex; align-items:center; justify-content:space-between;
+            padding:0 34px 0 28px; box-shadow:0 1px 8px #0001;
+        }
+        .topbar-left { display:flex; align-items:center; gap:26px; }
+        .topbar-title { font-size:1.45rem; font-weight:700; color:#217b9b; letter-spacing:1px; }
+        .topbar-user { font-size:1rem; color:#217b9b; font-weight:400; margin-left:24px; }
+        .topbar-icons { display:flex; align-items:center; gap:18px; }
+        .topbar-icons i { font-size:1.2rem; color:#217b9b; cursor:pointer; margin-top:5px; }
+        .topbar-user-box { position:relative; }
+        #userMenu, #notificationsMenu {
+            display:none; position:absolute; right:0; top:32px; background:#fff; border-radius:10px;
+            box-shadow:0 2px 12px #0d575a22; min-width:180px; z-index:99; padding:12px;
+        }
+        #notificationsMenu { right:64px; top:40px; min-width:260px; padding:15px; }
+        #userMenu button, #userMenu .btn-perfil {
+            width:100%; background:#0d575a; color:#fff; border:none; border-radius:6px;
+            margin:8px 0 0 0; padding:7px 0; font-weight:700; font-size:1rem;
+        }
+        #userMenu .btn-cerrar { background:#fff; color:#0d575a; border:1px solid #0d575a; }
+        .roles-wrapper {
+            padding:30px 32px 40px 32px;
+        }
+        .roles-header {
+            display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px;
+            margin-bottom:18px;
+        }
+        .roles-header h1 {
+            margin:0; font-size:1.5rem; font-weight:700; color:#0d575a;
+        }
+        .empresa-info {
+            display:flex; align-items:center; gap:10px; background:#fff; border:1px solid #b0bec5;
+            border-radius:8px; padding:10px 16px; min-height:44px; color:#125b5e; font-size:1rem;
+        }
+        .empresa-label { font-weight:600; color:#0d575a; }
+        .empresa-name { font-weight:500; }
+        .roles-layout {
+            display:grid; grid-template-columns: minmax(280px, 360px) 1fr; gap:24px;
+        }
+        .card {
+            background:#fff; border-radius:14px; box-shadow:0 4px 18px rgba(13,87,90,0.12);
+            padding:24px 26px; position:relative;
+        }
+        .card h2 {
+            margin:0 0 16px 0; font-size:1.22rem; font-weight:700; color:#125b5e;
+        }
+        .form-group { margin-bottom:14px; }
+        label { font-weight:600; color:#125b5e; display:block; margin-bottom:6px; }
+        input[type="text"], textarea {
+            width:100%; padding:10px 14px; border:1px solid #b0bec5; border-radius:8px; font-size:1rem;
+            background:#f9fafb; color:#125b5e; transition:border-color .2s, background .2s;
+        }
+        input[type="text"]:focus, textarea:focus { border-color:#0c8c98; background:#fff; outline:none; }
+        textarea { min-height:96px; resize:vertical; }
+        .permissions-box {
+            max-height:240px; overflow:auto; border:1px solid #cfd8dc; border-radius:10px; padding:12px;
+            background:#f6fbfc; display:grid; gap:8px;
+        }
+        .permissions-box label {
+            font-weight:500; color:#217b9b; display:flex; align-items:center; gap:10px;
+        }
+        .form-actions { display:flex; gap:12px; margin-top:18px; }
+        .btn-primary {
+            background:#0d575a; color:#fff; border:none; border-radius:8px; padding:10px 22px;
+            font-weight:600; letter-spacing:.4px; cursor:pointer; transition:background .2s;
+        }
+        .btn-primary:hover { background:#0c8c98; }
+        .btn-light {
+            background:#fff; color:#0d575a; border:1px solid #0d575a; border-radius:8px; padding:10px 22px;
+            font-weight:600; cursor:pointer; transition:background .2s, color .2s;
+        }
+        .btn-light:hover { background:#0d575a; color:#fff; }
+        table { width:100%; border-collapse:collapse; }
+        thead th {
+            background:#0d575a; color:#fff; padding:12px 10px; font-weight:600; text-transform:uppercase; letter-spacing:.5px;
+        }
+        tbody td {
+            padding:14px 10px; border-bottom:1px solid #e0f2f5; color:#125b5e; vertical-align:top;
+        }
+        tbody tr:last-child td { border-bottom:none; }
+        .table-actions { display:flex; gap:10px; }
+        .table-actions button {
+            border:none; border-radius:6px; padding:6px 12px; font-size:.95rem; cursor:pointer;
+            font-weight:600; background:#e0f2f5; color:#0d575a; transition:background .2s;
+        }
+        .table-actions button:hover { background:#0c8c98; color:#fff; }
+        .empty-state { text-align:center; padding:40px 0; color:#607d8b; font-weight:500; }
+        .message {
+            margin-top:16px; font-weight:600; text-align:center; padding:10px; border-radius:10px; display:none;
+        }
+        .message.show { display:block; }
+        .message.success { background:#e3f8f1; color:#0d755a; border:1px solid #0d755a; }
+        .message.error { background:#fdecea; color:#b71c1c; border:1px solid #b71c1c; }
+        .message.warning { background:#fff8e1; color:#a05a00; border:1px solid #fbc02d; }
+        .role-meta { font-size:.9rem; color:#607d8b; margin-top:4px; }
+        .badge {
+            display:inline-flex; align-items:center; justify-content:center; padding:4px 10px; border-radius:999px;
+            background:#e0f2f5; color:#0d575a; font-size:.8rem; font-weight:600; margin:2px 4px 2px 0;
+        }
+        @media (max-width:1100px) {
+            .roles-layout { grid-template-columns:1fr; }
+            .main-content { margin-left:0; }
+        }
+        @media (max-width:640px) {
+            .roles-header { flex-direction:column; align-items:flex-start; }
+            .empresa-info { width:100%; justify-content:space-between; }
+        }
+    </style>
+    <script>
+    fetch(BASE_URL + '/backend/check_permission.php?permiso=usuarios_view')
+      .then(r=>r.json())
+      .then(d=>{ if(!d.allowed) window.location.href = BASE_URL + '/apps/tenant/index.html'; });
+    </script>
+</head>
+<body>
+    <aside id="sidebar" class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link" href="apps/tenant/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+            <i class="fa fa-user-shield"></i>
+            <span>ROLES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+            <i class="fa fa-circle-question"></i>
+            <span>TUTORIAL</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </aside>
+    <div class="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+                <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Roles delegados</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/tenant/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <section class="roles-wrapper">
+            <div class="roles-header">
+                <h1>Roles delegados</h1>
+                <div class="empresa-info" id="empresaInfo">
+                    <span class="empresa-label">Empresa:</span>
+                    <span id="empresaName" class="empresa-name">Cargando…</span>
+                </div>
+            </div>
+            <div id="rolesMessage" class="message"></div>
+            <div class="roles-layout">
+                <div class="card" id="formCard">
+                    <h2 id="formTitle">Registrar rol</h2>
+                    <form id="roleForm">
+                        <input type="hidden" id="empresaId" name="empresa_id">
+                        <input type="hidden" id="roleId" name="role_id">
+                        <div class="form-group">
+                            <label for="roleVisibleName">Nombre visible</label>
+                            <input type="text" id="roleVisibleName" name="nombre_visible" maxlength="120" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="roleInternalName">Identificador interno</label>
+                            <input type="text" id="roleInternalName" name="nombre" maxlength="80" placeholder="Ej. Supervisor Planta">
+                            <div class="role-meta">Se utilizará como referencia interna y para integraciones. Si se deja vacío, se generará automáticamente.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="roleDescription">Descripción</label>
+                            <textarea id="roleDescription" name="descripcion" maxlength="250" placeholder="Describe el alcance del rol"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Permisos asociados</label>
+                            <div id="permissionsBox" class="permissions-box"></div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary" id="submitRole">Guardar rol</button>
+                            <button type="button" class="btn-light" id="cancelEdit">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <h2>Roles registrados</h2>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre visible</th>
+                                    <th>Identificador</th>
+                                    <th>Permisos</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rolesTable">
+                                <tr><td colspan="4" class="empty-state">Aún no hay roles delegados registrados para tu empresa.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script type="module" src="assets/scripts/scripts-tenant.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script>
+    (function(){
+        const sidebarEl = document.getElementById('sidebar');
+        if(sidebarEl){
+            fetch(BASE_URL + '/apps/tenant/sidebar.html')
+                .then(r=>r.text())
+                .then(html=>{
+                    sidebarEl.innerHTML = html;
+                    if(typeof initSidebar === 'function') initSidebar();
+                    if(typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+                    const activeLink = sidebarEl.querySelector('.nav-link[data-section="roles"]');
+                    if(activeLink) activeLink.classList.add('active');
+                });
+        }
+    })();
+
+    const API_BASE = BASE_URL + '/backend/usuarios/delegated_roles';
+    const FALLBACK_ROLES_ENDPOINT = BASE_URL + '/backend/usuarios/roles.php';
+    const empresaNameEl = document.getElementById('empresaName');
+    const empresaIdInput = document.getElementById('empresaId');
+    const rolesTable = document.getElementById('rolesTable');
+    const messageBox = document.getElementById('rolesMessage');
+    const form = document.getElementById('roleForm');
+    const formTitle = document.getElementById('formTitle');
+    const roleIdInput = document.getElementById('roleId');
+    const visibleInput = document.getElementById('roleVisibleName');
+    const internalInput = document.getElementById('roleInternalName');
+    const descriptionInput = document.getElementById('roleDescription');
+    const permissionsBox = document.getElementById('permissionsBox');
+    const cancelEditBtn = document.getElementById('cancelEdit');
+
+    let userContext = null;
+    let currentEmpresaId = '';
+    const permissionsCache = new Map();
+    const rolesCache = new Map();
+
+    function showMessage(text, type = 'success'){
+        if(!messageBox) return;
+        messageBox.textContent = text;
+        messageBox.className = `message show ${type}`;
+    }
+
+    function clearMessage(){
+        if(!messageBox) return;
+        messageBox.textContent = '';
+        messageBox.className = 'message';
+    }
+
+    function normalizeRoleObject(role){
+        if(!role || typeof role !== 'object'){
+            return null;
+        }
+        const id = role.id ?? role.role_id ?? role.slug ?? null;
+        const nombre = role.nombre ?? role.role_name ?? role.slug ?? null;
+        const visible = role.nombre_visible ?? role.visible_name ?? role.display_name ?? nombre ?? '';
+        const descripcion = role.descripcion ?? role.description ?? '';
+        let permisos = [];
+        if(Array.isArray(role.permisos)) permisos = role.permisos;
+        else if(Array.isArray(role.permissions)) permisos = role.permissions;
+        else if(typeof role.permisos === 'string') permisos = role.permisos.split(',');
+        else if(typeof role.permissions === 'string') permisos = role.permissions.split(',');
+        permisos = permisos.map(p => p && p.trim ? p.trim() : p).filter(Boolean);
+        const empresa = role.empresa_id ?? role.empresa ?? null;
+        return { id, nombre, visible, descripcion, permisos, empresa_id: empresa };
+    }
+
+    function renderPermissionsCheckboxes(permissions){
+        if(!permissionsBox) return;
+        permissionsBox.innerHTML = '';
+        if(!permissions || !permissions.length){
+            const empty = document.createElement('div');
+            empty.className = 'text-muted';
+            empty.textContent = 'No se encontraron permisos configurables.';
+            permissionsBox.appendChild(empty);
+            return;
+        }
+        permissions.forEach(perm => {
+            const value = perm.nombre ?? perm.name ?? perm.id ?? perm;
+            const label = perm.descripcion ?? perm.description ?? perm.label ?? value;
+            if(!value) return;
+            const wrapper = document.createElement('label');
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.value = value;
+            input.name = 'permisos[]';
+            wrapper.appendChild(input);
+            const span = document.createElement('span');
+            span.textContent = label;
+            wrapper.appendChild(span);
+            permissionsBox.appendChild(wrapper);
+            permissionsCache.set(value, label);
+        });
+    }
+
+    function getSelectedPermissions(){
+        const selected = [];
+        permissionsBox.querySelectorAll('input[type="checkbox"]:checked').forEach(chk => {
+            selected.push(chk.value);
+        });
+        return selected;
+    }
+
+    function setSelectedPermissions(permisos){
+        const set = new Set(Array.isArray(permisos) ? permisos.map(String) : []);
+        permissionsBox.querySelectorAll('input[type="checkbox"]').forEach(chk => {
+            chk.checked = set.has(chk.value);
+        });
+    }
+
+    function resetForm(){
+        form.reset();
+        roleIdInput.value = '';
+        formTitle.textContent = 'Registrar rol';
+        permissionsBox.querySelectorAll('input[type="checkbox"]').forEach(chk => { chk.checked = false; });
+        cancelEditBtn.classList.add('btn-light');
+    }
+
+    function populateForm(role){
+        if(!role) return;
+        formTitle.textContent = 'Editar rol';
+        if(role.id) roleIdInput.value = role.id;
+        visibleInput.value = role.visible || '';
+        internalInput.value = role.nombre || '';
+        descriptionInput.value = role.descripcion || '';
+        setSelectedPermissions(role.permisos);
+        cancelEditBtn.classList.remove('btn-light');
+    }
+
+    function renderRolesTable(roles){
+        rolesTable.innerHTML = '';
+        if(!roles || !roles.length){
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = 4;
+            td.className = 'empty-state';
+            td.textContent = 'No hay roles delegados registrados para la empresa seleccionada.';
+            tr.appendChild(td);
+            rolesTable.appendChild(tr);
+            return;
+        }
+        roles.forEach(role => {
+            const tr = document.createElement('tr');
+            const visibleTd = document.createElement('td');
+            visibleTd.textContent = role.visible || 'Sin nombre visible';
+            if(role.descripcion){
+                const meta = document.createElement('div');
+                meta.className = 'role-meta';
+                meta.textContent = role.descripcion;
+                visibleTd.appendChild(meta);
+            }
+            tr.appendChild(visibleTd);
+
+            const nameTd = document.createElement('td');
+            nameTd.textContent = role.nombre || '—';
+            tr.appendChild(nameTd);
+
+            const permTd = document.createElement('td');
+            if(role.permisos && role.permisos.length){
+                role.permisos.forEach(p => {
+                    const span = document.createElement('span');
+                    span.className = 'badge';
+                    span.textContent = p;
+                    permTd.appendChild(span);
+                });
+            } else {
+                permTd.innerHTML = '<span class="text-muted">Sin permisos definidos</span>';
+            }
+            tr.appendChild(permTd);
+
+            const actionsTd = document.createElement('td');
+            const actions = document.createElement('div');
+            actions.className = 'table-actions';
+            const editBtn = document.createElement('button');
+            editBtn.type = 'button';
+            editBtn.innerHTML = '<i class="fa fa-edit"></i> Editar';
+            editBtn.addEventListener('click', () => {
+                populateForm(role);
+                clearMessage();
+            });
+            actions.appendChild(editBtn);
+            actionsTd.appendChild(actions);
+            tr.appendChild(actionsTd);
+            rolesTable.appendChild(tr);
+        });
+    }
+
+    async function fetchRoles(empresaId){
+        if(!empresaId){
+            renderRolesTable([]);
+            return;
+        }
+        clearMessage();
+        const query = new URLSearchParams();
+        if(empresaId) query.set('empresa_id', empresaId);
+        const target = `${API_BASE}/list.php?${query.toString()}`;
+        try {
+            const response = await fetch(target);
+            if(response.status === 403){
+                renderRolesTable([]);
+                showMessage('No cuentas con permisos para consultar los roles de esta empresa.', 'warning');
+                return;
+            }
+            if(!response.ok){
+                throw new Error('response_error');
+            }
+            const payload = await response.json();
+            const rawRoles = Array.isArray(payload.roles) ? payload.roles : Array.isArray(payload.data) ? payload.data : payload;
+            const normalized = Array.isArray(rawRoles) ? rawRoles.map(normalizeRoleObject).filter(Boolean) : [];
+            rolesCache.clear();
+            normalized.forEach(role => {
+                const key = role.id !== null && role.id !== undefined ? String(role.id) : (role.nombre || role.visible);
+                if(key) rolesCache.set(key, role);
+            });
+            renderRolesTable(normalized);
+        } catch (error) {
+            try {
+                const fallback = await fetch(FALLBACK_ROLES_ENDPOINT);
+                if(!fallback.ok) throw new Error('fallback_error');
+                const legacy = await fallback.json();
+                const normalized = Array.isArray(legacy) ? legacy.map(normalizeRoleObject).filter(Boolean) : [];
+                renderRolesTable(normalized);
+                if(!normalized.length){
+                    showMessage('No se pudieron obtener roles delegados; se muestran los roles globales disponibles.', 'warning');
+                }
+            } catch (fallbackError) {
+                renderRolesTable([]);
+                showMessage('No se pudieron obtener los roles delegados. Intenta nuevamente más tarde.', 'error');
+            }
+        }
+    }
+
+    async function fetchPermissions(){
+        try {
+            const response = await fetch(`${API_BASE}/permissions.php`);
+            if(response.status === 403){
+                renderPermissionsCheckboxes([]);
+                showMessage('No tienes permisos suficientes para consultar los permisos configurables.', 'warning');
+                return;
+            }
+            if(!response.ok){
+                throw new Error('permissions_error');
+            }
+            const payload = await response.json();
+            const list = Array.isArray(payload.permissions) ? payload.permissions : Array.isArray(payload.data) ? payload.data : payload;
+            renderPermissionsCheckboxes(Array.isArray(list) ? list : []);
+        } catch (error) {
+            renderPermissionsCheckboxes([]);
+        }
+    }
+
+    async function fetchUserContext(){
+        try {
+            const response = await fetch(BASE_URL + '/backend/usuarios/get_actual_user.php');
+            if(!response.ok) return;
+            const data = await response.json();
+            userContext = data;
+            const nameEl = document.getElementById('userName');
+            if(nameEl){
+                nameEl.innerHTML = `${data?.nombre || 'Invitado'} <span class="text-accent">(${data?.role_name || 'Sin rol'})</span>`;
+            }
+            if(data?.empresa_id){
+                currentEmpresaId = String(data.empresa_id);
+                empresaIdInput.value = String(data.empresa_id);
+            } else {
+                currentEmpresaId = '';
+                empresaIdInput.value = '';
+            }
+            const canManageUsuarios = data?.permission_flags?.canManageUsuarios;
+            const empresaNombre = data?.empresa_nombre || 'Mi empresa';
+            if(empresaNameEl){
+                empresaNameEl.textContent = empresaNombre;
+            }
+            if(!canManageUsuarios && !data?.empresa_id && empresaNameEl){
+                empresaNameEl.textContent = 'Sin empresa asignada';
+            }
+        } catch (error) {
+            // Ignorar errores
+        }
+    }
+
+    function validateForm(){
+        clearMessage();
+        const visible = visibleInput.value.trim();
+        const empresa = empresaIdInput.value;
+        if(!empresa){
+            showMessage('No se pudo identificar la empresa en sesión.', 'error');
+            return false;
+        }
+        if(!visible){
+            showMessage('Ingresa un nombre visible para el rol.', 'error');
+            return false;
+        }
+        if(getSelectedPermissions().length === 0){
+            showMessage('Selecciona al menos un permiso para el rol.', 'warning');
+            return false;
+        }
+        return true;
+    }
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if(!validateForm()) return;
+        const empresaId = empresaIdInput.value;
+        const selectedPerms = getSelectedPermissions();
+        const formData = new FormData();
+        formData.append('empresa_id', empresaId);
+        formData.append('nombre_visible', visibleInput.value.trim());
+        formData.append('descripcion', descriptionInput.value.trim());
+        const internal = internalInput.value.trim();
+        if(internal) formData.append('nombre', internal);
+        selectedPerms.forEach(p => formData.append('permisos[]', p));
+        const hasId = roleIdInput.value.trim() !== '';
+        if(hasId){
+            formData.append('role_id', roleIdInput.value.trim());
+        }
+        const endpoint = hasId ? `${API_BASE}/update.php` : `${API_BASE}/create.php`;
+        try {
+            const response = await fetch(endpoint, { method: 'POST', body: formData });
+            const payload = await response.json().catch(() => ({}));
+            if(response.status === 403){
+                showMessage(payload?.msg || 'No cuentas con permisos para administrar roles delegados.', 'error');
+                return;
+            }
+            if(!response.ok || payload?.success === false){
+                const message = payload?.msg || payload?.error || 'Ocurrió un error al guardar el rol.';
+                throw new Error(message);
+            }
+            showMessage(payload?.msg || 'Rol guardado correctamente.', 'success');
+            resetForm();
+            fetchRoles(empresaId);
+        } catch (error) {
+            showMessage(error.message || 'No fue posible guardar el rol.', 'error');
+        }
+    });
+
+    cancelEditBtn.addEventListener('click', () => {
+        resetForm();
+        clearMessage();
+    });
+
+    (async function init(){
+        await fetchUserContext();
+        await fetchPermissions();
+        if(!currentEmpresaId){
+            showMessage('No fue posible identificar la empresa en sesión. Contacta al administrador.', 'error');
+            if(empresaNameEl){
+                empresaNameEl.textContent = 'Sin empresa asignada';
+            }
+            return;
+        }
+        fetchRoles(currentEmpresaId);
+    })();
+    </script>
+</body>
+</html>

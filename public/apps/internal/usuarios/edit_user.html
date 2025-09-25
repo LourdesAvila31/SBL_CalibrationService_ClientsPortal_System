@@ -1,0 +1,848 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <script src="assets/scripts/roles-utils.js"></script>
+
+    <title>Editar Usuario | SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background: #e6f6fb; font-family: 'Montserrat', Arial, sans-serif; margin: 0;}
+        .main-content { margin-left: 200px; min-height: 100vh; padding: 0;}
+        .user-section { max-width: 630px; margin: 32px auto 0 auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 18px #0d575a11; padding: 30px 34px 28px 34px;}
+        .user-title { font-size: 1.24rem; color: #125b5e; font-weight: 700; margin-bottom: 24px; text-align: center; letter-spacing: 1px;}
+        .alert-error, .alert-success { font-size: 1.09rem; text-align: center; padding: 14px; border-radius: 8px; margin-bottom: 20px;}
+        .alert-error { background: #ffeded; color: #c00; border:1.5px solid #c00;}
+        .alert-success { background: #e9ffe4; color: #097a3d; border:1.5px solid #097a3d;}
+        .is-hidden { display: none !important; }
+        .is-visible { display: block !important; }
+        .form-label { font-weight: 600; color: #125b5e; margin-bottom: 6px; display: block;}
+        .form-input, .form-select { width: 100%; padding: 12px; border: 1px solid #b2e0ef; border-radius: 8px; font-size: 1rem; margin-bottom: 18px; background: #f1faff; color: #217b9b; font-family: inherit; font-weight: 500;}
+        .form-input:focus, .form-select:focus { outline: none; border-color: #21829b; background: #e6f6fb;}
+        .form-checkbox-group { display: flex; gap: 16px; margin-bottom: 12px;}
+        .form-checkbox-label { font-weight: 500; color: #217b9b; margin-left: 6px;}
+        .roles-title { font-weight: 700; color: #125b5e; margin-bottom: 8px; margin-top: 10px;}
+        .roles-group { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-bottom: 18px;}
+        .roles-group label { font-weight: 500; color: #217b9b; cursor: pointer;}
+        .password-hint { font-size: 0.97rem; color: #21829b; background: #f5fcfc; border-radius: 7px; padding: 8px 12px; margin-bottom: 16px; margin-top: -8px;}
+        .form-actions { display: flex; gap: 16px; justify-content: center; margin-top: 10px;}
+        .btn { border: none; border-radius: 8px; padding: 11px 34px; font-size: 1.09rem; font-weight: 700; letter-spacing: 1px; background: #21829b; color: #fff; cursor: pointer; box-shadow: 0 2px 12px #21829b22; transition: background .18s;}
+        .btn.cancel { background: #fff; color: #21829b; border: 1px solid #21829b;}
+        .btn:hover, .btn.cancel:hover { background: #125b5e; color: #fff;}
+        @media (max-width:900px) {
+            .main-content { margin-left:0; }
+            .user-section { margin:18px 2vw; padding:14px;}
+        }
+         .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img {
+            width: 140px;
+            margin-bottom: 22px;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-nav .nav-link {
+            width: 92%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0 8px 0;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s;
+            position: relative;
+        }
+        .sidebar-nav .nav-link.active,
+        .sidebar-nav .nav-link:hover {
+            background: #0c8c98;
+            color: #fff;
+        }
+        .sidebar-nav .nav-link i {
+            font-size: 1.85rem;
+            margin-bottom: 8px;
+        }
+        .sidebar-nav .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 4px;
+            height: 32px;
+            background: #fff;
+            border-radius: 2px;
+        }
+    </style>
+
+    <script>
+    const params=new URLSearchParams(window.location.search);
+    fetch(BASE_URL + '/backend/check_permission.php?permiso=usuarios_edit')
+      .then(r=>r.json())
+      .then(d=>{ if(!d.allowed) window.location.href = BASE_URL + '/apps/internal/index.html'; });
+    </script>
+</head>
+<body>
+   <!-- SIDEBAR -->
+        <aside id="sidebar" class="sidebar">
+        <!-- SIDEBAR CONTENT -->
+        <style>
+            .sidebar-nav {
+                gap: 12px;
+            }
+        
+            .sidebar-nav .nav-link {
+                width: 90%;
+                padding: 16px 0 10px 0;
+                font-size: 1.02rem;
+                letter-spacing: 0.5px;
+            }
+        
+            .sidebar-nav .nav-link i {
+                font-size: 1.7rem;
+                margin-bottom: 6px;
+            }
+        
+            @media (max-width: 900px) {
+                .sidebar-nav .nav-link {
+                    width: 92%;
+                }
+            }
+        </style>
+        <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+        <div class="sidebar-logo">
+            <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-link active" href="apps/internal/index.html">
+                <i class="fa fa-tachometer-alt"></i>
+                <span>MENÚ</span>
+            </a>
+            <a class="nav-link" href="apps/internal/instrumentos/list_gages.html">
+                <i class="fa fa-boxes-stacked"></i>
+                <span>INSTRUMENTOS</span>
+            </a>
+            <a class="nav-link" href="apps/internal/planeacion/list_planning.html">
+                <i class="fa fa-calendar-alt"></i>
+                <span>PLANEACIÓN</span>
+            </a>
+            <a class="nav-link" href="apps/internal/calibraciones/list_calibrations.html">
+                <i class="fa fa-balance-scale"></i>
+                <span>CALIBRACIONES</span>
+            </a>
+            <a class="nav-link" href="apps/internal/reportes/reports.html">
+                <i class="fa fa-file-alt"></i>
+                <span>REPORTES</span>
+            </a>
+            <a class="nav-link" href="apps/internal/index.html" data-section="menu">
+                <i class="fa fa-tachometer-alt"></i>
+                <span>MENÚ</span>
+            </a>
+            <a class="nav-link" href="apps/internal/instrumentos/list_gages.html" data-section="instrumentos">
+                <i class="fa fa-boxes-stacked"></i>
+                <span>INSTRUMENTOS</span>
+            </a>
+            <a class="nav-link" href="apps/internal/planeacion/list_planning.html" data-section="planeacion">
+                <i class="fa fa-calendar-alt"></i>
+                <span>PLANEACIÓN</span>
+            </a>
+            <a class="nav-link" href="apps/internal/calibraciones/list_calibrations.html" data-section="calibraciones">
+                <i class="fa fa-balance-scale"></i>
+                <span>CALIBRACIONES</span>
+            </a>
+            <a class="nav-link" href="apps/internal/reportes/reports.html" data-section="reportes">
+                <i class="fa fa-file-alt"></i>
+                <span>REPORTES</span>
+            </a>
+            <a class="nav-link" href="apps/internal/configuracion/api_tokens.html" data-section="configuracion" data-requires-api-tokens="manage">
+                <i class="fa fa-key"></i>
+                <span>TOKENS API</span>
+            </a>
+            <a class="nav-link" href="apps/internal/ayuda/help_center.html" data-section="ayuda">
+                <i class="fa fa-circle-question"></i>
+                <span>AYUDA</span>
+            </a>
+            <a class="nav-link" href="apps/internal/calidad/index.html" data-section="calidad">
+                <i class="fa fa-award"></i>
+                <span>CALIDAD</span>
+            </a>
+        </nav>
+        </aside>
+ <!-- FIN SIDEBAR -->
+    <!-- Sidebar dinámico -->
+    <div id="sidebar"></div>
+    <div class="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+          <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Usuarios &gt; Editar</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/internal/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="formbar">
+            <button class="btn-back" onclick="window.location.href = BASE_URL + '/apps/internal/usuarios/list_users.html'">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+            <div class="formbar-title">Usuarios &gt; Editar</div>
+        </div>
+        <section class="user-section">
+            <div class="user-title">Editar Usuario</div>
+            <div class="alert-error is-hidden" id="error-box"></div>
+            <div class="alert-success is-hidden" id="success-box"></div>
+            <form id="userForm" autocomplete="off">
+                <input type="hidden" id="usuario_id" name="usuario_id" value="">
+                <label class="form-label" for="correo">Correo electrónico</label>
+                <input type="email" class="form-input" id="correo" name="correo" required>
+
+                <label class="form-label" for="telefono">Teléfono de contacto</label>
+                <input type="text" class="form-input" id="telefono" name="telefono" maxlength="50" required>
+
+                <label class="form-label" for="nombre">Nombre(s)</label>
+                <input type="text" class="form-input" id="nombre" name="nombre" required>
+
+                <label class="form-label" for="apellidos">Apellidos</label>
+                <input type="text" class="form-input" id="apellidos" name="apellidos" required>
+
+                <label class="form-label" for="puesto">Puesto</label>
+                <input type="text" class="form-input" id="puesto" name="puesto" maxlength="150" required>
+
+                <label class="form-label" for="contrasena">Contraseña (solo si deseas cambiarla)</label>
+                <input type="password" class="form-input" id="contrasena" name="contrasena" placeholder="Dejar vacío paraúno cambiar" oninput="checkPassword()">
+                <span class="password-toggle" onclick="togglePassword()">
+                     <img src="assets/images/eye.png" alt="Ver" width="22" class="align-middle">
+                </span>
+                <div class="password-hint">
+                    <b>Requisitos de contraseña:</b><br>
+                    <br>Mínimo 8 caracteres<br>
+                    <br>Una mayúscula<br>
+                    <br>Una minúscula<br>
+                    <br>Un número<br>
+                    <br>Un símbolo<br>
+                </div>
+                <div id="pwReqList" class="mb-10">
+                    <span id="req-length" class="password-req">• Mínimo 8 caracteres</span><br>
+                    <span id="req-upper" class="password-req">• Una mayúscula</span><br>
+                    <span id="req-lower" class="password-req">• Una minúscula</span><br>
+                    <span id="req-number" class="password-req">• Un número</span><br>
+                    <span id="req-symbol" class="password-req">• Un símbolo</span>
+                </div>
+                <div class="form-checkbox-group">
+                    <label><input type="checkbox" id="activo" name="activo"> <span class="form-checkbox-label">Activo</span></label>
+                    <label><input type="checkbox" id="sso" name="sso"> <span class="form-checkbox-label">Single Sign-On</span></label>
+                </div>
+                <label class="form-label" for="empresa_id">Empresa</label>
+                <select class="form-select" id="empresa_id" name="empresa_id" required>
+                    <option value="">Selecciona una empresa</option>
+                </select>
+                <div class="roles-title">Selecciona el rol:</div>
+                <div class="roles-group">
+                    <label><input type="radio" name="role_id" value="Administrador" required> Administrador</label>
+                    <label><input type="radio" name="role_id" value="Supervisor"> Supervisor</label>
+                    <label><input type="radio" name="role_id" value="Operador"> Operador</label>
+                    <label><input type="radio" name="role_id" value="Lector"> Lector</label>
+                    <label><input type="radio" name="role_id" value="Cliente"> Cliente</label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="submitForm()">Guardar Cambios</button>
+                    <button type="button" class="btn cancel" onclick="window.location.href = BASE_URL + '/apps/internal/usuarios/list_users.html'">Cancelar</button>
+                </div>
+            </form>
+            <div class="user-title" style="margin-top:32px;">Evidencias de competencia</div>
+            <div class="alert-error is-hidden" id="competency-error"></div>
+            <div class="alert-success is-hidden" id="competency-success"></div>
+            <form id="competencyForm" class="mb-3" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" name="usuario_id" id="competencyUserId">
+                <label class="form-label" for="competencyDescripcion">Descripción de la evidencia</label>
+                <input type="text" class="form-input" id="competencyDescripcion" name="descripcion" placeholder="Ej. Constancia de calibraciones 2024">
+                <label class="form-label" for="competencyCatalogo">Familia de instrumento cubierta</label>
+                <select class="form-select" id="competencyCatalogo" name="catalogo_id">
+                    <option value="">Aplica a cualquier instrumento</option>
+                </select>
+                <small class="text-muted-sm">Selecciona la familia o tipo de instrumento que respalda esta evidencia.</small>
+                <label class="form-label" for="competencyFecha">Fecha de emisión</label>
+                <input type="date" class="form-input" id="competencyFecha" name="evidencia_fecha">
+                <div class="form-row" style="gap:16px;">
+                    <div class="form-group" style="flex:1;">
+                        <label class="form-label" for="competencyVigenteDesde">Vigente desde</label>
+                        <input type="date" class="form-input" id="competencyVigenteDesde" name="vigente_desde">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label class="form-label" for="competencyVigenteHasta">Vigente hasta<span style="color:#c00;"> *</span></label>
+                        <input type="date" class="form-input" id="competencyVigenteHasta" name="vigente_hasta" required>
+                    </div>
+                </div>
+                <small class="text-muted-sm">ISO/IEC 17025 exige vigencias claras: captura la fecha límite en la que esta evidencia sigue siendo válida.</small>
+                <label class="form-label" for="competencyArchivo">Archivo (PDF o imagen)</label>
+                <input type="file" class="form-input" id="competencyArchivo" name="archivo" accept="application/pdf,image/*" required>
+                <div class="form-actions" style="margin-top:0;">
+                    <button type="submit" class="btn">Adjuntar evidencia</button>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table table-striped" id="competencyTable">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Instrumento</th>
+                            <th>Vigencia</th>
+                            <th>Fecha emisión</th>
+                            <th>Archivo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5" class="text-center text-muted">Sin evidencias registradas.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <!-- Sidebar JS y carga dinámica -->
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script>
+      const empresaSelect = document.getElementById('empresa_id');
+      const rolesContainer = document.querySelector('.roles-group');
+      const permisosUsuario = { puedeDelegados: false };
+      let defaultEmpresaId = null;
+      let usuarioRolActual = null;
+      let usuarioIdEditar = null;
+      const competencyForm = document.getElementById('competencyForm');
+      const competencyTableBody = document.querySelector('#competencyTable tbody');
+      const competencyError = document.getElementById('competency-error');
+      const competencySuccess = document.getElementById('competency-success');
+      const competencyCatalogoSelect = document.getElementById('competencyCatalogo');
+      const competencyUserInput = document.getElementById('competencyUserId');
+      const catalogoCache = new Map();
+
+      async function cargarPermisosActuales() {
+        try {
+          const res = await fetch(BASE_URL + '/backend/usuarios/get_actual_user.php');
+          if (!res.ok) return;
+          const actual = await res.json();
+          if (actual && typeof actual === 'object') {
+            permisosUsuario.puedeDelegados = Boolean(actual.permission_flags?.canManageUsuarios);
+          }
+        } catch (error) {
+          console.warn('No se pudieron obtener los permisos del usuario actual.', error);
+        }
+      }
+
+      function mostrarMensajeCompetencia(ok, mensaje) {
+        if (!competencyError || !competencySuccess) {
+          return;
+        }
+        const objetivo = ok ? competencySuccess : competencyError;
+        const ocultar = ok ? competencyError : competencySuccess;
+        ocultar.classList.add('is-hidden');
+        ocultar.classList.remove('is-visible');
+        objetivo.textContent = mensaje;
+        objetivo.classList.remove('is-hidden');
+        objetivo.classList.add('is-visible');
+      }
+
+      function limpiarMensajesCompetencia() {
+        if (competencyError) {
+          competencyError.classList.add('is-hidden');
+          competencyError.classList.remove('is-visible');
+          competencyError.textContent = '';
+        }
+        if (competencySuccess) {
+          competencySuccess.classList.add('is-hidden');
+          competencySuccess.classList.remove('is-visible');
+          competencySuccess.textContent = '';
+        }
+      }
+
+      async function cargarCatalogoInstrumentos() {
+        if (!competencyCatalogoSelect) {
+          return;
+        }
+        competencyCatalogoSelect.innerHTML = '<option value="">Aplica a cualquier instrumento</option>';
+        try {
+          const res = await fetch(BASE_URL + '/backend/instrumentos/catalogo/get_catalogo_instrumentos.php');
+          if (!res.ok) {
+            throw new Error('Respuesta no válida');
+          }
+          const data = await res.json();
+          if (!Array.isArray(data)) {
+            return;
+          }
+          data.forEach((item) => {
+            if (!item || typeof item !== 'object') {
+              return;
+            }
+            const id = Number.parseInt(item.id, 10);
+            if (Number.isNaN(id)) {
+              return;
+            }
+            const nombre = item.nombre || item.descripcion || `Instrumento #${id}`;
+            catalogoCache.set(id, nombre);
+            const opt = document.createElement('option');
+            opt.value = String(id);
+            opt.textContent = nombre;
+            competencyCatalogoSelect.appendChild(opt);
+          });
+        } catch (error) {
+          console.error('No se pudo cargar el catálogo de instrumentos', error);
+          const aviso = document.createElement('option');
+          aviso.value = '';
+          aviso.textContent = 'No fue posible cargar el catálogo';
+          competencyCatalogoSelect.appendChild(aviso);
+        }
+      }
+
+      function formatearVigencia(item) {
+        const desde = item?.vigente_desde || '';
+        const hasta = item?.vigente_hasta || '';
+        const hoy = new Date().toISOString().slice(0, 10);
+        const partes = [];
+        if (desde) {
+          partes.push(`Desde ${desde}`);
+        }
+        if (hasta) {
+          partes.push(`Hasta ${hasta}`);
+        }
+        if (partes.length === 0) {
+          partes.push('Sin fecha de vencimiento');
+        }
+        const isExpired = hasta !== '' && hasta < hoy;
+        if (isExpired) {
+          partes.push('<span style="color:#b3261e;font-weight:600;">Expirada</span>');
+        }
+        return partes.join(' · ');
+      }
+
+      function nombreCatalogoPorId(catalogoId) {
+        if (catalogoId === null || catalogoId === undefined || catalogoId === '') {
+          return 'General';
+        }
+        const idNum = Number.parseInt(catalogoId, 10);
+        if (catalogoCache.has(idNum)) {
+          return catalogoCache.get(idNum);
+        }
+        return `Catálogo #${catalogoId}`;
+      }
+
+      function renderCompetencias(lista) {
+        if (!competencyTableBody) {
+          return;
+        }
+        competencyTableBody.innerHTML = '';
+        if (!Array.isArray(lista) || lista.length === 0) {
+          competencyTableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Sin evidencias registradas.</td></tr>';
+          return;
+        }
+
+        const hoy = new Date().toISOString().slice(0, 10);
+        lista.forEach((item) => {
+          const fila = document.createElement('tr');
+          const descripcion = (item?.descripcion || '').trim();
+          const catalogoNombre = nombreCatalogoPorId(item?.catalogo_id ?? null);
+          const vigenciaTexto = formatearVigencia(item);
+          const evidenciaFecha = item?.evidencia_fecha || '';
+          const archivo = item?.archivo ? `<a href="${item.url}" target="_blank" rel="noopener">Ver archivo</a>` : 'Sin archivo';
+          const vigente = !item?.vigente_hasta || item.vigente_hasta >= hoy;
+          if (!vigente) {
+            fila.style.backgroundColor = '#fff3cd';
+          }
+          fila.innerHTML = `
+            <td>${descripcion !== '' ? descripcion : 'Sin descripción'}</td>
+            <td>${catalogoNombre}</td>
+            <td>${vigenciaTexto}</td>
+            <td>${evidenciaFecha || 'N/D'}</td>
+            <td>${archivo}</td>
+            <td><button type="button" class="btn btn-link text-danger competency-delete" data-id="${item.id}"><i class="fa fa-trash"></i></button></td>
+          `;
+          competencyTableBody.appendChild(fila);
+        });
+      }
+
+      async function cargarCompetencias(usuarioId) {
+        if (!usuarioId) {
+          renderCompetencias([]);
+          return;
+        }
+        try {
+          const res = await fetch(`${BASE_URL}/backend/usuarios/list_competencies.php?usuario_id=${encodeURIComponent(usuarioId)}`);
+          if (!res.ok) {
+            throw new Error('Respuesta no válida');
+          }
+          const payload = await res.json();
+          renderCompetencias(payload?.competencias || []);
+        } catch (error) {
+          console.error('No se pudieron cargar las competencias', error);
+          renderCompetencias([]);
+          mostrarMensajeCompetencia(false, 'No fue posible obtener las evidencias registradas.');
+        }
+      }
+
+      async function eliminarCompetencia(id) {
+        try {
+          const form = new FormData();
+          form.append('id', id);
+          const res = await fetch(`${BASE_URL}/backend/usuarios/delete_competency.php`, {
+            method: 'POST',
+            body: form,
+          });
+          const data = await res.json();
+          if (!data.success) {
+            throw new Error(data.message || 'No se pudo eliminar');
+          }
+          mostrarMensajeCompetencia(true, data.message || 'Evidencia eliminada correctamente.');
+          await cargarCompetencias(usuarioIdEditar);
+        } catch (error) {
+          console.error('Error eliminando evidencia', error);
+          mostrarMensajeCompetencia(false, error.message || 'No se pudo eliminar la evidencia.');
+        }
+      }
+
+      async function cargarEmpresas(defaultId) {
+        try {
+          const res = await fetch(BASE_URL + '/backend/empresas/list.php');
+          if (!res.ok) throw new Error('Respuesta inválida');
+          const data = await res.json();
+          empresaSelect.innerHTML = '<option value="">Selecciona una empresa</option>';
+          data.forEach(emp => {
+            const opt = document.createElement('option');
+            opt.value = emp.id;
+            opt.textContent = emp.nombre;
+            empresaSelect.appendChild(opt);
+          });
+          if (typeof defaultId === 'number' && !Number.isNaN(defaultId)) {
+            defaultEmpresaId = defaultId;
+            empresaSelect.value = String(defaultId);
+          }
+        } catch (e) {
+          console.error('Error cargando empresas', e);
+          if (rolesContainer) {
+            rolesContainer.innerHTML = '<span style=\"color:#c00;\">No se pudieron cargar las empresas.</span>';
+          }
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', function() {
+        fetch(BASE_URL + '/apps/internal/sidebar.html').then(r=>r.text()).then(html=>{
+          document.getElementById('sidebar').innerHTML = html;
+          if (typeof initSidebar === 'function') initSidebar();
+          if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+            if (typeof window.applyApiTokenVisibility === 'function') window.applyApiTokenVisibility();
+            if (typeof window.activateApiTokensIfAvailable === 'function') window.activateApiTokensIfAvailable();
+        });
+      }
+
+      async function cargarRoles(empresaId) {
+        try {
+          const objetivo = (typeof empresaId === 'number' && !Number.isNaN(empresaId))
+            ? empresaId
+            : (typeof defaultEmpresaId === 'number' && !Number.isNaN(defaultEmpresaId) ? defaultEmpresaId : null);
+
+          let url = BASE_URL + '/backend/usuarios/roles.php';
+          if (objetivo) {
+            url += `?empresa_id=${objetivo}`;
+          }
+          const res = await fetch(url);
+          if (!res.ok) throw new Error('Respuesta inválida');
+          const data = await res.json();
+          const rolesNormalizados = window.RolesUtils
+            ? window.RolesUtils.filterRolesByEmpresa(data, objetivo, permisosUsuario.puedeDelegados)
+            : Array.isArray(data) ? data : [];
+          const opciones = window.RolesUtils
+            ? window.RolesUtils.buildRoleOptions(rolesNormalizados)
+            : rolesNormalizados.map((rol) => ({
+                value: rol.nombre || rol.role_name || rol,
+                label: rol.nombre || rol.role_name || rol,
+                delegated: Boolean(rol.delegated),
+              }));
+          renderRoles(opciones);
+        } catch (err) {
+          console.error('Error cargando roles', err);
+          if (rolesContainer) {
+            rolesContainer.innerHTML = '<span style=\"color:#c00;\">No se pudieron cargar los roles disponibles.</span>';
+          }
+        }
+      }
+
+      async function cargarUsuarioEditar(id) {
+        try {
+          const res = await fetch(`backend/usuarios/get_user.php?id=${encodeURIComponent(id)}`);
+          if (!res.ok) throw new Error('No se pudo obtener el usuario');
+          const u = await res.json();
+          if (!u || !u.id) {
+            showMsg('No se encontró el usuario solicitado.', false);
+            return;
+          }
+          usuarioIdEditar = u.id;
+          if (competencyUserInput) {
+            competencyUserInput.value = u.id;
+          }
+          await cargarCompetencias(u.id);
+          document.getElementById('usuario_id').value = u.id;
+          document.getElementById('correo').value = u.correo || '';
+          document.getElementById('telefono').value = u.telefono || '';
+          document.getElementById('nombre').value = u.nombre || '';
+          document.getElementById('apellidos').value = u.apellidos || '';
+          document.getElementById('activo').checked = Number(u.activo) === 1;
+          document.getElementById('sso').checked = Number(u.sso) === 1;
+          document.getElementById('puesto').value = u.puesto || '';
+          usuarioRolActual = typeof u.role_id === 'string'
+            ? u.role_id
+            : (typeof u.role_name === 'string' ? u.role_name : null);
+          defaultEmpresaId = typeof u.empresa_id === 'number' ? u.empresa_id : null;
+          await cargarEmpresas(defaultEmpresaId);
+          await cargarRoles(defaultEmpresaId);
+        } catch (error) {
+          console.error('Error cargando usuario', error);
+          showMsg('No se pudo cargar el usuario para edición.', false);
+        }
+      }
+
+      function togglePassword() {
+        const pw = document.getElementById('contrasena');
+        pw.type = pw.type === 'password' ? 'text' : 'password';
+      }
+      function checkPassword() {
+        const pw = document.getElementById('contrasena').value;
+        const isEmpty = pw.length === 0;
+        const updateReq = (id, condition) => {
+          const el = document.getElementById(id);
+          if(!el) return;
+          const valid = isEmpty || condition;
+          el.classList.toggle('is-valid', valid);
+        };
+        updateReq('req-length', pw.length >= 8);
+        updateReq('req-upper', /[A-Z]/.test(pw));
+        updateReq('req-lower', /[a-z]/.test(pw));
+        updateReq('req-number', /\d/.test(pw));
+        updateReq('req-symbol', /[^a-zA-Z0-9]/.test(pw));
+      }
+      function showMsg(msg, ok) {
+        const errorBox = document.getElementById('error-box');
+        const successBox = document.getElementById('success-box');
+        if(ok) {
+          if(errorBox){
+            errorBox.classList.add('is-hidden');
+            errorBox.classList.remove('is-visible');
+          }
+          if(successBox){
+            successBox.innerText = msg;
+            successBox.classList.remove('is-hidden');
+            successBox.classList.add('is-visible');
+          }
+        } else {
+          if(successBox){
+            successBox.classList.add('is-hidden');
+            successBox.classList.remove('is-visible');
+          }
+          if(errorBox){
+            errorBox.innerText = msg;
+            errorBox.classList.remove('is-hidden');
+            errorBox.classList.add('is-visible');
+          }
+        }
+      }
+      function validateForm() {
+        let valid = true;
+        let msg = "";
+        const correo = document.getElementById('correo').value.trim();
+        const nombre = document.getElementById('nombre').value.trim();
+        const apellidos = document.getElementById('apellidos').value.trim();
+        const puesto = document.getElementById('puesto').value.trim();
+        const telefono = document.getElementById('telefono').value.trim();
+        const pw = document.getElementById('contrasena').value;
+        const roleInput = document.querySelector('input[name="role_id"]:checked');
+        if (correo === "" || !correo.includes("@")) {
+          msg = "Debes ingresar un correo electrónico válido.";
+          valid = false;
+        } else if (nombre === "") {
+          msg = "El campo nombre es obligatorio.";
+          valid = false;
+        } else if (apellidos === "") {
+          msg = "El campo apellidos es obligatorio.";
+          valid = false;
+        } else if (puesto === "") {
+          msg = "El campo puesto es obligatorio.";
+          valid = false;
+        } else if (puesto.length > 150) {
+          msg = "El puesto no puede exceder 150 caracteres.";
+          valid = false;
+        } else if (telefono === "") {
+          msg = "El campo teléfono es obligatorio.";
+          valid = false;
+        } else if (telefono.length > 50) {
+          msg = "El teléfono no puede exceder 50 caracteres.";
+          valid = false;
+        } else if (pw.length > 0 && (pw.length < 8 || !/[A-Z]/.test(pw) || !/[a-z]/.test(pw) || !/\d/.test(pw) || !/[^a-zA-Z0-9]/.test(pw))) {
+          msg = "La contraseña no cumple los requisitos.";
+          valid = false;
+        } else if (!roleInput) {
+          msg = "Selecciona un rol.";
+          valid = false;
+        }
+        if (!valid) showMsg(msg, false);
+        return valid;
+      }
+      async function submitForm() {
+        if(!validateForm()) return;
+        if (!empresaSelect.value) {
+          showMsg('Selecciona una empresa válida.', false);
+          return;
+        }
+        const form = document.getElementById('userForm');
+        const data = new FormData(form);
+        data.set('puesto', document.getElementById('puesto').value.trim());
+        data.set('telefono', document.getElementById('telefono').value.trim());
+        try {
+          const response = await fetch(BASE_URL + '/backend/usuarios/edit_user.php', {
+            method:'POST',
+            body: data
+          });
+          const res = await response.json();
+          showMsg(res.msg, res.success);
+          if(res.success){
+            setTimeout(()=>{ window.location.href = BASE_URL + '/apps/internal/usuarios/list_users.html'; }, 1500);
+          }
+        } catch (error) {
+          showMsg("Error de conexión.", false);
+        }
+      }
+
+      empresaSelect.addEventListener('change', () => {
+        usuarioRolActual = null;
+        const empresaId = Number.parseInt(empresaSelect.value, 10);
+        cargarRoles(!Number.isNaN(empresaId) ? empresaId : null);
+      });
+
+      if (competencyForm) {
+        competencyForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          limpiarMensajesCompetencia();
+          if (!competencyUserInput || competencyUserInput.value === '') {
+            mostrarMensajeCompetencia(false, 'Primero guarda el usuario para asociar evidencias.');
+            return;
+          }
+          const vigenteHasta = document.getElementById('competencyVigenteHasta');
+          if (vigenteHasta && vigenteHasta.value === '') {
+            mostrarMensajeCompetencia(false, 'Captura la fecha de vigencia.');
+            return;
+          }
+          try {
+            const formData = new FormData(competencyForm);
+            formData.set('usuario_id', competencyUserInput.value);
+            const res = await fetch(`${BASE_URL}/backend/usuarios/upload_competency.php`, {
+              method: 'POST',
+              body: formData,
+            });
+            const data = await res.json();
+            if (!data.success) {
+              throw new Error(data.message || 'No se pudo guardar la evidencia.');
+            }
+            mostrarMensajeCompetencia(true, data.message || 'Evidencia registrada correctamente.');
+            competencyForm.reset();
+            competencyUserInput.value = usuarioIdEditar;
+            await cargarCompetencias(usuarioIdEditar);
+          } catch (error) {
+            console.error('Error registrando evidencia', error);
+            mostrarMensajeCompetencia(false, error.message || 'Ocurrió un problema al registrar la evidencia.');
+          }
+        });
+      }
+
+      if (competencyTableBody) {
+        competencyTableBody.addEventListener('click', (event) => {
+          const boton = event.target.closest('.competency-delete');
+          if (!boton) {
+            return;
+          }
+          const id = boton.getAttribute('data-id');
+          if (!id) {
+            return;
+          }
+          if (confirm('¿Deseas eliminar esta evidencia de competencia?')) {
+            eliminarCompetencia(id);
+          }
+        });
+      }
+
+      window.addEventListener('DOMContentLoaded', async function() {
+        fetch(BASE_URL + '/apps/internal/sidebar.html')
+          .then(r=>r.text())
+          .then(html=>{
+            document.getElementById('sidebar').innerHTML = html;
+            if (typeof initSidebar === 'function') initSidebar();
+            if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+          });
+        await cargarCatalogoInstrumentos();
+        renderCompetencias([]);
+        await cargarPermisosActuales();
+        const params = new URLSearchParams(window.location.search);
+        if(params.has('id')){
+          await cargarUsuarioEditar(params.get('id'));
+        } else {
+          if (competencyUserInput) {
+            competencyUserInput.value = '';
+          }
+          await cargarEmpresas();
+          await cargarRoles(null);
+        }
+      });
+    </script>
+
+</body>
+</html>
+
+
+

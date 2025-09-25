@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <base id="app-base" href="/">
+    <script>
+        (function () {
+            var baseTag = document.getElementById('app-base');
+            if (!baseTag) {
+                return;
+            }
+            var pathname = window.location && typeof window.location.pathname === 'string'
+                ? window.location.pathname
+                : '';
+            var baseHref = '';
+            var publicIndex = pathname.indexOf('/public/');
+            if (publicIndex !== -1) {
+                baseHref = pathname.slice(0, publicIndex + 7);
+            } else if (pathname.endsWith('/public')) {
+                baseHref = pathname;
+            } else {
+                baseHref = '/public';
+            }
+            if (!baseHref) {
+                baseHref = '/public';
+            }
+            if (!baseHref.endsWith('/')) {
+                baseHref += '/';
+            }
+            baseTag.setAttribute('href', baseHref);
+            var globalBase = baseHref.replace(/\/+$/, '');
+            if (!globalBase) {
+                globalBase = '/public';
+            }
+            window.BASE_URL = globalBase;
+            window.AppUrl = window.AppUrl || {};
+            if (typeof window.AppUrl.BASE_URL !== 'string' || !window.AppUrl.BASE_URL) {
+                window.AppUrl.BASE_URL = globalBase;
+            }
+        })();
+    </script>
+    <script src="assets/scripts/base-url.js" defer></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            var baseTag = document.getElementById('app-base');
+            if (!baseTag) {
+                return;
+            }
+            var href = (typeof window.BASE_URL === 'string' && window.BASE_URL) ? window.BASE_URL : '/public';
+            if (!href.endsWith('/')) {
+                href += '/';
+            }
+            baseTag.setAttribute('href', href);
+        });
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <title>Calidad de servicio | Sistema ISO 17025</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/styles.css">
+    <link rel="stylesheet" href="assets/styles/service-portal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            color: #0d575a;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+            transition: transform 0.3s ease-in-out;
+        }
+        .main-content {
+            margin-left: 200px;
+            min-height: 100vh;
+            padding: 0;
+            width: calc(100% - 200px);
+            display: flex;
+            flex-direction: column;
+        }
+        .dashboard-section {
+            padding: 32px 28px;
+        }
+        .dashboard-header {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 24px;
+        }
+        .dashboard-header h1 {
+            font-size: clamp(1.8rem, 3vw, 2.2rem);
+            font-weight: 700;
+            color: #0d575a;
+            margin: 0;
+        }
+        .dashboard-header p {
+            margin: 0;
+            color: #496064;
+        }
+        .placeholder-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 10px 24px #0d575a1a;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .placeholder-card .icon {
+            font-size: 2.4rem;
+            color: #0c8c98;
+        }
+        .placeholder-card h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0d575a;
+        }
+        .placeholder-card p {
+            margin: 0;
+            color: #496064;
+        }
+        .placeholder-card small {
+            color: #217b9b;
+            font-weight: 600;
+        }
+        @media (max-width: 900px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="service-portal" data-active-section="calidad">
+    <aside id="sidebar" class="sidebar" aria-label="Menú lateral"></aside>
+    <div class="main-content">
+        <div id="topbarContainer"></div>
+        <section class="dashboard-section">
+            <div class="dashboard-header">
+                <h1>Calidad en servicio a clientes</h1>
+                <p>Pronto verás aquí indicadores de validación, hallazgos y compromisos derivados del módulo de calidad.</p>
+            </div>
+            <div class="placeholder-card">
+                <i class="fa fa-award icon" aria-hidden="true"></i>
+                <h2>Alineación con ISO/IEC 17025</h2>
+                <p>Estamos integrando los datos de calidad relacionados con atención a clientes y calibraciones externas.</p>
+                <p>La información se habilitará cuando haya datos de validación aprobados por el laboratorio.</p>
+                <small>Actualizaremos este panel en cuanto se carguen registros de calidad.</small>
+            </div>
+        </section>
+    </div>
+    <script type="module" src="assets/scripts/scripts-service.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script src="assets/scripts/service-layout.js"></script>
+</body>
+</html>

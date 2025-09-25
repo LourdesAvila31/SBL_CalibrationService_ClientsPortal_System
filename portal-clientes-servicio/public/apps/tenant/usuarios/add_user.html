@@ -1,0 +1,815 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = (base === '/') ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <meta charset="UTF-8">
+    <title>Registrar Usuario | SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Bootstrap, FontAwesome, Montserrat -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <style>
+        :root {
+            --sidebar-bg: #0d575a;
+            --sidebar-active: #0c8c98;
+            --sidebar-hover: #17b6c1;
+            --table-header-bg: #0d575a;
+            --table-header-color: #fff;
+            --page-bg: #f4f6f8;
+            --actionbar-bg: #ececec;
+            --actionbar-icon-bg: #176d72;
+        }
+        body { background: var(--page-bg); font-family: 'Montserrat', Arial, sans-serif; margin:0; }
+        .sidebar { position:fixed; left:0; top:0; width:200px; height:100vh; background:#0d575a; color:#fff; z-index:100; display:flex; flex-direction:column; align-items:center; padding-top:30px; box-shadow:1px 0 6px #0002; }
+        .sidebar-logo img { width:140px; margin-bottom:22px; }
+        .sidebar-nav { width:100%; display:flex; flex-direction:column; align-items:center; gap:8px; }
+        .sidebar-nav .nav-link { width:92%; display:flex; flex-direction:column; align-items:center; padding:20px 0 8px 0; color:#cfd8dc; text-decoration:none; font-size:1.08rem; font-weight:600; letter-spacing:1px; border-radius:10px; margin-bottom:2px; transition:background 0.2s,color 0.2s; position:relative; }
+        .sidebar-nav .nav-link.active, .sidebar-nav .nav-link:hover { background:#0c8c98; color:#fff; }
+        .sidebar-nav .nav-link i { font-size:1.85rem; margin-bottom:8px; }
+        .sidebar-nav .nav-link.active::after { content:""; position:absolute; left:0; top:16px; width:4px; height:32px; background:#fff; border-radius:2px; }
+        .main-content { margin-left:200px; min-height:100vh; padding:0; }
+        .topbar { background:#fff; height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 34px 0 28px; box-shadow:0 1px 8px #0001; }
+        .topbar-left { display:flex; align-items:center; gap:26px; }
+        .topbar-title { font-size:1.45rem; font-weight:700; color:#217b9b; letter-spacing:1px; }
+        .topbar-user { font-size:1rem; color:#217b9b; font-weight:400; margin-left:24px; }
+        .topbar-icons { display:flex; align-items:center; gap:18px; }
+        .topbar-icons i { font-size:1.2rem; color:#217b9b; cursor:pointer; margin-top:5px; }
+        .formbar { background:var(--actionbar-bg); padding:14px 32px; display:flex; align-items:center; gap:14px; border-bottom:1px solid #e2e8f0; }
+        .formbar-title { font-weight:500; color:#217b9b; font-size:1.1rem; margin-right:18px; }
+        .formbar .btn-back { background:var(--actionbar-icon-bg); color:#fff; border:none; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:1.15rem; cursor:pointer; transition:background 0.2s; }
+        .formbar .btn-back:hover { background:#218fa1; }
+        .form-container { max-width:860px; margin:28px auto; background:#fff; border-radius:16px; box-shadow:0 4px 18px #0d575a11; padding:30px 38px 22px 38px; }
+        .form-title { font-size:1.32rem; color:#0d575a; font-weight:700; margin-bottom:26px; text-align:left; }
+        form .form-group { margin-bottom:18px; }
+        .form-row { display:flex; gap:24px; flex-wrap:wrap; }
+        .form-col { flex:1 1 200px; min-width:220px; }
+        form input, form select, form textarea { width:100%; padding:10px 14px; font-size:1rem; border:1px solid #b0bec5; border-radius:6px; background:#f9fafb; margin-bottom:2px; transition:border-color 0.2s; }
+        form input:focus, form select:focus, form textarea:focus { border-color:#217b9b; outline:none; background:#fff; }
+        .form-actions { margin-top:22px; }
+        .form-actions .btn { background:#0d575a; color:#fff; border:none; padding:10px 24px; border-radius:8px; font-weight:600; margin-right:14px; transition:background 0.2s; }
+        .form-actions .btn:hover { background:#0c8c98; }
+        .form-actions .btn.btn-cancel { background:#fff; color:#217b9b; border:2px solid #217b9b; }
+        .msg { margin-top:14px; font-weight:600; color:#217b9b; text-align:center; }
+        .role-message {
+            margin-top:6px;
+            font-weight:600;
+            color:#b3261e;
+        }
+        .role-message.warning { color:#a05a00; }
+        .role-info {
+            margin-top:10px;
+            background:#f1f8fb;
+            border:1px solid #b0bec5;
+            border-radius:10px;
+            padding:12px 14px;
+            color:#125b5e;
+            font-size:0.96rem;
+        }
+        .role-info .role-info-title { font-weight:700; margin-bottom:4px; }
+        .role-info .role-meta { font-size:0.9rem; color:#607d8b; margin-bottom:6px; }
+        .role-info .role-permissions {
+            display:flex;
+            flex-wrap:wrap;
+            gap:6px;
+            margin-top:4px;
+        }
+        .role-info .badge {
+            background:#e0f2f5;
+            color:#0d575a;
+            border-radius:999px;
+            padding:4px 10px;
+            font-weight:600;
+            font-size:0.82rem;
+        }
+        .text-muted { color:#607d8b; }
+        .hidden { display:none !important; }
+        .first-user-message {
+            margin-top:10px;
+            background:#fff5e6;
+            border:1px solid #f0c36d;
+            border-radius:10px;
+            padding:12px 14px;
+            color:#8a5900;
+            font-size:0.95rem;
+            font-weight:500;
+        }
+        .first-user-message strong {
+            display:block;
+            font-weight:700;
+            margin-bottom:4px;
+        }
+    </style>
+
+    <script>
+    fetch(BASE_URL + '/backend/check_permission.php?permiso=usuarios_add')
+      .then(r=>r.json())
+      .then(d=>{ if(!d.allowed) window.location.href = BASE_URL + '/apps/tenant/index.html'; });
+    </script>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link active" href="apps/tenant/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+            <i class="fa fa-user-shield"></i>
+            <span>ROLES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+            <i class="fa fa-circle-question"></i>
+            <span>TUTORIAL</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </aside>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Registrar Nuevo Usuario</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/tenant/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="formbar">
+            <button class="btn-back" onclick="window.location.href = BASE_URL + '/apps/tenant/usuarios/list_users.html'">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+            <div class="formbar-title">Usuarios &gt; Registrar</div>
+        </div>
+        <div class="form-container">
+            <div class="form-title">Registrar Usuario</div>
+            <form autocomplete="off" id="formUsuario">
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" id="apellidos" name="apellidos" required>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="puesto">Puesto</label>
+                        <input type="text" id="puesto" name="puesto" maxlength="150" required>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="usuario">Usuario</label>
+                        <input type="text" id="usuario" name="usuario" required>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="correo">Correo electrónico</label>
+                        <input type="email" id="correo" name="correo" required>
+                    </div>
+                    <div class="form-col form-group">
+                        <label for="telefono">Teléfono de contacto</label>
+                        <input type="text" id="telefono" name="telefono" maxlength="50" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="contrasena">Contraseña</label>
+                        <input type="password" id="contrasena" name="contrasena" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col form-group">
+                        <label for="empresa_id">Empresa</label>
+                        <select id="empresa_id" name="empresa_id" required>
+                            <option value="">Selecciona una empresa</option>
+                        </select>
+                    </div>
+                    <div class="form-col form-group" id="roleFieldGroup">
+                        <label for="role_id">Rol</label>
+                        <select id="role_id" name="role_id" required>
+                            <option value="">Selecciona un rol</option>
+                        </select>
+                        <div id="roleMessage" class="role-message"></div>
+                        <div id="firstUserMessage" class="first-user-message hidden"></div>
+                    </div>
+                </div>
+                <div class="form-row" id="roleInfoRow">
+                    <div class="form-col">
+                        <div id="roleInfo" class="role-info">
+                            <span class="text-muted">Selecciona un rol para visualizar los permisos asignados.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Registrar</button>
+                    <button type="button" class="btn btn-cancel" onclick="window.location.href = BASE_URL + '/apps/tenant/usuarios/list_users.html'">Cancelar</button>
+                </div>
+                <div class="msg" id="mensaje"></div>
+                <input type="hidden" name="activo" value="1">
+            </form>
+        </div>
+    </div>
+    <script>
+    const formUsuario = document.getElementById('formUsuario');
+    const mensajeEl = document.getElementById('mensaje');
+    const empresaSelect = document.getElementById('empresa_id');
+    const rolSelect = document.getElementById('role_id');
+    const roleInfoBox = document.getElementById('roleInfo');
+    const roleMessageEl = document.getElementById('roleMessage');
+    const roleFieldGroup = document.getElementById('roleFieldGroup');
+    const roleInfoRow = document.getElementById('roleInfoRow');
+    const firstUserMessageBox = document.getElementById('firstUserMessage');
+    const searchParams = new URLSearchParams(window.location.search);
+    const tipoCuenta = (searchParams.get('tipo') || '').toLowerCase();
+    const esCliente = tipoCuenta === 'cliente';
+    let defaultEmpresaId = null;
+    const rolesMap = new Map();
+    const DELEGATED_ROLES_ENDPOINT = BASE_URL + '/backend/usuarios/delegated_roles/list.php';
+    const FALLBACK_ROLES_ENDPOINT = BASE_URL + '/backend/usuarios/roles.php';
+    const FIRST_USER_STATE_ENDPOINT = BASE_URL + '/backend/usuarios/company_user_state.php';
+    let currentEmpresaState = {
+        isFirstUser: false,
+        userCount: 0,
+        forcedRole: 'Cliente',
+        forcedTenantRole: 'responsable',
+        roleAvailable: null,
+        hasError: false,
+    };
+
+    function setRoleMessage(text = '', type = '') {
+        if (!roleMessageEl) return;
+        roleMessageEl.textContent = text;
+        roleMessageEl.className = 'role-message' + (type ? ` ${type}` : '');
+    }
+
+    function normalizarRol(rol) {
+        if (rol && typeof rol === 'object') {
+            const id = rol.id ?? rol.role_id ?? null;
+            const nombre = rol.nombre ?? rol.role_name ?? null;
+            const visible = rol.nombre_visible ?? rol.visible_name ?? rol.display_name ?? nombre ?? '';
+            const descripcion = rol.descripcion ?? rol.description ?? '';
+            let permisos = [];
+            if (Array.isArray(rol.permisos)) permisos = rol.permisos;
+            else if (Array.isArray(rol.permissions)) permisos = rol.permissions;
+            else if (typeof rol.permisos === 'string') permisos = rol.permisos.split(',');
+            else if (typeof rol.permissions === 'string') permisos = rol.permissions.split(',');
+            permisos = permisos.map(p => (p && p.trim ? p.trim() : p)).filter(Boolean);
+            const empresaId = rol.empresa_id ?? rol.empresa ?? null;
+            return { id, nombre, visible, descripcion, permisos, empresa_id: empresaId };
+        }
+        if (typeof rol === 'string') {
+            return { id: null, nombre: rol, visible: rol, descripcion: '', permisos: [] };
+        }
+        return null;
+    }
+
+    async function cargarEmpresas() {
+        try {
+            const res = await fetch(BASE_URL + '/backend/empresas/list.php');
+            if (!res.ok) throw new Error('Respuesta inválida');
+            const data = await res.json();
+            empresaSelect.innerHTML = '<option value="">Selecciona una empresa</option>';
+            data.forEach(emp => {
+                const opt = document.createElement('option');
+                opt.value = emp.id;
+                opt.textContent = emp.nombre;
+                empresaSelect.appendChild(opt);
+            });
+            if (defaultEmpresaId) {
+                empresaSelect.value = String(defaultEmpresaId);
+            }
+        } catch (err) {
+            mensajeEl.textContent = 'No se pudieron cargar las empresas.';
+        }
+    }
+
+    async function obtenerRolesDelegados(empresaId) {
+        const params = new URLSearchParams();
+        if (empresaId) params.set('empresa_id', empresaId);
+        const response = await fetch(`${DELEGATED_ROLES_ENDPOINT}?${params.toString()}`);
+        if (response.status === 403) {
+            const error = new Error('forbidden');
+            error.code = 'forbidden';
+            throw error;
+        }
+        if (!response.ok) {
+            throw new Error('fetch_error');
+        }
+        const payload = await response.json();
+        const data = Array.isArray(payload.roles) ? payload.roles : Array.isArray(payload.data) ? payload.data : payload;
+        return Array.isArray(data) ? data : [];
+    }
+
+    function applyFirstUserState() {
+        if (currentEmpresaState.isFirstUser) {
+            if (roleFieldGroup) roleFieldGroup.classList.add('hidden');
+            if (roleInfoRow) roleInfoRow.classList.add('hidden');
+            if (rolSelect) {
+                rolSelect.removeAttribute('required');
+                rolSelect.disabled = true;
+            }
+            if (firstUserMessageBox) {
+                const forcedRole = currentEmpresaState.forcedRole || 'Cliente';
+                const delegatedRole = currentEmpresaState.forcedTenantRole || 'responsable';
+                let warningText = '';
+                if (currentEmpresaState.roleAvailable === false) {
+                    warningText = ' Actualmente la empresa no tiene configurado el rol delegado requerido; contacta a soporte para regularizarlo.';
+                }
+                firstUserMessageBox.innerHTML = `<strong>Primer usuario de la empresa</strong><span>Se asignará automáticamente el rol ${forcedRole} y el rol delegado ${delegatedRole}, otorgando permisos completos para gestionar usuarios.${warningText}</span>`;
+                firstUserMessageBox.classList.remove('hidden');
+            }
+            if (roleInfoBox) {
+                roleInfoBox.innerHTML = '<span class="text-muted">El rol y los permisos se asignarán automáticamente para el primer usuario de la empresa.</span>';
+            }
+            if (currentEmpresaState.roleAvailable === false) {
+                setRoleMessage('No se encontró el rol delegado "responsable" en la empresa seleccionada. Contacta a soporte antes de continuar.', 'warning');
+            } else if (!currentEmpresaState.hasError) {
+                setRoleMessage('');
+            }
+        } else {
+            if (roleFieldGroup) roleFieldGroup.classList.remove('hidden');
+            if (roleInfoRow) roleInfoRow.classList.remove('hidden');
+            if (rolSelect) {
+                rolSelect.disabled = false;
+                rolSelect.setAttribute('required', 'required');
+            }
+            if (firstUserMessageBox) {
+                firstUserMessageBox.textContent = '';
+                firstUserMessageBox.classList.add('hidden');
+            }
+            if (currentEmpresaState.hasError) {
+                setRoleMessage('No se pudo verificar si es el primer usuario de la empresa.', 'warning');
+            }
+        }
+    }
+
+    function updateRoleInfo() {
+        if (!roleInfoBox) return;
+        if (currentEmpresaState.isFirstUser) {
+            roleInfoBox.innerHTML = '<span class="text-muted">El rol y los permisos se asignarán automáticamente para el primer usuario de la empresa.</span>';
+            return;
+        }
+        roleInfoBox.innerHTML = '';
+        const option = rolSelect.selectedOptions[0];
+        if (!option || !rolSelect.value) {
+            roleInfoBox.innerHTML = '<span class="text-muted">Selecciona un rol para visualizar los permisos asignados.</span>';
+            return;
+        }
+        const role = rolesMap.get(rolSelect.value) || null;
+        const title = document.createElement('div');
+        title.className = 'role-info-title';
+        title.textContent = role?.visible || option.dataset.displayName || option.textContent.replace(/•.*/, '').trim();
+        roleInfoBox.appendChild(title);
+        if (role?.descripcion) {
+            const desc = document.createElement('div');
+            desc.className = 'role-meta';
+            desc.textContent = role.descripcion;
+            roleInfoBox.appendChild(desc);
+        }
+        const permisos = role?.permisos && role.permisos.length
+            ? role.permisos
+            : (option.dataset.permisos ? option.dataset.permisos.split('|').filter(Boolean) : []);
+        if (permisos.length) {
+            const list = document.createElement('div');
+            list.className = 'role-permissions';
+            permisos.forEach(p => {
+                const badge = document.createElement('span');
+                badge.className = 'badge';
+                badge.textContent = p;
+                list.appendChild(badge);
+            });
+            roleInfoBox.appendChild(list);
+        } else {
+            const empty = document.createElement('div');
+            empty.className = 'text-muted';
+            empty.textContent = 'Sin permisos asociados.';
+            roleInfoBox.appendChild(empty);
+        }
+    }
+
+    async function cargarRoles(empresaId, preserveValue = true) {
+        const previousValue = preserveValue ? rolSelect.value : '';
+        rolSelect.innerHTML = '<option value="">Selecciona un rol</option>';
+        rolesMap.clear();
+        if (!currentEmpresaState.isFirstUser || currentEmpresaState.roleAvailable !== false) {
+            setRoleMessage('');
+        }
+
+        if (!empresaId) {
+            updateRoleInfo();
+            return;
+        }
+
+        let roleAssigned = false;
+
+        try {
+            const rawRoles = await obtenerRolesDelegados(empresaId);
+            const normalized = rawRoles.map(normalizarRol).filter(Boolean);
+            if (!normalized.length) {
+                setRoleMessage('No se encontraron roles delegados para la empresa seleccionada.', 'warning');
+            }
+            normalized.forEach(role => {
+                const option = document.createElement('option');
+                const value = role.id !== null && role.id !== undefined ? String(role.id) : (role.nombre || role.visible);
+                option.value = value;
+                option.textContent = role.visible || role.nombre || 'Rol sin nombre';
+                option.dataset.displayName = role.visible || role.nombre || '';
+                option.dataset.roleName = role.nombre || '';
+                if (role.permisos && role.permisos.length) {
+                    option.textContent = `${option.dataset.displayName} • ${role.permisos.join(', ')}`;
+                    option.dataset.permisos = role.permisos.join('|');
+                }
+                rolSelect.appendChild(option);
+                rolesMap.set(option.value, role);
+            });
+            const targetDefault = (esCliente ? 'Cliente' : 'Operador').toLowerCase();
+            let targetValue = '';
+            if (preserveValue && previousValue && rolesMap.has(previousValue)) {
+                targetValue = previousValue;
+            } else {
+                const match = normalized.find(role => (role.nombre || role.visible || '').toLowerCase() === targetDefault);
+                if (match) {
+                    targetValue = match.id !== null && match.id !== undefined ? String(match.id) : (match.nombre || match.visible);
+                }
+            }
+            if (targetValue && rolesMap.has(targetValue)) {
+                rolSelect.value = targetValue;
+                roleAssigned = true;
+            }
+        } catch (error) {
+            if (error.code === 'forbidden') {
+                setRoleMessage('No cuentas con permisos para consultar los roles delegados de esta empresa.', 'warning');
+                updateRoleInfo();
+                return;
+            }
+            try {
+                const fallbackRes = await fetch(FALLBACK_ROLES_ENDPOINT);
+                if (!fallbackRes.ok) throw new Error('fallback');
+                const fallbackData = await fallbackRes.json();
+                const normalized = Array.isArray(fallbackData) ? fallbackData.map(normalizarRol).filter(Boolean) : [];
+                normalized.forEach(role => {
+                    const option = document.createElement('option');
+                    const value = role.nombre || role.visible;
+                    option.value = value;
+                    option.textContent = role.visible || role.nombre || 'Rol';
+                    option.dataset.displayName = role.visible || role.nombre || '';
+                    option.dataset.roleName = role.nombre || '';
+                    if (role.permisos && role.permisos.length) {
+                        option.textContent = `${option.dataset.displayName} • ${role.permisos.join(', ')}`;
+                        option.dataset.permisos = role.permisos.join('|');
+                    }
+                    rolSelect.appendChild(option);
+                    rolesMap.set(option.value, role);
+                });
+                if (!normalized.length) {
+                    setRoleMessage('No se pudieron obtener roles delegados; se muestran los roles generales disponibles.', 'warning');
+                } else {
+                    setRoleMessage('Roles delegados no disponibles. Se listan los roles generales del sistema.', 'warning');
+                }
+            } catch (fallbackErr) {
+                setRoleMessage('No se pudieron cargar los roles disponibles.', 'warning');
+            }
+        }
+
+        if (!roleAssigned && rolSelect.options.length > 1) {
+            if (previousValue && rolesMap.has(previousValue)) {
+                rolSelect.value = previousValue;
+                roleAssigned = true;
+            }
+        }
+
+        if (!roleAssigned && rolSelect.options.length > 1) {
+            const targetDefault = (esCliente ? 'Cliente' : 'Operador').toLowerCase();
+            const matchOption = Array.from(rolSelect.options).find(opt => (opt.dataset.roleName || opt.value || '').toLowerCase() === targetDefault);
+            if (matchOption) {
+                rolSelect.value = matchOption.value;
+                roleAssigned = true;
+            }
+        }
+
+        if (!roleAssigned && rolSelect.options.length > 1) {
+            rolSelect.selectedIndex = 1;
+        }
+
+        updateRoleInfo();
+    }
+
+    async function cargarUsuarioActual() {
+        try {
+            const res = await fetch(BASE_URL + '/backend/usuarios/get_actual_user.php');
+            if (!res.ok) return;
+            const u = await res.json();
+            if (u && typeof u === 'object') {
+                defaultEmpresaId = u.empresa_id || null;
+                if (defaultEmpresaId) {
+                    const option = empresaSelect.querySelector(`option[value="${defaultEmpresaId}"]`);
+                    if (option) {
+                        empresaSelect.value = String(defaultEmpresaId);
+                    }
+                }
+            }
+        } catch (_) {
+            /* Ignorar errores de usuario actual */
+        }
+    }
+
+    function resolverValorRol() {
+        const value = rolSelect.value;
+        if (!value) return '';
+        const role = rolesMap.get(value);
+        if (role && role.nombre) {
+            return role.nombre;
+        }
+        const option = rolSelect.selectedOptions[0];
+        if (option) {
+            return option.dataset.roleName || option.value;
+        }
+        return value;
+    }
+
+    function resolverRolParaEnvio() {
+        if (currentEmpresaState.isFirstUser) {
+            return currentEmpresaState.forcedRole || 'Cliente';
+        }
+        return resolverValorRol();
+    }
+
+    async function consultarEstadoEmpresa(empresaId) {
+        if (!empresaId) {
+            currentEmpresaState = {
+                isFirstUser: false,
+                userCount: 0,
+                forcedRole: 'Cliente',
+                forcedTenantRole: 'responsable',
+                roleAvailable: null,
+                hasError: false,
+            };
+            applyFirstUserState();
+            return;
+        }
+
+        try {
+            const response = await fetch(`${FIRST_USER_STATE_ENDPOINT}?empresa_id=${encodeURIComponent(empresaId)}`);
+            if (!response.ok) {
+                throw new Error('fetch_error');
+            }
+            const payload = await response.json();
+            currentEmpresaState = {
+                isFirstUser: payload?.is_first_user === true,
+                userCount: Number(payload?.user_count ?? 0),
+                forcedRole: payload?.forced_role || 'Cliente',
+                forcedTenantRole: payload?.forced_tenant_role || 'responsable',
+                roleAvailable: typeof payload?.responsable_role_available === 'boolean'
+                    ? payload.responsable_role_available
+                    : null,
+                hasError: false,
+            };
+        } catch (error) {
+            currentEmpresaState = {
+                isFirstUser: false,
+                userCount: 0,
+                forcedRole: 'Cliente',
+                forcedTenantRole: 'responsable',
+                roleAvailable: null,
+                hasError: true,
+            };
+        }
+
+        applyFirstUserState();
+    }
+
+    formUsuario.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        mensajeEl.textContent = '';
+        mensajeEl.style.color = '#217b9b';
+
+        if (!empresaSelect.value) {
+            mensajeEl.textContent = 'Selecciona una empresa válida.';
+            mensajeEl.style.color = '#c00';
+            return;
+        }
+        if (currentEmpresaState.isFirstUser && currentEmpresaState.roleAvailable === false) {
+            mensajeEl.textContent = 'No es posible registrar el primer usuario porque falta el rol delegado "responsable" en la empresa seleccionada.';
+            mensajeEl.style.color = '#c00';
+            return;
+        }
+
+        const rolResuelto = resolverRolParaEnvio();
+        if (!rolResuelto) {
+            mensajeEl.textContent = 'Selecciona un rol.';
+            mensajeEl.style.color = '#c00';
+            return;
+        }
+
+        const datos = new FormData(this);
+        const nombre = (datos.get('nombre') || '').trim();
+        const apellidos = (datos.get('apellidos') || '').trim();
+        const correo = (datos.get('correo') || '').trim().toLowerCase();
+        const usuario = (datos.get('usuario') || '').trim();
+        const contrasena = (datos.get('contrasena') || '').trim();
+        const puesto = (datos.get('puesto') || '').trim();
+        const telefono = (datos.get('telefono') || '').trim();
+
+        if (!nombre || !apellidos || !puesto || !telefono) {
+            mensajeEl.textContent = 'Nombre, apellidos, puesto y teléfono son obligatorios.';
+            mensajeEl.style.color = '#c00';
+            return;
+        }
+
+        if (puesto.length > 150) {
+            mensajeEl.textContent = 'El puesto no puede exceder 150 caracteres.';
+            mensajeEl.style.color = '#c00';
+            return;
+        }
+
+        if (telefono.length > 50) {
+            mensajeEl.textContent = 'El teléfono no puede exceder 50 caracteres.';
+            mensajeEl.style.color = '#c00';
+            return;
+        }
+
+        if (!/^[a-zA-Z0-9._-]{3,}$/.test(usuario)) {
+            mensajeEl.textContent = 'El usuario debe tener al menos 3 caracteres y solo puede contener letras, números y ._-';
+            mensajeEl.style.color = '#c00';
+            return;
+        }
+
+        if (!contrasena) {
+            mensajeEl.textContent = 'Ingresa una contraseña válida.';
+            mensajeEl.style.color = '#c00';
+            return;
+        }
+
+        datos.set('nombre', nombre);
+        datos.set('apellidos', apellidos);
+        datos.set('usuario', usuario);
+        datos.set('correo', correo);
+        datos.set('puesto', puesto);
+        datos.set('telefono', telefono);
+        datos.set('contrasena', contrasena);
+        datos.set('empresa_id', empresaSelect.value);
+        datos.set('role_id', rolResuelto);
+        datos.set('activo', '1');
+
+        try {
+            const response = await fetch(BASE_URL + '/backend/usuarios/create_user.php', {
+                method: 'POST',
+                body: datos
+            });
+            const payload = await response.json().catch(() => null);
+            if (!response.ok || !payload || payload.success !== true) {
+                const message = payload?.msg || 'Error al registrar usuario.';
+                throw new Error(message);
+            }
+
+            mensajeEl.textContent = payload.msg || 'Usuario registrado correctamente';
+            mensajeEl.style.color = '#0d575a';
+            this.reset();
+
+            if (defaultEmpresaId) {
+                empresaSelect.value = String(defaultEmpresaId);
+            }
+            const empresaPostRegistro = empresaSelect.value || (defaultEmpresaId ? String(defaultEmpresaId) : '');
+            await consultarEstadoEmpresa(empresaPostRegistro);
+            await cargarRoles(empresaPostRegistro, false);
+            updateRoleInfo();
+        } catch (err) {
+            mensajeEl.textContent = err.message || 'Error al conectar con el servidor.';
+            mensajeEl.style.color = '#c00';
+        }
+    });
+
+    empresaSelect.addEventListener('change', async () => {
+        const empresaId = empresaSelect.value;
+        await consultarEstadoEmpresa(empresaId);
+        await cargarRoles(empresaId, false);
+        updateRoleInfo();
+    });
+    rolSelect.addEventListener('change', () => {
+        if (!currentEmpresaState.isFirstUser) {
+            updateRoleInfo();
+        }
+    });
+
+    window.addEventListener('DOMContentLoaded', async () => {
+        const titulo = esCliente ? 'Registrar Cliente' : 'Registrar Usuario';
+        const migas = esCliente ? 'Usuarios > Registrar cliente' : 'Usuarios > Registrar';
+        const topbarTitulo = document.querySelector('.topbar-title');
+        const formTitulo = document.querySelector('.form-title');
+        const formbarTitulo = document.querySelector('.formbar-title');
+        if (topbarTitulo) topbarTitulo.textContent = titulo;
+        if (formTitulo) formTitulo.textContent = titulo;
+        if (formbarTitulo) formbarTitulo.textContent = migas;
+
+        await cargarEmpresas();
+        await cargarUsuarioActual();
+        const empresaInicial = empresaSelect.value || (defaultEmpresaId ? String(defaultEmpresaId) : '');
+        await consultarEstadoEmpresa(empresaInicial);
+        await cargarRoles(empresaInicial, false);
+        updateRoleInfo();
+    });
+    </script>
+    <script type="module" src="assets/scripts/scripts-tenant.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        fetch(BASE_URL + '/apps/tenant/sidebar.html')
+          .then(response => response.text())
+          .then(html => {
+            document.getElementById('sidebar').innerHTML = html;
+            if (typeof initSidebar === 'function') initSidebar();
+            if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+            if (typeof window.applyApiTokenVisibility === 'function') window.applyApiTokenVisibility();
+            if (typeof window.activateApiTokensIfAvailable === 'function') window.activateApiTokensIfAvailable();
+          });
+      });
+      (function(){
+        const el = document.getElementById('userName');
+        if(!el) return;
+        fetch(BASE_URL + '/backend/usuarios/get_actual_user.php')
+          .then(r=>r.json())
+          .then(u=>{ el.innerHTML = `${u?.nombre||'Invitado'} <span class="text-accent">(${u?.role_id||'Sin rol'})</span>`; });
+      })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1097 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = (base === '/') ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <meta charset="UTF-8">
+    <title>Planeación de Calibraciones</title>
+     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Bootstrap, Montserrat, FontAwesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+         .sidebar-logo img { width: 140px; margin-bottom: 22px; }
+
+        .sidebar-nav { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        
+        .sidebar-nav .nav-link {
+            width: 92%; display: flex; flex-direction: column; align-items: center;
+            padding: 20px 0 8px 0; color: #cfd8dc; text-decoration: none; font-size: 1.08rem;
+            font-weight: 600; letter-spacing: 1px; border-radius: 10px; margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s; position: relative;
+        }
+        .sidebar-nav .nav-link.active,
+         .sidebar-nav .nav-link:hover { background: #0c8c98; color: #fff; }
+        .sidebar-nav .nav-link i { font-size: 1.85rem; margin-bottom: 8px; }
+        
+        .sidebar-nav .nav-link.active::after {
+            content:""; position:absolute; left:0; top:16px; width:4px; height:32px; background:#fff; border-radius:2px;
+        }
+         .main-content { margin-left:200px; min-height:100vh; padding:0; }
+        .topbar {
+            background:#fff; height:64px; display:flex; align-items:center; justify-content:space-between;
+            padding:0 34px 0 28px; box-shadow:0 1px 8px #0001;
+        }
+         .topbar-left { display:flex; align-items:center; gap:26px; }
+        .topbar-title { font-size:1.45rem; font-weight:700; color:#217b9b; letter-spacing:1px; }
+        .topbar-user { font-size:1rem; color:#217b9b; font-weight:400; margin-left:24px; }
+        .topbar-icons { display:flex; align-items:center; gap:18px; }
+        .topbar-icons i { font-size:1.2rem; color:#217b9b; cursor:pointer; margin-top:5px; }
+       
+        /* Menú usuario y notificaciones */
+        .topbar-user-box { display:inline-block; position:relative; }
+        #userMenu, #notificationsMenu {
+            display:none; position:absolute; right:0; top:32px; background:#fff; border-radius:10px;
+            box-shadow:0 2px 12px #0d575a22; min-width:180px; z-index:99; padding:12px;
+        }
+        #notificationsMenu { right:64px; top:40px; min-width:260px; padding:15px;}
+         #notificationsMenu { right:64px; top:40px; min-width:260px; padding:15px; }
+        #userMenu button, #userMenu .btn-perfil {
+            width:100%; background:#0d575a; color:#fff; border:none; border-radius:6px;
+            margin:8px 0 0 0; padding:7px 0; font-weight:700; font-size:1rem;
+        }
+        #userMenu .btn-cerrar { background:#fff; color:#0d575a; border:1px solid #0d575a; }
+        #userMenu div { padding:6px 0; border-bottom:1px solid #e0f7fa; }
+        #userMenu div:last-child { border-bottom:none; }
+    .planeacion-section { padding:0 28px; }
+        .actions-bar {
+            background:#e9eff1;
+            padding:14px 0;
+            display:flex;
+            align-items:center;
+            gap:14px;
+            flex-wrap:wrap;
+            width:100%;
+            box-sizing:border-box;
+        }
+        .actions-bar .btn {
+            background:#227b9b; color:#fff; border:none; border-radius:22px; padding:7px 20px;
+            font-weight:500; font-size:1rem; cursor:pointer; transition:background .18s;
+            display:flex; align-items:center; gap:7px;
+        }
+        .actions-bar .btn:hover { background:#08536a; }
+  .actions-bar .btn:disabled, .actions-bar .bulk-btn:disabled {
+  background: #7bb2c2 !important;
+  color: #fff !important;
+  border: none !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+  }
+        .actions-bar select, .actions-bar input {
+            font-size:1rem; padding:4px 8px; border-radius:6px; border:1px solid #d1d5db; margin-left:8px;
+        }
+        .table-container {
+            background:#fff; width:100%; border-radius:8px; box-shadow:0 4px 16px rgba(60,60,100,0.09);
+            overflow-x:auto; margin-top:8px;
+        }
+        .instructions-col {
+            max-width: 260px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .pagination-bar {
+            width:100%;
+        }
+        .empty-row { text-align:center; color:#555; font-size:1.08rem; padding:32px 0; }
+        .pagination-bar {
+            display:flex; align-items:center; justify-content:flex-end; background:#e9eff1;
+            padding:10px 24px; margin-top:0; gap:12px;
+        }
+        .pagination-bar select, .pagination-bar input {
+            font-size:1rem; padding:4px 8px; border-radius:6px; border:1px solid #d1d5db;
+        }
+        .pagination-bar .btn {
+            background:#227b9b; color:#fff; border:none; border-radius:18px; padding:5px 16px;
+            font-weight:500; font-size:1rem; cursor:pointer; transition:background .18s;
+        }
+        .pagination-bar .btn:disabled { background:#b1c9d1; cursor:not-allowed; }
+        .reset-btn {
+            background:#fff; color:#227b9b; border:1px solid #227b9b; padding:5px 16px; border-radius:18px;
+            margin-left:8px; cursor:pointer; font-weight:500;
+            }
+        /* Lista de seleccionados */
+        .selected-list { margin:10px 24px; display:none; flex-wrap:wrap; gap:6px; }
+        .selected-list.is-visible { display:flex !important; }
+        .selected-chip { background:#e0e7ff; padding:4px 8px; border-radius:12px; display:inline-flex; align-items:center; }
+        .selected-chip i { margin-left:6px; cursor:pointer; }
+        /* Panel de programación masiva */
+        .bulk-program-section {
+            display:none;
+            background:#fff;
+            border-radius:16px;
+            box-shadow:0 4px 18px rgba(13,87,90,0.11);
+            padding:24px 28px 28px;
+            margin:18px 24px 32px;
+        }
+        .bulk-program-header {
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            gap:18px;
+            margin-bottom:18px;
+        }
+        .bulk-program-title {
+            font-size:1.3rem;
+            color:#0d575a;
+            font-weight:700;
+            margin:0;
+        }
+        .bulk-program-desc {
+            margin-top:6px;
+            color:#4b6470;
+            font-size:0.97rem;
+        }
+        .bulk-program-close {
+            border:none;
+            background:#f1f5f9;
+            color:#0d575a;
+            border-radius:50%;
+            width:34px;
+            height:34px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+            transition:background 0.2s;
+        }
+        .bulk-program-close:hover { background:#e2e8f0; }
+        .bulk-instrument-table {
+            border:1px solid #e2e8f0;
+            border-radius:12px;
+            overflow:hidden;
+            margin-bottom:22px;
+        }
+        .bulk-instrument-scroll {
+            max-height:260px;
+            overflow:auto;
+        }
+        .bulk-instrument-table table {
+            width:100%;
+            border-collapse:collapse;
+            font-size:0.92rem;
+        }
+        .bulk-instrument-table thead {
+            background:#0d575a;
+            color:#fff;
+        }
+        .bulk-instrument-table th,
+        .bulk-instrument-table td {
+            padding:10px 12px;
+            text-align:left;
+            border-bottom:1px solid #e2e8f0;
+        }
+        .bulk-instrument-table tbody tr:nth-child(even) { background:#f8fafc; }
+        .bulk-instrument-table tbody tr:last-child td { border-bottom:none; }
+        .bulk-remove {
+            background:transparent;
+            border:1px solid #cbd5e1;
+            border-radius:18px;
+            color:#0d575a;
+            padding:4px 12px;
+            font-size:0.85rem;
+            cursor:pointer;
+            transition:background 0.2s, color 0.2s;
+        }
+        .bulk-remove:hover {
+            background:#0d575a;
+            color:#fff;
+            border-color:#0d575a;
+        }
+        .bulk-form-row {
+            display:flex;
+            gap:24px;
+            flex-wrap:wrap;
+        }
+        .bulk-form-col {
+            flex:1 1 220px;
+            min-width:220px;
+        }
+        .bulk-form-col label {
+            display:block;
+            font-weight:600;
+            color:#0d575a;
+            margin-bottom:6px;
+        }
+        .bulk-form-col input,
+        .bulk-form-col select {
+            width:100%;
+            padding:10px 14px;
+            font-size:1rem;
+            border:1px solid #b0bec5;
+            border-radius:6px;
+            background:#f9fafb;
+            transition:border-color 0.2s, background 0.2s;
+        }
+        .bulk-form-col input:focus,
+        .bulk-form-col select:focus {
+            border-color:#217b9b;
+            outline:none;
+            background:#fff;
+        }
+        .bulk-form-actions {
+            margin-top:18px;
+            display:flex;
+            gap:14px;
+            flex-wrap:wrap;
+        }
+        .bulk-form-actions .btn-primary {
+            background:#0d575a;
+            color:#fff;
+            border:none;
+            padding:10px 24px;
+            border-radius:8px;
+            font-weight:600;
+            cursor:pointer;
+            transition:background 0.2s;
+        }
+        .bulk-form-actions .btn-primary:hover { background:#0c8c98; }
+        .bulk-form-actions .btn-secondary {
+            background:#fff;
+            color:#217b9b;
+            border:2px solid #217b9b;
+            padding:10px 24px;
+            border-radius:8px;
+            font-weight:600;
+            cursor:pointer;
+            transition:background 0.2s;
+        }
+        .bulk-form-actions .btn-secondary:hover { background:#e0f2f1; }
+        .bulk-msg { margin-top:14px; font-weight:600; }
+        .bulk-msg.success {
+            background:#e9ffe4;
+            color:#097a3d;
+            border:1.5px solid #097a3d;
+            padding:10px;
+            border-radius:8px;
+        }
+        .bulk-msg.error {
+            background:#ffeded;
+            color:#c00;
+            border:1.5px solid #c00;
+            padding:10px;
+            border-radius:8px;
+        }
+        /* Resaltar sin fecha asignada */
+        .sin-fecha { background:#ffe5e5; }
+        @media (max-width:900px){
+            .table-container { min-width:100vw; }
+            .main-content { margin-left:0; }
+          }
+        @media (max-width:700px){
+            .bulk-program-header { flex-direction:column; align-items:flex-start; }
+            .bulk-program-close { align-self:flex-end; }
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+       <aside id="sidebar" class="sidebar">
+       <!-- SIDEBAR CONTENT -->
+       <style>
+           .sidebar-nav {
+               gap: 12px;
+           }
+       
+           .sidebar-nav .nav-link {
+               width: 90%;
+               padding: 16px 0 10px 0;
+               font-size: 1.02rem;
+               letter-spacing: 0.5px;
+           }
+       
+           .sidebar-nav .nav-link i {
+               font-size: 1.7rem;
+               margin-bottom: 6px;
+           }
+       
+           @media (max-width: 900px) {
+               .sidebar-nav .nav-link {
+                   width: 92%;
+               }
+           }
+       </style>
+       <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+       <div class="sidebar-logo">
+           <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+       </div>
+       <nav class="sidebar-nav">
+           <a class="nav-link" href="apps/tenant/index.html" data-section="menu">
+               <i class="fa fa-tachometer-alt"></i>
+               <span>MENÚ</span>
+           </a>
+           <a class="nav-link" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+               <i class="fa fa-boxes-stacked"></i>
+               <span>INSTRUMENTOS</span>
+           </a>
+           <a class="nav-link active" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+               <i class="fa fa-calendar-alt"></i>
+               <span>PLANEACIÓN</span>
+           </a>
+           <a class="nav-link" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+               <i class="fa fa-balance-scale"></i>
+               <span>CALIBRACIONES</span>
+           </a>
+           <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+               <i class="fa fa-file-alt"></i>
+               <span>REPORTES</span>
+           </a>
+           <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+               <i class="fa fa-user-shield"></i>
+               <span>ROLES</span>
+           </a>
+           <a class="nav-link" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+               <i class="fa fa-circle-question"></i>
+               <span>TUTORIAL</span>
+           </a>
+           <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+               <i class="fa fa-award"></i>
+               <span>CALIDAD</span>
+           </a>
+       </nav>
+       </aside>
+    <!-- FIN SIDEBAR -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+        <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Planeación de Calibraciones</span>
+            </div>
+                <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <!-- Menú usuario -->
+                     <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/tenant/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <!-- Notificaciones -->
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList">
+                        <div class="text-muted-sm">No hay notificaciones nuevas.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="planeacion-section">
+            <div class="actions-bar">
+                <button class="btn" onclick="window.location.href = BASE_URL + '/apps/tenant/planeacion/add_planning.html'">
+                    <i class="fa fa-plus"></i> Registrar Planeación
+                </button>
+                <button class="btn" onclick="window.location.href = BASE_URL + '/apps/tenant/planeacion/calendar.html'">
+                    <i class="fa fa-calendar-alt"></i> Ver Calendario
+                </button>
+                <button class="btn bulk-btn" id="btnProgramar" disabled><i class="fa fa-calendar-check"></i> Programar selección</button>
+                <select id="filterPeriod">
+                    <option value="30">30 días</option>
+                    <option value="60" selected>60 días</option>
+                    <option value="90">90 días</option>
+                </select>
+                <button class="btn" id="applyFilter">Aplicar filtros</button>
+            </div>
+            <div id="seleccionados" class="selected-list is-hidden"></div>
+            <section id="bulkProgramSection" class="bulk-program-section is-hidden">
+                <div class="bulk-program-header">
+                    <div>
+                        <h2 class="bulk-program-title">Programar instrumentos seleccionados</h2>
+                        <p class="bulk-program-desc">Se programarán <span id="bulkSelectionCount">0</span> instrumentos con un mismo proveedor. Revisa la información antes de continuar.</p>
+                    </div>
+                    <button type="button" class="bulk-program-close" id="bulkClose" aria-label="Cerrar sección">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="bulk-instrument-table">
+                    <div class="bulk-instrument-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Código</th>
+                                    <th>Instrumento</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Serie</th>
+                                    <th>Departamento</th>
+                                    <th>Ubicación</th>
+                                    <th>Instrucciones</th>
+                                    <th>Próxima</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bulkInstrumentList"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <form id="bulkProgramForm" autocomplete="off">
+                    <div class="bulk-form-row">
+                        <div class="bulk-form-col">
+                            <label for="bulkDate">Fecha programada</label>
+                            <input type="date" id="bulkDate" required>
+                        </div>
+                        <div class="bulk-form-col">
+                            <label for="bulkProvider">Proveedor</label>
+                            <select id="bulkProvider" required>
+                                <option value="">Seleccione proveedor...</option>
+                            </select>
+                        </div>
+                        <div class="bulk-form-col">
+                            <label for="bulkResponsibleName">Responsable</label>
+                            <input type="text" id="bulkResponsibleName" readonly placeholder="Cargando responsable...">
+                            <input type="hidden" id="bulkResponsible">
+                        </div>
+                        <div class="bulk-form-col">
+                            <label for="bulkStatus">Estado</label>
+                            <select id="bulkStatus" required>
+                                <option value="">Selecciona estado...</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Programada">Programada</option>
+                                <option value="Completada">Completada</option>
+                                <option value="Cancelada">Cancelada</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="bulk-form-actions">
+                        <button type="submit" class="btn-primary" id="bulkSubmit"><i class="fa fa-save"></i> Guardar planeación</button>
+                        <button type="button" class="btn-secondary" id="bulkCancel">Cancelar</button>
+                    </div>
+                    <div id="bulkMsg" class="bulk-msg"></div>
+                </form>
+            </section>
+            <!-- Tabla de planes -->
+            <div class="table-container">
+                <table id="tablaPlanes" class="builder-table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll" /></th>
+                            <th>ID</th>
+                            <th>Instrumento</th>
+                            <th class="instructions-col">Instrucciones del cliente</th>
+                            <th class="date-col">Próxima Calibración</th>
+                            <th class="date-col">Fecha Programada</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="planesTbody"></tbody>
+                </table>
+            </div>
+            <!-- Paginación -->
+            <div class="pagination-bar">
+                <button class="btn" id="btnFirst">&lt;&lt;</button>
+                <button class="btn" id="btnPrev">&lt;</button>
+                <span>Página <input type="number" id="currentPage" value="1" min="1" class="pagination-input" /> de <span id="totalPages">1</span></span>
+                <button class="btn" id="btnNext">&gt;</button>
+                <button class="btn" id="btnLast">&gt;&gt;</button>
+                <select id="selectPerPage">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100" selected>100</option>
+                </select>
+                <span>por página</span>
+                <button class="reset-btn" onclick="window.location.reload()">RESTABLECER VISTA</button>
+            </div>
+            <div class="export-actions">
+                <button class="btn-export excel" id="exportPlanesExcel"><i class="fa fa-file-excel"></i> Exportar a Excel</button>
+                <button class="btn-export pdf" id="exportPlanesPdf"><i class="fa fa-file-pdf"></i> Exportar a PDF</button>
+            </div>
+        </section>
+    </div>
+    <!-- Sidebar JS y carga dinámica -->
+    <script type="module" src="assets/scripts/scripts-tenant.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/F54q9WlH0I1GtIsfRSAxEPPGjBJOCa/MEGLjm+rXhN3kLBXjg5eQof8I4eAbOeXtfLOcAfeUOLVN2y5kqL/hg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="assets/scripts/exports.js"></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        fetch(BASE_URL + '/apps/tenant/sidebar.html')
+          .then(response => response.text())
+          .then(html => {
+            document.getElementById('sidebar').innerHTML = html;
+            if (typeof initSidebar === 'function') initSidebar();
+            if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+            if (typeof window.applyApiTokenVisibility === 'function') window.applyApiTokenVisibility();
+            if (typeof window.activateApiTokensIfAvailable === 'function') window.activateApiTokensIfAvailable();
+          });
+      });
+
+    // Variables de paginación y selección
+      let planes = [];
+      let currentPage = 1;
+      let perPage = 100;
+      let filtroPeriodo = '60';
+      const seleccionados = new Set();
+      const cont = document.getElementById('seleccionados');
+      const btnProgramar = document.getElementById('btnProgramar');
+      let canManagePlaneacion = Boolean(window.permissionFlags && window.permissionFlags.canManagePlaneacion);
+      const planesExportColumns = [
+        { key: 'id', label: 'ID' },
+        { key: 'instrumento', label: 'Instrumento' },
+        { key: 'instrucciones_cliente', label: 'Instrucciones cliente' },
+        { key: 'fecha_proxima', label: 'Próxima Calibración' },
+        { key: 'fecha_programada', label: 'Fecha Programada' },
+        { key: 'estado', label: 'Estado' }
+      ];
+      function enforcePlaneacionPermissions(){
+        if (btnProgramar) btnProgramar.disabled = !canManagePlaneacion || seleccionados.size === 0;
+      }
+      document.addEventListener('permissionsready', function(event){
+        canManagePlaneacion = Boolean(event.detail && event.detail.canManagePlaneacion);
+        enforcePlaneacionPermissions();
+      });
+      const params = new URLSearchParams(window.location.search);
+      const periodoParam = params.get('dias') || params.get('periodo');
+      if (periodoParam && ['30','60','90'].includes(periodoParam)) {
+        filtroPeriodo = periodoParam;
+      }
+      document.getElementById('filterPeriod').value = filtroPeriodo;
+      let filtroEstado = (params.get('filtro') || 'all').toLowerCase();
+      const programarBtn = document.getElementById('btnProgramar');
+      const bulkSection = document.getElementById('bulkProgramSection');
+      const bulkList = document.getElementById('bulkInstrumentList');
+      const bulkCount = document.getElementById('bulkSelectionCount');
+      const bulkForm = document.getElementById('bulkProgramForm');
+      const bulkMsg = document.getElementById('bulkMsg');
+      const bulkDate = document.getElementById('bulkDate');
+      const bulkProvider = document.getElementById('bulkProvider');
+      const bulkResponsible = document.getElementById('bulkResponsible');
+      const bulkResponsibleName = document.getElementById('bulkResponsibleName');
+      const bulkStatus = document.getElementById('bulkStatus');
+      const bulkSubmit = document.getElementById('bulkSubmit');
+      const bulkClose = document.getElementById('bulkClose');
+      const bulkCancel = document.getElementById('bulkCancel');
+      let responsableActual = null;
+      let administradoresDisponibles = [];
+      let enviandoProgramacion = false;
+
+      if(bulkResponsibleName){
+        bulkResponsibleName.value = 'Cargando responsable...';
+      }
+
+      function setBulkMessage(msg, ok){
+        if(!bulkMsg) return;
+        bulkMsg.textContent = msg || '';
+        bulkMsg.classList.remove('success', 'error');
+        if(msg){
+          bulkMsg.classList.add(ok ? 'success' : 'error');
+        }
+      }
+
+      function esAdministrador(usuario){
+        if(!usuario) return false;
+        const rol = (usuario.role_name || usuario.role_id || '').toString().toLowerCase();
+        return rol === 'administrador';
+      }
+
+      function actualizarResponsableActual(){
+        if(bulkResponsible){
+          const id = responsableActual && responsableActual.id ? String(responsableActual.id) : '';
+          bulkResponsible.value = id;
+        }
+        if(bulkResponsibleName){
+          if(responsableActual && responsableActual.id){
+            const nombre = [responsableActual.nombre, responsableActual.apellidos].filter(Boolean).join(' ').trim();
+            const etiqueta = nombre || responsableActual.usuario || responsableActual.correo || `ID ${responsableActual.id}`;
+            bulkResponsibleName.value = etiqueta;
+          } else {
+            bulkResponsibleName.value = 'Responsable no identificado';
+          }
+        }
+      }
+
+      function aplicarResponsablePermitido(){
+        if(administradoresDisponibles.length > 0){
+          const coincidente = administradoresDisponibles.find(admin => responsableActual && String(admin.id) === String(responsableActual.id));
+          const elegido = coincidente || administradoresDisponibles[0];
+          responsableActual = {
+            id: elegido.id,
+            nombre: elegido.nombre,
+            apellidos: elegido.apellidos,
+            usuario: elegido.usuario,
+            correo: elegido.correo,
+            role_name: 'Administrador',
+            role_id: 'Administrador',
+          };
+        } else if(!esAdministrador(responsableActual)){
+          responsableActual = null;
+        }
+        actualizarResponsableActual();
+      }
+
+      function resetBulkForm(){
+        if(!bulkForm) return;
+        bulkForm.reset();
+        if(bulkStatus) bulkStatus.value = 'Programada';
+        setBulkMessage('', true);
+        actualizarResponsableActual();
+      }
+
+      function cargarAdministradores(){
+        fetch(BASE_URL + '/backend/usuarios/list_admins.php')
+          .then(resp => resp.ok ? resp.json() : [])
+          .then(lista => {
+            administradoresDisponibles = Array.isArray(lista) ? lista : [];
+            aplicarResponsablePermitido();
+          })
+          .catch(() => {
+            administradoresDisponibles = [];
+            aplicarResponsablePermitido();
+          });
+      }
+
+      function cargarProveedores(){
+        if(!bulkProvider) return;
+        bulkProvider.innerHTML = '<option value="">Cargando proveedores...</option>';
+        const procesar = (lista) => {
+          if(!Array.isArray(lista) || lista.length === 0){
+            bulkProvider.innerHTML = '<option value="">Sin proveedores disponibles</option>';
+            return;
+          }
+          bulkProvider.innerHTML = '<option value="">Seleccione proveedor...</option>';
+          lista.forEach(p => {
+            const option = document.createElement('option');
+            option.value = p.id;
+            option.textContent = p.nombre || p.razon_social || p.company || `Proveedor ${p.id}`;
+            bulkProvider.appendChild(option);
+          });
+        };
+        fetch(BASE_URL + '/backend/proveedores/list_providers.php')
+          .then(resp => resp.ok ? resp.text() : Promise.reject())
+          .then(texto => {
+            if(!texto) throw new Error('empty');
+            let datos;
+            try {
+              datos = JSON.parse(texto);
+            } catch (e) {
+              throw e;
+            }
+            procesar(datos);
+          })
+          .catch(() => {
+            fetch(BASE_URL + '/backend/proveedores/providers.php')
+              .then(resp => resp.ok ? resp.json() : [])
+              .then(procesar)
+              .catch(() => {
+                bulkProvider.innerHTML = '<option value="">Sin proveedores disponibles</option>';
+              });
+          });
+      }
+
+      function actualizarListaProgramacion(){
+        if(!bulkSection || !bulkSection.classList.contains('is-visible')) return;
+        bulkList.innerHTML = '';
+        const ids = Array.from(seleccionados);
+        bulkCount.textContent = ids.length;
+        if(!ids.length){
+          ocultarProgramacionMasiva();
+          return;
+        }
+        ids.forEach(id => {
+          const plan = planes.find(p => String(p.id) === String(id));
+          if(!plan) return;
+          const tr = document.createElement('tr');
+          const instrucciones = typeof plan.instrucciones_cliente === 'string'
+            ? plan.instrucciones_cliente.trim()
+            : '';
+          const valores = [
+            typeof formatNA === 'function' ? formatNA(plan.id) : (plan.id != null ? plan.id : 'NA'),
+            typeof formatNA === 'function' ? formatNA(plan.codigo) : (plan.codigo != null ? plan.codigo : 'NA'),
+            typeof formatNA === 'function' ? formatNA(plan.instrumento) : (plan.instrumento != null ? plan.instrumento : 'NA'),
+            typeof formatNA === 'function' ? formatNA(plan.marca) : (plan.marca != null ? plan.marca : 'NA'),
+            typeof formatNA === 'function' ? formatNA(plan.modelo) : (plan.modelo != null ? plan.modelo : 'NA'),
+            typeof formatNA === 'function' ? formatNA(plan.serie) : (plan.serie != null ? plan.serie : 'NA'),
+            typeof formatNA === 'function' ? formatNA(plan.departamento) : (plan.departamento != null ? plan.departamento : 'NA'),
+            typeof formatNA === 'function' ? formatNA(plan.ubicacion) : (plan.ubicacion != null ? plan.ubicacion : 'NA'),
+            instrucciones || 'Sin instrucciones',
+            plan.fecha_proxima ? (typeof formatFechaCorta === 'function' ? formatFechaCorta(plan.fecha_proxima) : plan.fecha_proxima) : 'NA'
+          ];
+          valores.forEach(valor => {
+            const td = document.createElement('td');
+            td.textContent = valor;
+            tr.appendChild(td);
+          });
+          const accionesTd = document.createElement('td');
+          const btnQuitar = document.createElement('button');
+          btnQuitar.type = 'button';
+          btnQuitar.className = 'bulk-remove';
+          btnQuitar.textContent = 'Quitar';
+          btnQuitar.addEventListener('click', function(){
+            seleccionados.delete(String(id));
+            renderTabla();
+            renderSeleccionados();
+          });
+          accionesTd.appendChild(btnQuitar);
+          tr.appendChild(accionesTd);
+          bulkList.appendChild(tr);
+        });
+        if(!bulkList.children.length){
+          const tr = document.createElement('tr');
+          const td = document.createElement('td');
+          td.colSpan = 11;
+          td.style.textAlign = 'center';
+          td.textContent = 'No se encontraron datos de los instrumentos seleccionados.';
+          tr.appendChild(td);
+          bulkList.appendChild(tr);
+        }
+      }
+
+      function mostrarProgramacionMasiva(){
+        if(seleccionados.size === 0){
+          alert('Seleccione al menos un instrumento');
+          return;
+        }
+        if(!responsableActual || !responsableActual.id){
+          alert('No se pudo identificar al usuario responsable');
+          return;
+        }
+        resetBulkForm();
+        if(bulkSection){
+          bulkSection.classList.remove('is-hidden');
+          bulkSection.classList.add('is-visible');
+          actualizarListaProgramacion();
+          setTimeout(() => {
+            bulkSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 150);
+        }
+      }
+
+      function ocultarProgramacionMasiva(){
+        if(!bulkSection) return;
+        bulkSection.classList.add('is-hidden');
+        bulkSection.classList.remove('is-visible');
+        if(bulkForm){
+          bulkForm.reset();
+          if(bulkStatus) bulkStatus.value = 'Programada';
+        }
+        setBulkMessage('', true);
+        actualizarResponsableActual();
+      }
+
+      fetch(BASE_URL + '/backend/usuarios/get_actual_user.php')
+        .then(r=>r.json())
+        .then(u=>{
+          if(u && !u.error && u.id && esAdministrador(u)){
+            responsableActual = u;
+          } else {
+            responsableActual = null;
+          }
+          aplicarResponsablePermitido();
+        })
+        .catch(()=>{
+          responsableActual = null;
+          aplicarResponsablePermitido();
+        });
+
+      cargarProveedores();
+      cargarAdministradores();
+
+      if(programarBtn){
+        programarBtn.addEventListener('click', mostrarProgramacionMasiva);
+      }
+      if(bulkClose){
+        bulkClose.addEventListener('click', ocultarProgramacionMasiva);
+      }
+      if(bulkCancel){
+        bulkCancel.addEventListener('click', ocultarProgramacionMasiva);
+      }
+      if(bulkForm){
+        bulkForm.addEventListener('submit', function(e){
+          e.preventDefault();
+          if(enviandoProgramacion) return;
+          if(seleccionados.size === 0){
+            setBulkMessage('No hay instrumentos seleccionados.', false);
+            return;
+          }
+          const fecha = bulkDate ? bulkDate.value : '';
+          const proveedor = bulkProvider ? bulkProvider.value : '';
+          const responsable = bulkResponsible ? bulkResponsible.value : '';
+          const estado = bulkStatus ? bulkStatus.value : '';
+          if(!fecha){
+            setBulkMessage('Selecciona la fecha programada.', false);
+            if(bulkDate) bulkDate.focus();
+            return;
+          }
+          if(!proveedor){
+            setBulkMessage('Selecciona el proveedor que atenderá esta planeación.', false);
+            if(bulkProvider) bulkProvider.focus();
+            return;
+          }
+          if(!responsable){
+            setBulkMessage('No se pudo identificar al responsable actual.', false);
+            return;
+          }
+          if(!estado){
+            setBulkMessage('Selecciona el estado de la planeación.', false);
+            if(bulkStatus) bulkStatus.focus();
+            return;
+          }
+          enviandoProgramacion = true;
+          if(bulkSubmit) bulkSubmit.disabled = true;
+          const ids = Array.from(seleccionados);
+          fetch(BASE_URL + '/backend/planeacion/add_bulk_planning.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ instrumentos: ids, fecha_programada: fecha, responsable_id: responsable, estado, proveedor_id: proveedor })
+          })
+          .then(r=>r.json())
+          .then(res=>{
+            if(res.success){
+              setBulkMessage('¡Planeación registrada correctamente!', true);
+              seleccionados.clear();
+              renderSeleccionados();
+              cargarPlanes();
+              setTimeout(() => { ocultarProgramacionMasiva(); }, 1200);
+            } else {
+              setBulkMessage(res.message || 'Error al registrar la planeación.', false);
+            }
+          })
+          .catch(()=> setBulkMessage('Error de conexión.', false))
+          .finally(()=>{
+            enviandoProgramacion = false;
+            if(bulkSubmit) bulkSubmit.disabled = false;
+          });
+        });
+      }
+
+      function getFiltered(){
+        return Array.isArray(planes) ? planes : [];
+      }
+
+      document.getElementById('selectPerPage').addEventListener('change', function(){
+        perPage = parseInt(this.value);
+        currentPage = 1;
+        renderTabla();
+      });
+        document.getElementById('applyFilter').addEventListener('click', function(){
+        filtroPeriodo = document.getElementById('filterPeriod').value;
+        currentPage = 1;
+         cargarPlanes();
+      });
+      
+      document.getElementById('btnFirst').onclick = function(){ currentPage = 1; renderTabla(); };
+      document.getElementById('btnPrev').onclick = function(){ if(currentPage>1){ currentPage--; renderTabla(); } };
+      document.getElementById('btnNext').onclick = function(){
+        const total = Math.max(1, Math.ceil(getFiltered().length/perPage));
+        if(currentPage < total){ currentPage++; renderTabla(); }
+      };
+      document.getElementById('btnLast').onclick = function(){ currentPage = Math.max(1, Math.ceil(getFiltered().length/perPage)); renderTabla(); };
+      document.getElementById('currentPage').addEventListener('change', function(){
+        const total = Math.max(1, Math.ceil(getFiltered().length/perPage));
+        let val = parseInt(this.value);
+        if(isNaN(val) || val < 1) val = 1;
+        if(val > total) val = total;
+        currentPage = val;
+        renderTabla();
+      });
+
+      document.getElementById('selectAll').addEventListener('change', function(){
+        const data = getFiltered();
+        if(this.checked){ data.forEach(p=> seleccionados.add(String(p.id))); }
+        else { data.forEach(p=> seleccionados.delete(String(p.id))); }
+        renderTabla();
+        renderSeleccionados();
+      });
+
+      function cargarPlanes(){
+        fetch(`backend/planeacion/list_planning.php?dias=${encodeURIComponent(filtroPeriodo)}&estado=${encodeURIComponent(filtroEstado)}`)
+          .then(r=>r.json())
+          .then(data=>{ planes = Array.isArray(data)?data:[]; renderTabla(); renderSeleccionados(); })
+          .catch(()=>{ planes = []; renderTabla(); renderSeleccionados(); });
+      }
+
+      function renderSeleccionados(){
+        const btn = document.getElementById('btnProgramar');
+        if (btn) {
+          btn.disabled = !canManagePlaneacion || seleccionados.size === 0;
+        }
+        if(!cont) return;
+
+        cont.innerHTML = '';
+        if(seleccionados.size === 0){
+          cont.classList.add('is-hidden');
+          cont.classList.remove('is-visible');
+          ocultarProgramacionMasiva();
+          return;
+        }
+        cont.classList.remove('is-hidden');
+        cont.classList.add('is-visible');
+        seleccionados.forEach(id=>{
+          const plan = planes.find(p=>String(p.id)===String(id));
+          if(!plan) return;
+          const chip = document.createElement('span');
+          chip.className = 'selected-chip';
+          chip.textContent = plan.instrumento;
+          const ic = document.createElement('i');
+          ic.className = 'fa fa-times';
+          ic.onclick = ()=>{ seleccionados.delete(String(id)); renderTabla(); renderSeleccionados(); };
+          chip.appendChild(ic);
+          cont.appendChild(chip);
+        });
+        if(bulkSection && bulkSection.classList.contains('is-visible')){
+          actualizarListaProgramacion();
+        }
+      }
+
+      function renderTabla(){
+        const tbody = document.getElementById('planesTbody');
+        tbody.innerHTML = '';
+        const data = getFiltered();
+        const total = Math.max(1, Math.ceil(data.length/perPage));
+        if(currentPage > total) currentPage = total;
+        document.getElementById('totalPages').textContent = total;
+        document.getElementById('currentPage').value = currentPage;
+        document.getElementById('btnFirst').disabled = currentPage === 1;
+        document.getElementById('btnPrev').disabled = currentPage === 1;
+        document.getElementById('btnNext').disabled = currentPage === total;
+        document.getElementById('btnLast').disabled = currentPage === total;
+
+        if(!data.length){
+          const row = document.createElement('tr');
+          const td = document.createElement('td');
+          td.colSpan = 8;
+          td.className = 'empty-row';
+          td.textContent = 'No hay planeaciones a agendar.';
+          row.appendChild(td);
+          tbody.appendChild(row);
+          return;
+        }
+        const start = (currentPage-1)*perPage;
+        const end = Math.min(start + perPage, data.length);
+        for(let i=start; i<end; i++){
+          const plan = data[i];
+          const tr = document.createElement('tr');
+          const idInstrumento = encodeURIComponent(plan.id);
+          const enlaceInstrumento = `apps/tenant/instrumentos/list_gages.html?id=${idInstrumento}`;
+          const fechaProgramadaHtml = plan.fecha_programada
+            ? formatFechaCorta(plan.fecha_programada)
+            : '<span class="text-danger fw-bold">Sin fecha</span>';
+          tr.innerHTML = `
+            <td><input type="checkbox" class="sel" data-id="${plan.id}" ${seleccionados.has(String(plan.id))?'checked':''}></td>
+            <td><a href="${enlaceInstrumento}">${formatNA(plan.id)}</a></td>
+            <td><a href="${enlaceInstrumento}">${formatNA(plan.instrumento)}</a></td>
+            <td class="instructions-col"></td>
+            <td class="date-col">${plan.fecha_proxima ? formatFechaCorta(plan.fecha_proxima) : 'NA'}</td>
+            <td class="date-col">${fechaProgramadaHtml}</td>
+            <td>${formatNA(plan.estado)}</td>
+            <td><button class="btn btn-primary btn-sm" onclick="verEnCalendario('${plan.fecha_programada || plan.fecha_proxima}')"><i class='fa fa-calendar-alt'></i> Ver en calendario</button></td>
+          `;
+          const instrucciones = typeof plan.instrucciones_cliente === 'string'
+            ? plan.instrucciones_cliente.trim()
+            : '';
+          const instruccionesCell = tr.querySelector('.instructions-col');
+          if (instruccionesCell) {
+            const texto = instrucciones || 'Sin instrucciones';
+            instruccionesCell.textContent = texto;
+            if (instrucciones) {
+              instruccionesCell.title = instrucciones;
+            }
+          }
+          const chk = tr.querySelector('.sel');
+          chk.addEventListener('change', function(){
+            if(this.checked){ seleccionados.add(String(plan.id)); }
+            else { seleccionados.delete(String(plan.id)); }
+            renderSeleccionados();
+          });
+          tbody.appendChild(tr);
+        }
+        const selectAll = document.getElementById('selectAll');
+        const visible = document.querySelectorAll('.sel');
+        const checkedCount = Array.from(visible).filter(ch=>ch.checked).length;
+        selectAll.checked = checkedCount === visible.length && visible.length>0;
+        selectAll.indeterminate = checkedCount>0 && checkedCount<visible.length;
+        if(bulkSection && bulkSection.classList.contains('is-visible')){
+          actualizarListaProgramacion();
+        }
+      }
+
+      function buildPlanesExportData(){
+        return getFiltered().map(function(plan){
+          return {
+            id: formatNA(plan.id),
+            instrumento: formatNA(plan.instrumento),
+            instrucciones_cliente: (typeof plan.instrucciones_cliente === 'string' && plan.instrucciones_cliente.trim())
+              ? plan.instrucciones_cliente.trim()
+              : 'Sin instrucciones',
+            fecha_proxima: plan.fecha_proxima ? formatFechaCorta(plan.fecha_proxima) : 'NA',
+            fecha_programada: plan.fecha_programada ? formatFechaCorta(plan.fecha_programada) : 'Sin fecha',
+            estado: formatNA(plan.estado)
+          };
+        });
+      }
+
+      function initExportButtons(){
+        const excelBtn = document.getElementById('exportPlanesExcel');
+        const pdfBtn = document.getElementById('exportPlanesPdf');
+        if(excelBtn){
+          excelBtn.addEventListener('click', function(){
+            const data = buildPlanesExportData();
+            if(data.length){
+              exportToExcel(data, planesExportColumns, 'planeacion');
+            }
+          });
+        }
+        if(pdfBtn){
+          pdfBtn.addEventListener('click', function(){
+            const data = buildPlanesExportData();
+            if(data.length){
+              exportToPDF(data, planesExportColumns, 'planeacion');
+            }
+          });
+        }
+      }
+
+      function verEnCalendario(fecha){
+        window.location.href = `apps/tenant/planeacion/calendar.html?fecha=${encodeURIComponent(fecha)}`;
+      }
+
+      document.addEventListener('DOMContentLoaded', function(){
+        cargarPlanes();
+        initExportButtons();
+      });
+      enforcePlaneacionPermissions();
+    </script>
+</body>
+</html>

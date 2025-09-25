@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <title>Panel de Calidad | SISTEMA ISO 17025</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+</head>
+<body>
+    <div id="sidebar" class="sidebar"></div>
+    <div class="main-content">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="sidebarOpen" aria-label="Abrir menú">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <h1 class="topbar-title">Gestión de Calidad</h1>
+            </div>
+            <div class="topbar-right">
+                <span id="userName" class="topbar-user"></span>
+            </div>
+        </header>
+        <main class="dashboard-section">
+            <div class="dashboard-bar">Panel general de Calidad</div>
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-md-4" data-calidad-section="documentos">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h2 class="h5 mb-1">Documentos controlados</h2>
+                                    <p class="text-muted mb-3">Seguimiento a versiones vigentes y próximas revisiones.</p>
+                                </div>
+                                <span class="badge bg-info text-dark" id="documentosVigentesCount">0</span>
+                            </div>
+                            <button class="btn btn-primary w-100" onclick="window.location.href = BASE_URL + '/apps/internal/calidad/documentos.html'">
+                                Administrar documentos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4" data-calidad-section="capacitaciones">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h2 class="h5 mb-1">Capacitaciones</h2>
+                                    <p class="text-muted mb-3">Plan de formación y evaluaciones asociadas.</p>
+                                </div>
+                                <span class="badge bg-success" id="capacitacionesProgramadasCount">0</span>
+                            </div>
+                            <button class="btn btn-primary w-100" onclick="window.location.href = BASE_URL + '/apps/internal/calidad/capacitaciones.html'">
+                                Gestionar capacitaciones
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4" data-calidad-section="no-conformidades">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h2 class="h5 mb-1">No conformidades</h2>
+                                    <p class="text-muted mb-3">Estatus de seguimiento y acciones correctivas.</p>
+                                </div>
+                                <span class="badge bg-danger" id="noConformidadesAbiertasCount">0</span>
+                            </div>
+                            <button class="btn btn-primary w-100" onclick="window.location.href = BASE_URL + '/apps/internal/calidad/no_conformidades.html'">
+                                Revisar no conformidades
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="card shadow-sm" data-calidad-section="overview">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Últimas actualizaciones</h2>
+                    <p class="text-muted" id="calidadUpdatesEmpty">No hay novedades recientes en el módulo de Calidad.</p>
+                    <ul class="list-group" id="calidadUpdatesList" hidden></ul>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            var sidebarTarget = document.getElementById('sidebar');
+            if (sidebarTarget) {
+                fetch((window.BASE_URL || '') + '/apps/internal/sidebar.html')
+                    .then(function (response) { return response.text(); })
+                    .then(function (html) {
+                        sidebarTarget.innerHTML = html;
+                        var nav = sidebarTarget.querySelector('.sidebar-nav');
+                        if (nav) {
+                            var calidadLink = sidebarTarget.querySelector('[data-section="calidad"]');
+                            if (!calidadLink) {
+                                calidadLink = document.createElement('a');
+                                calidadLink.className = 'nav-link';
+                                calidadLink.setAttribute('data-section', 'calidad');
+                                calidadLink.innerHTML = '<i class="fa fa-award"></i><span>CALIDAD</span>';
+                            }
+                            calidadLink.setAttribute('href', 'apps/internal/calidad/index.html');
+                            nav.appendChild(calidadLink);
+                        }
+                        if (typeof initSidebar === 'function') initSidebar();
+                        if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+                    });
+            }
+
+            if (typeof fetch === 'function') {
+                fetch((window.BASE_URL || '') + '/backend/usuarios/get_actual_user.php', { credentials: 'include' })
+                    .then(function (res) { return res.json(); })
+                    .then(function (user) {
+                        var nameEl = document.getElementById('userName');
+                        if (nameEl) {
+                            var nombre = user && (user.nombre || user.nombre_completo);
+                            var rol = user && (user.role_id || user.role_name || '');
+                            nameEl.innerHTML = nombre ? nombre + (rol ? ' <span class="text-accent">(' + rol + ')</span>' : '') : '';
+                        }
+                    })
+                    .catch(function () {});
+            }
+        });
+
+        (function () {
+            var metricsLoaded = false;
+            function renderUpdates(updates) {
+                var list = document.getElementById('calidadUpdatesList');
+                var empty = document.getElementById('calidadUpdatesEmpty');
+                if (!list || !empty) return;
+                if (!updates || !updates.length) {
+                    list.innerHTML = '';
+                    list.hidden = true;
+                    empty.hidden = false;
+                    return;
+                }
+                list.innerHTML = updates.map(function (item) {
+                    var fecha = item.fecha ? '<span class="text-muted-sm">' + item.fecha + '</span>' : '';
+                    return '<li class="list-group-item d-flex justify-content-between align-items-start">'
+                        + '<div><strong>' + (item.titulo || 'Actualización') + '</strong><br><span class="text-muted">' + (item.descripcion || '') + '</span></div>'
+                        + fecha + '</li>';
+                }).join('');
+                list.hidden = false;
+                empty.hidden = true;
+            }
+
+            document.addEventListener('permissionsready', function () {
+                if (metricsLoaded) return;
+                metricsLoaded = true;
+                var base = (window.AppUrl && typeof window.AppUrl.resolveAppUrl === 'function')
+                    ? window.AppUrl.resolveAppUrl
+                    : function (path) { return path; };
+                var resolve = base('/backend/calidad/metricas/resumen.php');
+                fetch(resolve, { credentials: 'include' })
+                    .then(function (response) { return response.json(); })
+                    .then(function (data) {
+                        if (!data || typeof data !== 'object') return;
+                        var documentos = document.getElementById('documentosVigentesCount');
+                        var capacitaciones = document.getElementById('capacitacionesProgramadasCount');
+                        var noConformidades = document.getElementById('noConformidadesAbiertasCount');
+                        if (documentos && data.documentos_vigentes != null) documentos.textContent = data.documentos_vigentes;
+                        if (capacitaciones && data.capacitaciones_activas != null) capacitaciones.textContent = data.capacitaciones_activas;
+                        if (noConformidades && data.no_conformidades_abiertas != null) noConformidades.textContent = data.no_conformidades_abiertas;
+                        renderUpdates(Array.isArray(data.actualizaciones) ? data.actualizaciones : []);
+                    })
+                    .catch(function () {});
+            });
+        })();
+    </script>
+</body>
+</html>

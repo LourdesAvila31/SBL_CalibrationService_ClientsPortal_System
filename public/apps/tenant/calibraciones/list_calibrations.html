@@ -1,0 +1,1416 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = (base === '/') ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <meta charset="UTF-8">
+    <title>Seguimiento de Calibraciones | SISTEMA ISO 17025</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Bootstrap, estilos, fuentes, FontAwesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            background: #f6f8fa;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img {
+            width: 140px;
+            margin-bottom: 22px;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-nav .nav-link {
+            width: 92%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0 8px 0;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s;
+            position: relative;
+        }
+        .sidebar-nav .nav-link.active,
+        .sidebar-nav .nav-link:hover {
+            background: #0c8c98;
+            color: #fff;
+        }
+        .sidebar-nav .nav-link i {
+            font-size: 1.85rem;
+            margin-bottom: 8px;
+        }
+        .sidebar-nav .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 4px;
+            height: 32px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .main-content {
+            margin-left: 200px;
+            padding: 0;
+        }
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(60,60,100,0.07);
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px 0 20px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .logo {
+            width: 120px;
+        }
+        .header-title {
+            font-size: 1.1rem;
+            color: #227b9b;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .header-user {
+            font-size: 1rem;
+            color: #227b9b;
+            font-weight: 400;
+            margin-left: 24px;
+        }
+        .actions-bar {
+            background: #e9eff1;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .actions-bar .btn {
+            background: #227b9b;
+            color: #fff;
+            border: none;
+            border-radius: 22px;
+            padding: 7px 20px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        .actions-bar .btn:hover {
+            background: #08536a;
+        }
+        .actions-bar .bulk-btn {
+            background: #e0e7ff;
+            color: #08536a;
+            border: 1px solid #227b9b;
+        }
+        .actions-bar select, .actions-bar input {
+            font-size: 1rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            margin-left: 8px;
+        }
+        .table-container {
+            background: #fff;
+            margin: 0 24px 0 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(60,60,100,0.09);
+            overflow-x: auto;
+            margin-top: 8px;
+        }
+        .empty-row {
+            text-align: center;
+            color: #555;
+            font-size: 1.08rem;
+            padding: 32px 0;
+        }
+        .pagination-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            background: #e9eff1;
+            padding: 10px 24px;
+            margin-top: 0px;
+            gap: 12px;
+        }
+        .pagination-bar select, .pagination-bar input {
+            font-size: 1rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+        }
+        .pagination-bar .btn {
+            background: #227b9b;
+            color: #fff;
+            border: none;
+            border-radius: 18px;
+            padding: 5px 16px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        .pagination-bar .btn:disabled {
+            background: #b1c9d1;
+            cursor: not-allowed;
+        }
+        .reset-btn {
+            background: #fff;
+            color: #227b9b;
+            border: 1px solid #227b9b;
+            padding: 5px 16px;
+            border-radius: 18px;
+            margin-left: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-warning { color: #fff; background: #227b9b; border: none; }
+        .btn-warning:hover, .btn-danger:hover { opacity: 0.85; }
+        .btn-danger { background: #e53e3e; color: #fff; border: none; }
+        .pendiente { background:#ffe5e5; }
+        .logistics-cell { display: flex; align-items: center; gap: 8px; }
+        .logistics-badge { font-size: 0.85rem; }
+        .btn-logistica { border: none; background: transparent; color: #227b9b; cursor: pointer; padding: 0 6px; }
+        .btn-logistica:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-logistica:hover { color: #0c8c98; }
+        .logistics-timeline { display: flex; flex-direction: column; gap: 10px; }
+        .logistics-step { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 10px; background: #f5f7fb; }
+        .logistics-step.completed { background: #e6f4ea; }
+        .logistics-step .step-icon { font-size: 1.2rem; width: 26px; text-align: center; }
+        .logistics-step .step-info { display: flex; flex-direction: column; font-size: 0.9rem; }
+        .logistics-step .step-title { font-weight: 600; color: #0d576a; }
+        .logistics-step .step-date { font-size: 0.8rem; color: #6b7280; }
+        .logistics-form label { font-weight: 600; font-size: 0.9rem; }
+        .logistics-form .form-control, .logistics-form .form-select { font-size: 0.9rem; }
+        @media (max-width: 900px) {
+            .table-container { min-width: 100vw; }
+            .main-content { margin-left: 0; }
+            .filters-bar {
+                flex-direction: column;
+            }
+        }
+        .filters-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .filters-bar label {
+            font-weight: 600;
+            color: #217b9b;
+            margin-right: 4px;
+        }
+        .filters-bar select {
+            min-width: 180px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            padding: 6px 10px;
+        }
+        .row-justification {
+            background-color: #fff7e6;
+        }
+        .row-nonconformity {
+            background-color: #ffe8e8;
+        }
+        .no-conformity-cell .badge {
+            font-size: 0.8rem;
+        }
+        .no-conformity-cell .btn-link {
+            padding: 0;
+            font-size: 0.85rem;
+        }
+        .status-badge {
+            font-size: 0.85rem;
+        }
+        .status-calibration-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+        }
+        .status-calibration-cell .status-hint {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        .custom-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1040;
+        }
+        .custom-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1050;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom-modal.open,
+        .custom-modal-backdrop.open {
+            display: flex;
+        }
+        .custom-modal-dialog {
+            background: #fff;
+            border-radius: 10px;
+            padding: 24px;
+            width: min(480px, 92%);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+        .custom-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .custom-modal-header .btn-close {
+            border: none;
+            background: transparent;
+            font-size: 1.2rem;
+        }
+        .custom-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .custom-modal-body label {
+            font-weight: 600;
+            color: #217b9b;
+        }
+    </style>
+</head>
+<body>
+     <!-- SIDEBAR -->
+         <aside id="sidebar" class="sidebar">
+         <!-- SIDEBAR CONTENT -->
+         <style>
+             .sidebar-nav {
+                 gap: 12px;
+             }
+         
+             .sidebar-nav .nav-link {
+                 width: 90%;
+                 padding: 16px 0 10px 0;
+                 font-size: 1.02rem;
+                 letter-spacing: 0.5px;
+             }
+         
+             .sidebar-nav .nav-link i {
+                 font-size: 1.7rem;
+                 margin-bottom: 6px;
+             }
+         
+             @media (max-width: 900px) {
+                 .sidebar-nav .nav-link {
+                     width: 92%;
+                 }
+             }
+         </style>
+         <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+         <div class="sidebar-logo">
+             <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+         </div>
+         <nav class="sidebar-nav">
+             <a class="nav-link" href="apps/tenant/index.html" data-section="menu">
+                 <i class="fa fa-tachometer-alt"></i>
+                 <span>MENÚ</span>
+             </a>
+             <a class="nav-link" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+                 <i class="fa fa-boxes-stacked"></i>
+                 <span>INSTRUMENTOS</span>
+             </a>
+             <a class="nav-link" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+                 <i class="fa fa-calendar-alt"></i>
+                 <span>PLANEACIÓN</span>
+             </a>
+             <a class="nav-link active" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+                 <i class="fa fa-balance-scale"></i>
+                 <span>CALIBRACIONES</span>
+             </a>
+             <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+                 <i class="fa fa-file-alt"></i>
+                 <span>REPORTES</span>
+             </a>
+             <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+                 <i class="fa fa-user-shield"></i>
+                 <span>ROLES</span>
+             </a>
+             <a class="nav-link" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+                 <i class="fa fa-circle-question"></i>
+                 <span>TUTORIAL</span>
+             </a>
+             <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+                 <i class="fa fa-award"></i>
+                 <span>CALIDAD</span>
+             </a>
+         </nav>
+         </aside>
+     <!-- FIN SIDEBAR -->
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="topbar-left">
+        <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Seguimiento de Calibraciones</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/tenant/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <!-- Actions Bar -->
+        <div class="actions-bar">
+            <button class="btn" id="btnAddCalibration">+ Agregar calibración</button>
+            <button class="btn bulk-btn" id="btnBulk">Acciones múltiples</button>
+            <button class="btn" id="btnEdit" disabled>Editar</button>
+            <button class="btn" id="btnDelete" disabled>Eliminar</button>
+            <div class="ms-auto d-flex align-items-center gap-2 logistics-filter-group">
+                <label for="filtroLogistica" class="mb-0 text-muted" style="font-size:0.85rem;">Logística:</label>
+                <select id="filtroLogistica" class="form-select form-select-sm" style="width:auto;">
+                    <option value="">Todas</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Enviado">Enviado</option>
+                    <option value="En tránsito">En tránsito</option>
+                    <option value="Recibido">Recibido</option>
+                </select>
+            </div>
+        </div>
+        <div class="px-4 pt-3">
+            <div class="alert alert-info shadow-sm" role="status" style="border-left: 4px solid #0c8c98;">
+                <strong>Recuerda:</strong> antes de liberar una calibración debe existir una aprobación previa registrada por otra persona en el portal interno.
+                Si intentas liberar sin esa doble validación o siendo la misma persona que aprobó, el sistema mostrará un mensaje de bloqueo para proteger la segregación de funciones.
+            </div>
+        </div>
+        <div class="filters-bar">
+            <label>
+                <span>Instrumento</span>
+                <select id="filtroInstrumento">
+                    <option value="">Todos</option>
+                </select>
+            </label>
+            <label>
+                <span>Estado de Orden</span>
+                <select id="filtroEstado">
+                    <option value="">Todos</option>
+                </select>
+            </label>
+            <label>
+                <span>Estado de calibración</span>
+                <select id="filtroEstadoCalibracion">
+                    <option value="all">Todos</option>
+                    <option value="vigente">Vigentes</option>
+                    <option value="proximo">Próximo vencimiento</option>
+                    <option value="vencido">Vencidos</option>
+                </select>
+            </label>
+        </div>
+        <!-- Tabla de calibraciones -->
+        <div class="table-container">
+            <table id="tablaCalibraciones" class="builder-table">
+                <thead>
+                    <tr>
+                        <th class="w-40"><input type="checkbox" /></th>
+                        <th>ID</th>
+                        <th>Instrumento</th>
+                        <th>Patrón</th>
+                        <th>Certificado del patrón</th>
+                        <th>Código Interno</th>
+                        <th class="date-col">Fecha Programada</th>
+                        <th class="date-col">Fecha de Calibración</th>
+                        <th class="date-col">Próxima Calibración</th>
+                        <th class="compact-col">Estado de calibración</th>
+                        <th class="compact-col">Estado de ejecución</th>
+                        <th class="compact-col">Resultado</th>
+                        <th class="compact-col">Modalidad</th>
+                        <th class="compact-col">Logística</th>
+                        <th class="compact-col">No conformidad</th>
+                        <th class="numeric-col">Duración (h)</th>
+                        <th class="numeric-col">Costo</th>
+                        <th class="numeric-col">Días atraso</th>
+                        <th>Motivo/Justificación</th>
+                        <th class="compact-col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí van las calibraciones (se llenan con JS) -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Paginación -->
+        <div class="pagination-bar">
+            <button class="btn" id="btnFirst">&#60;&#60;</button>
+            <button class="btn" id="btnPrev">&#60;</button>
+            <span>Página <input type="number" id="currentPage" value="1" min="1" class="pagination-input" /> de <span id="totalPages">1</span></span>
+            <button class="btn" id="btnNext">&#62;</button>
+            <button class="btn" id="btnLast">&#62;&#62;</button>
+            <select id="selectPerPage">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100" selected>100</option>
+            </select>
+            <span>por página</span>
+            <button class="reset-btn" onclick="window.location.reload()">RESTABLECER VISTA</button>
+        </div>
+        <div class="export-actions">
+            <button class="btn-export excel" id="exportCalibrationsExcel"><i class="fa fa-file-excel"></i> Exportar a Excel</button>
+            <button class="btn-export pdf" id="exportCalibrationsPdf"><i class="fa fa-file-pdf"></i> Exportar a PDF</button>
+        </div>
+        <div id="estadoModalBackdrop" class="custom-modal-backdrop"></div>
+        <div id="estadoModal" class="custom-modal" role="dialog" aria-hidden="true">
+            <div class="custom-modal-dialog">
+                <div class="custom-modal-header">
+                    <h5 id="estadoModalTitle" class="mb-0">Actualizar estado</h5>
+                    <button type="button" class="btn-close" id="estadoModalClose" aria-label="Cerrar">&times;</button>
+                </div>
+                <form id="estadoForm" autocomplete="off">
+                    <input type="hidden" name="id" id="estadoCalibracionId">
+                    <input type="hidden" name="instrumento_id" id="estadoInstrumentoId">
+                    <input type="hidden" name="calibration_date" id="estadoFechaCalibracion">
+                    <input type="hidden" name="due_date" id="estadoFechaProxima">
+                    <input type="hidden" name="result" id="estadoResultado">
+                    <input type="hidden" name="periodo" id="estadoPeriodo">
+                    <input type="hidden" name="type" id="estadoTipo">
+                    <input type="hidden" name="duration_hours" id="estadoDuracion">
+                    <input type="hidden" name="cost_total" id="estadoCosto">
+                    <input type="hidden" name="plan_id" id="estadoPlanId">
+                    <input type="hidden" name="as_json" value="1">
+                    <div class="custom-modal-body">
+                        <div class="mb-3">
+                            <label for="estadoEjecucionSelect" class="form-label">Estado de ejecución</label>
+                            <select id="estadoEjecucionSelect" name="estado_ejecucion" class="form-select" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="estadoFechaReprogramada" class="form-label">Fecha reprogramada</label>
+                            <input type="date" id="estadoFechaReprogramada" name="fecha_reprogramada" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="estadoMotivo" class="form-label">Motivo / justificación</label>
+                            <textarea id="estadoMotivo" name="motivo_reprogramacion" class="form-control" rows="3" placeholder="Describe la razón de reprogramación o atraso"></textarea>
+                        </div>
+                        <div class="text-muted small">Se solicitará justificación automáticamente cuando exista atraso o el estado sea Reprogramada/Atrasada.</div>
+                        <div id="estadoModalMessage" class="text-danger mt-2"></div>
+                    </div>
+                    <div class="custom-modal-actions">
+                        <button type="button" class="btn btn-secondary" id="estadoModalCancel">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="logisticsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa fa-route me-2"></i>Seguimiento logístico</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="logistics-timeline mb-3" id="logisticsTimeline"></div>
+                    <div id="logisticsDetails" class="mb-3 small text-muted"></div>
+                    <form class="logistics-form">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="logisticsState" class="form-label">Estado</label>
+                                <select id="logisticsState" class="form-select">
+                                    <option value="Pendiente">Pendiente</option>
+                                    <option value="Enviado">Enviado</option>
+                                    <option value="En tránsito">En tránsito</option>
+                                    <option value="Recibido">Recibido</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="logisticsProvider" class="form-label">Proveedor externo</label>
+                                <input type="text" class="form-control" id="logisticsProvider" placeholder="Proveedor externo">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="logisticsCarrier" class="form-label">Transportista</label>
+                                <input type="text" class="form-control" id="logisticsCarrier" placeholder="Transportista">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="logisticsTracking" class="form-label">Número de guía</label>
+                                <input type="text" class="form-control" id="logisticsTracking" placeholder="Número de guía">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="logisticsOrder" class="form-label">Orden de servicio</label>
+                                <input type="text" class="form-control" id="logisticsOrder" placeholder="Orden de servicio">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="logisticsShipDate" class="form-label">Fecha envío</label>
+                                <input type="date" class="form-control" id="logisticsShipDate">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="logisticsTransitDate" class="form-label">Fecha en tránsito</label>
+                                <input type="date" class="form-control" id="logisticsTransitDate">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="logisticsReceivedDate" class="form-label">Fecha recibido proveedor</label>
+                                <input type="date" class="form-control" id="logisticsReceivedDate">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="logisticsReturnDate" class="form-label">Fecha retorno</label>
+                                <input type="date" class="form-control" id="logisticsReturnDate">
+                            </div>
+                            <div class="col-12">
+                                <label for="logisticsComments" class="form-label">Comentarios</label>
+                                <textarea class="form-control" id="logisticsComments" rows="2" placeholder="Observaciones"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="logisticsFeedback" class="mt-3 small"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="logisticsSaveBtn"><i class="fa fa-save me-1"></i>Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/F54q9WlH0I1GtIsfRSAxEPPGjBJOCa/MEGLjm+rXhN3kLBXjg5eQof8I4eAbOeXtfLOcAfeUOLVN2y5kqL/hg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="assets/scripts/calibration-status.js"></script>
+    <script src="assets/scripts/exports.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/scripts/calibraciones/logistics.js"></script>
+    <script>
+    let calibraciones = [];
+    let calibracionesOriginal = [];
+    let currentPage = 1;
+    let perPage = 100;
+    let filtroInstrumento = '';
+    let filtroEstado = '';
+    let filtroEstadoCalibracion = 'all';
+
+    const filtroInstrumentoSelect = document.getElementById('filtroInstrumento');
+    const filtroEstadoSelect = document.getElementById('filtroEstado');
+    const filtroEstadoCalibracionSelect = document.getElementById('filtroEstadoCalibracion');
+    const btnAddCalibration = document.getElementById('btnAddCalibration');
+    const btnBulk = document.getElementById('btnBulk');
+    const btnEdit = document.getElementById('btnEdit');
+    const btnDelete = document.getElementById('btnDelete');
+    let canManageCalibraciones = Boolean(window.permissionFlags && window.permissionFlags.canManageCalibraciones);
+
+    const hoursFormatter = new Intl.NumberFormat('es-MX', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    const currencyFormatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+    const dateFormatter = new Intl.DateTimeFormat('es-MX');
+    let calibrationStatusHelpers = null;
+
+    function getCalibrationStatusHelpers() {
+        if (calibrationStatusHelpers) {
+            return calibrationStatusHelpers;
+        }
+        if (typeof window !== 'undefined' && window.CalibrationStatusHelpers) {
+            calibrationStatusHelpers = window.CalibrationStatusHelpers;
+        }
+        return calibrationStatusHelpers;
+    }
+    const calibracionesExportColumns = [
+        { key: 'id', label: 'ID' },
+        { key: 'instrumento', label: 'Instrumento' },
+        { key: 'patron', label: 'Patrón' },
+        { key: 'patron_certificado', label: 'Certificado Patrón' },
+        { key: 'codigo', label: 'Código Interno' },
+        { key: 'tecnico', label: 'Técnico' },
+        { key: 'fecha_programada', label: 'Fecha Programada' },
+        { key: 'fecha_inicio', label: 'Inicio Orden' },
+        { key: 'fecha_cierre', label: 'Cierre Orden' },
+        { key: 'fecha_calibracion', label: 'Fecha de Calibración' },
+        { key: 'proxima_calibracion', label: 'Próxima Calibración' },
+        { key: 'estado_calibracion', label: 'Estado de calibración' },
+        { key: 'dias_restantes', label: 'Días restantes' },
+        { key: 'estado_ejecucion', label: 'Estado de ejecución' },
+        { key: 'resultado', label: 'Resultado' },
+        { key: 'dias_atraso', label: 'Días atraso' },
+        { key: 'motivo_reprogramacion', label: 'Motivo/Justificación' },
+        { key: 'modalidad', label: 'Modalidad' },
+        { key: 'estado_logistica', label: 'Estado logístico' },
+        { key: 'fecha_envio', label: 'Fecha envío' },
+        { key: 'fecha_retorno', label: 'Fecha retorno' },
+        { key: 'duracion_horas', label: 'Duración (h)' },
+        { key: 'costo_total', label: 'Costo' },
+        { key: 'observaciones', label: 'Observaciones' },
+        { key: 'referencias', label: 'Referencias vinculadas' }
+    ];
+    const logisticsModalElement = document.getElementById('logisticsModal');
+    const logisticsTimelineContainer = document.getElementById('logisticsTimeline');
+    const logisticsDetailsContainer = document.getElementById('logisticsDetails');
+    const logisticsStateSelect = document.getElementById('logisticsState');
+    const logisticsProviderInput = document.getElementById('logisticsProvider');
+    const logisticsCarrierInput = document.getElementById('logisticsCarrier');
+    const logisticsTrackingInput = document.getElementById('logisticsTracking');
+    const logisticsOrderInput = document.getElementById('logisticsOrder');
+    const logisticsShipInput = document.getElementById('logisticsShipDate');
+    const logisticsTransitInput = document.getElementById('logisticsTransitDate');
+    const logisticsReceivedInput = document.getElementById('logisticsReceivedDate');
+    const logisticsReturnInput = document.getElementById('logisticsReturnDate');
+    const logisticsCommentsInput = document.getElementById('logisticsComments');
+    const logisticsSaveBtn = document.getElementById('logisticsSaveBtn');
+    const logisticsFeedback = document.getElementById('logisticsFeedback');
+    let logisticsModalInstance = null;
+    let selectedLogisticsRecord = null;
+    let filtroLogistica = '';
+
+    const estadoModal = document.getElementById('estadoModal');
+    const estadoBackdrop = document.getElementById('estadoModalBackdrop');
+    const estadoForm = document.getElementById('estadoForm');
+    const estadoModalTitle = document.getElementById('estadoModalTitle');
+    const estadoModalMessage = document.getElementById('estadoModalMessage');
+    const estadoModalClose = document.getElementById('estadoModalClose');
+    const estadoModalCancel = document.getElementById('estadoModalCancel');
+    const estadoEjecucionSelect = document.getElementById('estadoEjecucionSelect');
+    const estadoFechaReprogramada = document.getElementById('estadoFechaReprogramada');
+    const estadoMotivo = document.getElementById('estadoMotivo');
+    let calibracionActiva = null;
+
+    function escapeHtml(value) {
+        if (value === null || value === undefined) {
+            return '';
+        }
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function formatNA(value) {
+        if (value === null || value === undefined || value === '') {
+            return 'NA';
+        }
+        return escapeHtml(value);
+    }
+
+    function formatFechaCorta(value) {
+        if (!value) {
+            return 'NA';
+        }
+        try {
+            return dateFormatter.format(new Date(value));
+        } catch (error) {
+            return escapeHtml(value);
+        }
+    }
+
+    function formatHours(value) {
+        if (value === null || value === undefined || value === '') {
+            return 'NA';
+        }
+        const number = Number(value);
+        if (!Number.isFinite(number)) {
+            return 'NA';
+        }
+        return hoursFormatter.format(number);
+    }
+
+    function formatCurrencyValue(value) {
+        if (value === null || value === undefined || value === '') {
+            return 'NA';
+        }
+        const number = Number(value);
+        if (!Number.isFinite(number)) {
+            return 'NA';
+        }
+        return currencyFormatter.format(number);
+    }
+
+    function renderPatronCertificado(registro) {
+        if (!registro) {
+            return 'NA';
+        }
+        const certificado = registro.patron_certificado ? escapeHtml(registro.patron_certificado) : '';
+        const url = registro.patron_certificado_url ? escapeHtml(registro.patron_certificado_url) : '';
+        if (url) {
+            const etiqueta = certificado || 'Ver certificado';
+            return `<a href="${url}" target="_blank" rel="noopener noreferrer">${etiqueta}</a>`;
+        }
+        return certificado || 'NA';
+    }
+
+    function getCalibracionStatusInfo(registro) {
+        const helpers = getCalibrationStatusHelpers();
+        if (helpers && typeof helpers.getStatusInfo === 'function') {
+            return helpers.getStatusInfo(registro);
+        }
+        const diasRestantes = (registro && typeof registro.dias_restantes === 'number')
+            ? registro.dias_restantes
+            : (registro && typeof registro.dias_restantes === 'string' && registro.dias_restantes.trim() !== '' && !Number.isNaN(Number(registro.dias_restantes))
+                ? Number(registro.dias_restantes)
+                : null);
+        let estado = (registro && registro.estado_calibracion) ? registro.estado_calibracion.toString().trim().toLowerCase() : '';
+        if (!estado) {
+            if (diasRestantes === null || diasRestantes === undefined) {
+                estado = 'sin_programar';
+            } else if (diasRestantes < 0) {
+                estado = 'vencido';
+            } else if (diasRestantes <= 30) {
+                estado = 'proximo';
+            } else {
+                estado = 'vigente';
+            }
+        }
+        const helpersLabels = helpers && helpers.LABELS ? helpers.LABELS : null;
+        const helpersBadges = helpers && helpers.BADGES ? helpers.BADGES : null;
+        const label = helpersLabels && helpersLabels[estado] ? helpersLabels[estado] : (estado ? estado.charAt(0).toUpperCase() + estado.slice(1) : 'Sin información');
+        const badgeClass = helpersBadges && helpersBadges[estado] ? helpersBadges[estado] : 'bg-secondary';
+        const tooltip = helpers && typeof helpers.describeDiasRestantes === 'function'
+            ? helpers.describeDiasRestantes(diasRestantes)
+            : (diasRestantes === null || diasRestantes === undefined
+                ? 'Sin fecha programada'
+                : diasRestantes === 0
+                    ? 'Vence hoy'
+                    : diasRestantes > 0
+                        ? (diasRestantes === 1 ? 'Falta 1 día para la calibración' : `Faltan ${diasRestantes} días para la calibración`)
+                        : (Math.abs(diasRestantes) === 1 ? 'Vencido hace 1 día' : `Vencido hace ${Math.abs(diasRestantes)} días`));
+        return {
+            estado,
+            label,
+            badgeClass,
+            tooltip,
+            dias_restantes: diasRestantes
+        };
+    }
+
+    function renderEstadoCalibracionBadge(infoOrRegistro) {
+        const helpers = getCalibrationStatusHelpers();
+        if (helpers && typeof helpers.renderBadge === 'function') {
+            return helpers.renderBadge(infoOrRegistro, { includeTitle: true });
+        }
+        const info = infoOrRegistro && typeof infoOrRegistro === 'object' && infoOrRegistro.label && infoOrRegistro.badgeClass
+            ? infoOrRegistro
+            : getCalibracionStatusInfo(infoOrRegistro);
+        const titleAttr = info && info.tooltip ? ` title="${escapeHtml(info.tooltip)}"` : '';
+        return `<span class="badge ${info.badgeClass || 'bg-secondary'}"${titleAttr}>${escapeHtml(info.label || 'Sin información')}</span>`;
+    }
+
+    function matchesEstadoCalibracion(registro, filtro) {
+        if (!filtro || filtro === 'all') {
+            return true;
+        }
+        const helpers = getCalibrationStatusHelpers();
+        if (helpers && typeof helpers.matchesPeriodFilter === 'function') {
+            return helpers.matchesPeriodFilter(registro, filtro);
+        }
+        const info = getCalibracionStatusInfo(registro);
+        if (!info) {
+            return true;
+        }
+        if (filtro === 'vigente' || filtro === 'proximo' || filtro === 'vencido') {
+            return info.estado === filtro;
+        }
+        return true;
+    }
+
+    function enforceCalibracionPermissions() {
+        const manage = canManageCalibraciones;
+        if (btnAddCalibration) {
+            btnAddCalibration.style.display = manage ? '' : 'none';
+            btnAddCalibration.disabled = !manage;
+        }
+        if (btnBulk) {
+            btnBulk.style.display = manage ? '' : 'none';
+            btnBulk.disabled = !manage;
+        }
+        if (btnEdit) {
+            btnEdit.style.display = manage ? '' : 'none';
+            if (!manage) {
+                btnEdit.disabled = true;
+            }
+        }
+        if (btnDelete) {
+            btnDelete.style.display = manage ? '' : 'none';
+            if (!manage) {
+                btnDelete.disabled = true;
+            }
+        }
+    }
+
+    document.addEventListener('permissionsready', (event) => {
+        canManageCalibraciones = Boolean(event.detail && event.detail.canManageCalibraciones);
+        enforceCalibracionPermissions();
+    });
+    enforceCalibracionPermissions();
+
+
+    if (btnAddCalibration) {
+        btnAddCalibration.addEventListener('click', () => {
+            if (!canManageCalibraciones) return;
+            window.location.href = BASE_URL + '/apps/tenant/calibraciones/add_calibration.html';
+        });
+    }
+
+    const perPageSelect = document.getElementById('selectPerPage');
+    if (perPageSelect) {
+        perPageSelect.addEventListener('change', function () {
+            perPage = parseInt(this.value, 10);
+            currentPage = 1;
+            renderTabla();
+        });
+    }
+
+    if (filtroInstrumentoSelect) {
+        filtroInstrumentoSelect.addEventListener('change', function () {
+            filtroInstrumento = this.value;
+            currentPage = 1;
+            aplicarFiltro();
+            renderTabla();
+        });
+    }
+
+    if (filtroEstadoSelect) {
+        filtroEstadoSelect.addEventListener('change', function () {
+            filtroEstado = this.value;
+            currentPage = 1;
+            aplicarFiltro();
+            renderTabla();
+        });
+    }
+      
+    if (filtroPeriodoSelect) {
+        filtroPeriodoSelect.addEventListener('change', function () {
+            filtroPeriodo = this.value || 'all';
+            currentPage = 1;
+            aplicarFiltro();
+            renderTabla();
+        });
+    }
+
+    if (filtroEstadoCalibracionSelect) {
+        filtroEstadoCalibracionSelect.addEventListener('change', function () {
+            filtroEstadoCalibracion = this.value || 'all';
+            currentPage = 1;
+            aplicarFiltro();
+            renderTabla();
+        });
+    }
+
+    if (filtroPeriodoSelect) {
+        filtroPeriodoSelect.addEventListener('change', function () {
+            filtroPeriodo = this.value || 'all';
+            currentPage = 1;
+            aplicarFiltro();
+            renderTabla();
+        });
+    }
+
+    if (filtroEstadoCalibracionSelect) {
+        filtroEstadoCalibracionSelect.addEventListener('change', function () {
+            filtroEstadoCalibracion = this.value || 'all';
+            currentPage = 1;
+            aplicarFiltro();
+            renderTabla();
+        });
+    }
+
+    if (filtroEstadoCalibracionSelect) {
+        filtroEstadoCalibracionSelect.addEventListener('change', function () {
+            filtroEstadoCalibracion = this.value || 'all';
+            currentPage = 1;
+            aplicarFiltro();
+            renderTabla();
+        });
+    }
+
+    document.getElementById('btnFirst').addEventListener('click', () => {
+        currentPage = 1;
+        renderTabla();
+    });
+    document.getElementById('btnPrev').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderTabla();
+        }
+    });
+    document.getElementById('btnNext').addEventListener('click', () => {
+        const totalPages = Math.ceil(calibraciones.length / perPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderTabla();
+        }
+    });
+    document.getElementById('btnLast').addEventListener('click', () => {
+        currentPage = Math.max(1, Math.ceil(calibraciones.length / perPage));
+        renderTabla();
+    });
+    document.getElementById('currentPage').addEventListener('change', function () {
+        let val = parseInt(this.value, 10);
+        const totalPages = Math.ceil(calibraciones.length / perPage);
+        if (val < 1) val = 1;
+        if (val > totalPages) val = totalPages;
+        currentPage = val;
+        renderTabla();
+    });
+
+    function populateInstrumentFilter() {
+        if (!filtroInstrumentoSelect) return;
+        const instrumentos = [...new Set(calibracionesOriginal.map((c) => c.instrumento).filter(Boolean))].sort();
+        filtroInstrumentoSelect.innerHTML = '<option value="">Todos</option>';
+        instrumentos.forEach((nombre) => {
+            filtroInstrumentoSelect.innerHTML += `<option value="${escapeHtml(nombre)}">${escapeHtml(nombre)}</option>`;
+        });
+    }
+
+    function populateTecnicoFilter(list) {
+        if (!filtroTecnicoSelect) return;
+        filtroTecnicoSelect.innerHTML = '<option value="">Todos</option>';
+        filtroTecnicoSelect.innerHTML += '<option value="sin_asignar">Sin asignar</option>';
+        if (!Array.isArray(list) || !list.length) {
+            return;
+        }
+        list.forEach((tech) => {
+            const option = document.createElement('option');
+            option.value = String(tech.id);
+            const puesto = tech.puesto ? ` — ${tech.puesto}` : '';
+            option.textContent = `${tech.nombre}${puesto}`;
+            filtroTecnicoSelect.appendChild(option);
+        });
+    }
+
+    function loadTecnicoFilterOptions() {
+        if (!filtroTecnicoSelect) return;
+        fetch(BASE_URL + '/backend/calibraciones/list_technicians.php')
+            .then((response) => response.json())
+            .then((payload) => {
+                const list = payload && Array.isArray(payload.technicians) ? payload.technicians : [];
+                populateTecnicoFilter(list.map((tech) => ({
+                    id: tech.id,
+                    nombre: tech.nombre,
+                    puesto: tech.puesto || ''
+                })));
+            })
+            .catch(() => {
+                populateTecnicoFilter([]);
+            });
+    }
+
+    function populateEstadoFilter() {
+        if (!filtroEstadoSelect) return;
+        const estados = CalibrationStatus.getFilterOptions();
+        filtroEstadoSelect.innerHTML = '<option value="">Todos</option>';
+        estados.forEach((estado) => {
+            filtroEstadoSelect.innerHTML += `<option value="${estado}">${estado}</option>`;
+        });
+    }
+
+    function populateEstadoCalibracionFilter() {
+        if (!filtroEstadoCalibracionSelect) return;
+        const previous = filtroEstadoCalibracionSelect.value || 'all';
+        const helpers = window.CalibrationStatusHelpers;
+        const labels = helpers && helpers.LABELS ? helpers.LABELS : {
+            vigente: 'Vigente',
+            proximo: 'Próximo',
+            vencido: 'Vencido',
+            sin_programar: 'Sin programar',
+            desconocido: 'Desconocido'
+        };
+
+        const entries = Object.entries(labels)
+            .filter(([value]) => value !== 'desconocido')
+            .sort((a, b) => a[1].localeCompare(b[1], 'es', { sensitivity: 'base' }));
+
+        filtroEstadoCalibracionSelect.innerHTML = '<option value="all">Todos</option>';
+        entries.forEach(([value, label]) => {
+            filtroEstadoCalibracionSelect.innerHTML += `<option value="${value}">${label}</option>`;
+        });
+
+        if (previous && filtroEstadoCalibracionSelect.querySelector(`option[value="${previous}"]`)) {
+            filtroEstadoCalibracionSelect.value = previous;
+        } else {
+            filtroEstadoCalibracionSelect.value = 'all';
+            filtroEstadoCalibracion = 'all';
+        }
+    }
+
+    function populateEstadoSelectOptions() {
+        if (!estadoEjecucionSelect) return;
+        const estados = CalibrationStatus.getFilterOptions();
+        estadoEjecucionSelect.innerHTML = '';
+        estados.forEach((estado) => {
+            estadoEjecucionSelect.innerHTML += `<option value="${estado}">${estado}</option>`;
+        });
+    }
+
+    function aplicarFiltro() {
+        calibraciones = calibracionesOriginal.filter((cal) => {
+            const coincideInstrumento = !filtroInstrumento || cal.instrumento === filtroInstrumento;
+            const normalizedEstado = CalibrationStatus.normalizeStatus(cal.estado_ejecucion || (cal.calibracion_id ? 'Completada' : 'Programada'));
+            const coincideEstado = !filtroEstado || normalizedEstado === filtroEstado;
+            const coincideEstadoCalibracion = matchesEstadoCalibracion(cal, filtroEstadoCalibracion);
+            return coincideInstrumento && coincideEstado && coincideEstadoCalibracion;
+        });
+
+    }
+
+    function renderTabla() {
+        const tbody = document.querySelector('#tablaCalibraciones tbody');
+        tbody.innerHTML = '';
+        const columnCount = document.querySelectorAll('#tablaCalibraciones thead th').length || 1;
+        const totalPages = Math.max(1, Math.ceil(calibraciones.length / perPage));
+        document.getElementById('totalPages').textContent = totalPages;
+        document.getElementById('currentPage').value = currentPage;
+
+        document.getElementById('btnFirst').disabled = currentPage === 1;
+        document.getElementById('btnPrev').disabled = currentPage === 1;
+        document.getElementById('btnNext').disabled = currentPage === totalPages;
+        document.getElementById('btnLast').disabled = currentPage === totalPages;
+
+        if (!calibraciones.length) {
+            const row = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = columnCount;
+            td.className = 'empty-row';
+            td.textContent = 'No hay calibraciones registradas.';
+            row.appendChild(td);
+            tbody.appendChild(row);
+            return;
+        }
+
+        const start = (currentPage - 1) * perPage;
+        const end = Math.min(start + perPage, calibraciones.length);
+        for (let i = start; i < end; i++) {
+            const cal = calibraciones[i];
+            const row = document.createElement('tr');
+
+            if (cal.justificacion_pendiente) {
+                row.classList.add('row-justification');
+            }
+            if (cal.no_conformidad_activa) {
+                row.classList.add('row-nonconformity');
+            }
+
+            const statusInfo = getCalibracionStatusInfo(cal);
+            const statusBadge = renderEstadoCalibracionBadge(statusInfo);
+            const statusHint = statusInfo && statusInfo.tooltip ? `<span class="status-hint">${escapeHtml(statusInfo.tooltip)}</span>` : '';
+            const estadoBadgeClass = CalibrationStatus.getStatusBadgeClass(cal.estado_ejecucion);
+            const estadoLabel = escapeHtml(cal.estado_ejecucion || (cal.calibracion_id ? 'Completada' : 'Programada'));
+            const diasAtraso = typeof cal.dias_atraso === 'number' ? cal.dias_atraso : 'NA';
+            const motivo = cal.motivo_reprogramacion ? escapeHtml(cal.motivo_reprogramacion) : '—';
+            const referencesHtml = renderReferences(cal.referencias);
+            const requiereIcon = cal.justificacion_pendiente ? '<i class="fa fa-exclamation-circle text-danger ms-1" title="Justificación pendiente"></i>' : '';
+            const puedeActualizar = Boolean(canManageCalibraciones && cal.calibracion_id && cal.resultado);
+            const estadoCalibracionBadge = renderEstadoCalibracion(cal);
+
+            row.innerHTML = `
+                <td><input type="checkbox" /></td>
+                <td>${formatNA(cal.id)}</td>
+                <td>${formatNA(cal.instrumento)}</td>
+                <td>${formatNA(cal.patron || cal.patron_nombre)}</td>
+                <td class="compact-col">${renderPatronCertificado(cal)}</td>
+                <td>${formatNA(cal.codigo)}</td>
+                <td>${tecnicoNombre}</td>
+                <td class="date-col">${formatFechaCorta(cal.fecha_programada)}</td>
+                <td class="date-col">${formatFechaCorta(cal.fecha_calibracion)}</td>
+                <td class="date-col">${formatFechaCorta(cal.fecha_proxima)}</td>
+                <td class="compact-col status-calibration-cell">${statusBadge}${statusHint}</td>
+                <td class="compact-col"><span class="badge ${estadoBadgeClass} status-badge">${estadoLabel}</span>${requiereIcon}</td>
+                <td class="compact-col">${formatNA(cal.resultado)}</td>
+                <td class="compact-col">${formatNA(cal.tipo)}</td>
+                <td class="compact-col logistics-cell">${renderLogisticsBadge(cal)}${renderLogisticsAction(cal, i)}</td>
+                <td class="compact-col no-conformity-cell">${renderNoConformityBadge(cal)}</td>
+                <td class="numeric-col">${formatHours(cal.duracion_horas)}</td>
+                <td class="numeric-col">${formatCurrencyValue(cal.costo_total)}</td>
+                <td class="numeric-col">${diasAtraso}</td>
+                <td>${motivo}${referencesHtml}</td>
+                <td class="compact-col">${puedeActualizar ? `<button type="button" class="btn btn-link btn-sm actualizar-estado" data-index="${i}">Actualizar estado</button>` : '<span class="text-muted">—</span>'}</td>
+
+            `;
+
+            tbody.appendChild(row);
+        }
+        attachLogisticsEvents();
+    }
+
+    function buildCalibracionesExportData() {
+        return calibraciones.map((cal) => {
+            const statusInfo = getCalibracionStatusInfo(cal);
+            const diasRestantesExport = statusInfo && statusInfo.dias_restantes !== null && statusInfo.dias_restantes !== undefined
+                ? statusInfo.dias_restantes
+                : 'NA';
+            const estadoLogistica = cal.estado_logistica || (cal.logistica && cal.logistica.estado) || cal.logistica_estado || cal.log_estado;
+            const fechaEnvio = cal.fecha_envio || (cal.logistica && cal.logistica.fecha_envio) || cal.logistica_fecha_envio || cal.log_fecha_envio;
+            const fechaRetorno = cal.fecha_retorno || (cal.logistica && cal.logistica.fecha_retorno) || cal.logistica_fecha_retorno || cal.log_fecha_retorno;
+
+            return {
+                id: formatNA(cal.id),
+                instrumento: formatNA(cal.instrumento),
+                patron: formatNA(cal.patron || cal.patron_nombre),
+                patron_certificado: formatNA(cal.patron_certificado),
+                codigo: formatNA(cal.codigo),
+                tecnico: formatNA(cal.tecnico),
+                fecha_programada: formatFechaCorta(cal.fecha_programada),
+                fecha_inicio: formatFechaCorta(cal.fecha_inicio),
+                fecha_cierre: formatFechaCorta(cal.fecha_cierre),
+                fecha_calibracion: formatFechaCorta(cal.fecha_calibracion),
+                proxima_calibracion: formatFechaCorta(cal.fecha_proxima),
+                estado_calibracion: statusInfo ? statusInfo.label : 'Sin información',
+                dias_restantes: diasRestantesExport,
+                estado_ejecucion: cal.estado_ejecucion || (cal.calibracion_id ? 'Completada' : 'Programada'),
+                resultado: cal.resultado ? cal.resultado : 'NA',
+                dias_atraso: typeof cal.dias_atraso === 'number' ? cal.dias_atraso : 'NA',
+                motivo_reprogramacion: cal.motivo_reprogramacion ? cal.motivo_reprogramacion : 'NA',
+                modalidad: formatNA(cal.tipo),
+                estado_logistica: formatNA(estadoLogistica),
+                fecha_envio: formatFechaCorta(fechaEnvio),
+                fecha_retorno: formatFechaCorta(fechaRetorno),
+                duracion_horas: formatHours(cal.duracion_horas),
+                costo_total: formatCurrencyValue(cal.costo_total),
+                observaciones: formatNA(cal.observaciones)
+            };
+        });
+    }
+
+    function initExportButtons() {
+        const excelBtn = document.getElementById('exportCalibrationsExcel');
+        const pdfBtn = document.getElementById('exportCalibrationsPdf');
+        if (excelBtn) {
+            excelBtn.addEventListener('click', () => {
+                const data = buildCalibracionesExportData();
+                if (data.length) {
+                    exportToExcel(data, calibracionesExportColumns, 'calibraciones');
+                }
+            });
+        }
+        if (pdfBtn) {
+            pdfBtn.addEventListener('click', () => {
+                const data = buildCalibracionesExportData();
+                if (data.length) {
+                    exportToPDF(data, calibracionesExportColumns, 'calibraciones');
+                }
+            });
+        }
+    }
+
+    function cargarCalibraciones() {
+        fetch(BASE_URL + '/backend/calibraciones/list_calibrations.php')
+            .then((response) => response.json())
+            .then((data) => {
+                calibracionesOriginal = Array.isArray(data) ? data : [];
+                populateInstrumentFilter();
+                populateEstadoFilter();
+                populateEstadoCalibracionFilter();
+                populateEstadoSelectOptions();
+                aplicarFiltro();
+                renderTabla();
+            })
+            .catch(() => {
+                calibracionesOriginal = [];
+                loadTecnicoFilterOptions();
+                aplicarFiltro();
+                renderTabla();
+            });
+    }
+
+    function toggleModal(open) {
+        if (!estadoModal || !estadoBackdrop) return;
+        if (open) {
+            estadoModal.classList.add('open');
+            estadoBackdrop.classList.add('open');
+        } else {
+            estadoModal.classList.remove('open');
+            estadoBackdrop.classList.remove('open');
+        }
+    }
+
+    function actualizarCamposEstado() {
+        const normalized = CalibrationStatus.normalizeStatus(estadoEjecucionSelect.value);
+        estadoFechaReprogramada.required = normalized === 'Reprogramada';
+    }
+
+    function openEstadoModal(cal) {
+        if (!cal || !cal.calibracion_id) {
+            estadoModalMessage.textContent = 'No hay registro de calibración para actualizar.';
+            return;
+        }
+        calibracionActiva = cal;
+        estadoModalTitle.textContent = `Actualizar estado - ${cal.instrumento || 'Instrumento'}`;
+        estadoModalMessage.textContent = '';
+        const estadoCalibracionInfo = getCalibrationStatusInfo(cal);
+        const resumenEstado = describeCalibrationDays(estadoCalibracionInfo.dias_restantes);
+        estadoModalMessage.innerHTML = `${renderCalibrationStatus(estadoCalibracionInfo)} <span class="text-muted small ms-2">${escapeHtml(resumenEstado)}</span>`;
+        estadoForm.reset();
+
+        document.getElementById('estadoCalibracionId').value = cal.calibracion_id;
+        document.getElementById('estadoInstrumentoId').value = cal.instrumento_id || '';
+        document.getElementById('estadoFechaCalibracion').value = cal.fecha_calibracion || '';
+        document.getElementById('estadoFechaProxima').value = cal.fecha_proxima || '';
+        document.getElementById('estadoResultado').value = cal.resultado || '';
+        document.getElementById('estadoPeriodo').value = cal.periodo || '';
+        document.getElementById('estadoTipo').value = cal.tipo || 'Interna';
+        document.getElementById('estadoDuracion').value = cal.duracion_horas !== null && cal.duracion_horas !== undefined ? cal.duracion_horas : '';
+        document.getElementById('estadoCosto').value = cal.costo_total !== null && cal.costo_total !== undefined ? cal.costo_total : '';
+        document.getElementById('estadoPlanId').value = cal.plan_id || '';
+
+        estadoEjecucionSelect.value = CalibrationStatus.normalizeStatus(cal.estado_ejecucion || (cal.calibracion_id ? 'Completada' : 'Programada'));
+        estadoFechaReprogramada.value = cal.fecha_reprogramada || '';
+        estadoMotivo.value = cal.motivo_reprogramacion || '';
+        actualizarCamposEstado();
+
+        toggleModal(true);
+    }
+
+    function closeEstadoModal() {
+        calibracionActiva = null;
+        estadoModalMessage.textContent = '';
+        toggleModal(false);
+    }
+
+    if (estadoModalClose) {
+        estadoModalClose.addEventListener('click', closeEstadoModal);
+    }
+    if (estadoModalCancel) {
+        estadoModalCancel.addEventListener('click', (event) => {
+            event.preventDefault();
+            closeEstadoModal();
+        });
+    }
+    if (estadoBackdrop) {
+        estadoBackdrop.addEventListener('click', closeEstadoModal);
+    }
+    if (estadoEjecucionSelect) {
+        estadoEjecucionSelect.addEventListener('change', actualizarCamposEstado);
+    }
+
+    document.addEventListener('click', (event) => {
+        const trigger = event.target.closest('.actualizar-estado');
+        if (!trigger) return;
+        const index = Number(trigger.getAttribute('data-index'));
+        const cal = calibraciones[index];
+        if (!cal || !cal.calibracion_id || !cal.resultado) {
+            estadoModalMessage.textContent = 'El registro debe tener resultado para actualizar el estado.';
+            return;
+        }
+        if (!canManageCalibraciones) {
+            estadoModalMessage.textContent = 'No tienes permisos para actualizar el estado.';
+            return;
+        }
+        openEstadoModal(cal);
+    });
+
+    if (estadoForm) {
+        estadoForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (!calibracionActiva) {
+                closeEstadoModal();
+                return;
+            }
+            const formData = new FormData(estadoForm);
+            formData.set('as_json', '1');
+            fetch(BASE_URL + '/backend/calibraciones/edit_calibration.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data && data.success) {
+                        closeEstadoModal();
+                        cargarCalibraciones();
+                    } else {
+                        estadoModalMessage.textContent = (data && data.message) ? data.message : 'No se pudo actualizar el estado.';
+                    }
+                })
+                .catch(() => {
+                    estadoModalMessage.textContent = 'Error de red. Intenta nuevamente.';
+                });
+        });
+    }
+
+    populateEstadoSelectOptions();
+    initExportButtons();
+    cargarCalibraciones();
+    </script>
+    <script type="module" src="assets/scripts/scripts-tenant.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script>
+    (function(){
+        function cargarUsuarioActual(){
+            fetch(BASE_URL + '/backend/usuarios/get_actual_user.php')
+              .then(r=>r.json())
+              .then(u=>{
+                const nombre=u?.nombre||'Invitado';
+                const role_id=u?.role_id||'Sin rol';
+                const userName=document.getElementById('userName');
+                if(userName){
+                  userName.innerHTML = `${nombre} <span class=\\"text-accent\\">(${role_id})</span>`;
+                }
+                const mn=document.getElementById('menuNombre');
+                if(mn) mn.innerText = `Nombre: ${nombre}`;
+                const mr=document.getElementById('menuRol');
+                if(mr) mr.innerText = `Rol: ${role_id}`;
+              });
+        }
+        if(document.getElementById('userName')){ cargarUsuarioActual(); }
+    })();
+    </script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,3 @@
+-- Archivo reemplazado para evitar inserciones automáticas en base de pruebas.
+-- Utiliza los paquetes por empresa ubicados en app/Modules/Tenant/ArchivosSql/
+-- y realiza la importación desde el portal de servicios (public/apps/service).

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <title>Gestión de retroalimentación</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <style>
+        body {
+            background: #f4f6f8;
+            min-height: 100vh;
+        }
+        .feedback-admin {
+            max-width: 1100px;
+            margin: 36px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 15px 42px rgba(13, 87, 90, 0.15);
+            padding: 26px 32px 32px;
+        }
+        .feedback-admin h1 {
+            font-size: 1.75rem;
+            color: #0d575a;
+            margin-bottom: 18px;
+        }
+        .table thead {
+            background: #0d575a;
+            color: #fff;
+        }
+        .badge {
+            text-transform: capitalize;
+        }
+        .status-column select,
+        .status-column .form-select {
+            min-width: 160px;
+        }
+        .priority-column select {
+            min-width: 130px;
+        }
+        .description-cell {
+            max-width: 340px;
+        }
+        .attachments-cell {
+            min-width: 180px;
+        }
+        .attachments-cell a {
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-admin">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h1><i class="fa fa-comments me-2 text-primary"></i>Retroalimentación recibida</h1>
+            <button class="btn btn-outline-primary" onclick="window.location.href=resolveAppUrl('/apps/internal/feedback/feedback_sbl.html')">
+                <i class="fa fa-plus me-1"></i> Nuevo reporte
+            </button>
+        </div>
+        <p class="text-muted">Revisa los reportes de errores o sugerencias y asigna el estado y prioridad adecuados. Esta vista está reservada para superadministradores.</p>
+        <div id="pageStatus" class="mb-3"></div>
+        <div class="nav-wrapper">
+            <ul class="nav nav-pills gap-2 mb-3" id="originTabs"></ul>
+            <div id="typeCounters" class="mb-3 small text-muted"></div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle" id="feedbackTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Empresa</th>
+                        <th>Resumen</th>
+                        <th>Detalles</th>
+                        <th>Evidencias</th>
+                        <th class="status-column">Estado</th>
+                        <th class="priority-column">Prioridad</th>
+                        <th>Reportado por</th>
+                        <th>Creado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="placeholder">
+                        <td colspan="10" class="text-center text-muted py-4">Cargando información…</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="assets/scripts/base-url.js"></script>
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script>
+        (function() {
+            const statusEl = document.getElementById('pageStatus');
+            const tableBody = document.querySelector('#feedbackTable tbody');
+            const originTabsEl = document.getElementById('originTabs');
+            const typeCountersEl = document.getElementById('typeCounters');
+
+            const originOptions = [
+                { value: 'interno', label: 'Interno' },
+                { value: 'externo', label: 'Externo' },
+            ];
+            let activeOrigin = originOptions[0].value;
+            const itemsCache = new Map();
+
+            const estadoOptions = [
+                { value: 'abierto', label: 'Abierto' },
+                { value: 'en_progreso', label: 'En progreso' },
+                { value: 'cerrado', label: 'Cerrado' }
+            ];
+            const prioridadOptions = [
+                { value: 'baja', label: 'Baja' },
+                { value: 'media', label: 'Media' },
+                { value: 'alta', label: 'Alta' },
+                { value: 'critica', label: 'Crítica' }
+            ];
+
+            function setStatus(message, type) {
+                if (!statusEl) return;
+                if (!message) {
+                    statusEl.innerHTML = '';
+                    return;
+                }
+                const alertType = type || 'info';
+                statusEl.innerHTML = '<div class="alert alert-' + alertType + ' mb-0">' + message + '</div>';
+            }
+
+            function formatDate(value) {
+                if (!value) return '';
+                const date = new Date(value.replace(' ', 'T'));
+                if (Number.isNaN(date.getTime())) {
+                    return value;
+                }
+                return date.toLocaleString('es-MX', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }).replace('.', '');
+            }
+
+            function renderOptions(select, options, current) {
+                select.innerHTML = '';
+                options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.value;
+                    option.textContent = opt.label;
+                    if (opt.value === current) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+                if (current && !options.some(opt => opt.value === current)) {
+                    const option = document.createElement('option');
+                    option.value = current;
+                    option.textContent = current;
+                    option.selected = true;
+                    select.appendChild(option);
+                }
+            }
+
+            function normalizeOrigin(value) {
+                const normalized = (value || '').toString().trim().toLowerCase();
+                return normalized === 'externo' ? 'externo' : 'interno';
+            }
+
+            function getOriginLabel(origin) {
+                const option = originOptions.find(opt => opt.value === origin);
+                return option ? option.label : origin;
+            }
+
+            function renderTypeCounters(items, { state, origin } = {}) {
+                if (!typeCountersEl) return;
+                typeCountersEl.innerHTML = '';
+
+                const targetOrigin = origin ? normalizeOrigin(origin) : activeOrigin;
+                const originLabel = getOriginLabel(targetOrigin);
+
+                if (state === 'loading') {
+                    const loadingEl = document.createElement('span');
+                    loadingEl.className = 'text-muted';
+                    loadingEl.textContent = `Cargando información de ${originLabel.toLowerCase()}…`;
+                    typeCountersEl.appendChild(loadingEl);
+                    return;
+                }
+
+                if (state === 'forbidden') {
+                    const forbiddenEl = document.createElement('span');
+                    forbiddenEl.className = 'text-danger';
+                    forbiddenEl.textContent = `Sin acceso al segmento ${originLabel.toLowerCase()}.`;
+                    typeCountersEl.appendChild(forbiddenEl);
+                    return;
+                }
+
+                if (state === 'error') {
+                    const errorEl = document.createElement('span');
+                    errorEl.className = 'text-danger';
+                    errorEl.textContent = 'No se pudo obtener la información.';
+                    typeCountersEl.appendChild(errorEl);
+                    return;
+                }
+
+                if (!items || !items.length) {
+                    const emptyEl = document.createElement('span');
+                    emptyEl.className = 'text-muted';
+                    emptyEl.textContent = `Sin reportes en ${originLabel.toLowerCase()}.`;
+                    typeCountersEl.appendChild(emptyEl);
+                    return;
+                }
+
+                const totals = items.reduce((acc, item) => {
+                    const key = (item && item.tipo ? String(item.tipo) : '').trim() || 'Sin tipo';
+                    acc[key] = (acc[key] || 0) + 1;
+                    return acc;
+                }, {});
+
+                const totalEl = document.createElement('span');
+                totalEl.className = 'me-2 fw-semibold text-body';
+                totalEl.textContent = `${originLabel}: ${items.length}`;
+                typeCountersEl.appendChild(totalEl);
+
+                Object.keys(totals).sort().forEach(tipo => {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge text-bg-secondary me-1';
+                    badge.textContent = `${tipo}: ${totals[tipo]}`;
+                    typeCountersEl.appendChild(badge);
+                });
+            }
+
+            function renderRows(items, origin) {
+                const targetOrigin = origin ? normalizeOrigin(origin) : activeOrigin;
+                renderTypeCounters(items, { origin: targetOrigin });
+                if (!tableBody) return;
+                tableBody.innerHTML = '';
+                if (!items || !items.length) {
+                    const emptyRow = document.createElement('tr');
+                    const label = getOriginLabel(targetOrigin).toLowerCase();
+                    emptyRow.innerHTML = `<td colspan="10" class="text-center text-muted py-4">No hay reportes registrados en ${label}.</td>`;
+                    tableBody.appendChild(emptyRow);
+                    return;
+                }
+
+                items.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.dataset.id = item.id;
+
+                    const resumen = item.resumen || '';
+                    const descripcion = item.descripcion || '';
+                    const empresa = item.empresa_nombre || (item.empresa_id ? 'Empresa #' + item.empresa_id : 'Sin empresa');
+                    const reporter = item.reporter && item.reporter.nombre ? item.reporter.nombre : (item.reporter ? item.reporter.usuario : '');
+                    const attachments = Array.isArray(item.adjuntos) ? item.adjuntos : [];
+                    const attachmentsHtml = attachments.length
+                        ? `<ul class="list-unstyled mb-0">${attachments.map(file => {
+                            const fileId = file && (typeof file.id === 'number' || typeof file.id === 'string') ? file.id : '';
+                            const displayName = file && file.nombre ? escapeHtml(file.nombre) : escapeHtml(fileId ? `Archivo #${fileId}` : 'Archivo');
+                            const downloadPath = file && typeof file.descarga_url === 'string' ? file.descarga_url : (fileId !== '' ? `/backend/feedback/download_attachment.php?id=${fileId}` : null);
+                            if (!downloadPath) {
+                                return `<li>${displayName}</li>`;
+                            }
+                            const downloadUrl = resolveAppUrl(downloadPath);
+                            const safeUrl = escapeHtml(downloadUrl);
+                            return `<li><a href="${safeUrl}" target="_blank" rel="noopener">${displayName}</a></li>`;
+                        }).join('')}</ul>`
+                        : '<span class="text-muted">Sin archivos</span>';
+
+                    row.innerHTML = `
+                        <td class="fw-semibold">#${item.id}</td>
+                        <td>${empresa}</td>
+                        <td>${resumen}</td>
+                        <td class="description-cell">
+                            ${descripcion ? `<details><summary>Ver detalles</summary><div class="mt-2 small">${descripcion.replace(/\n/g, '<br>')}</div></details>` : '<span class="text-muted">Sin descripción</span>'}
+                        </td>
+                        <td class="attachments-cell">${attachmentsHtml}</td>
+                        <td class="status-column"></td>
+                        <td class="priority-column"></td>
+                        <td>${reporter || 'Desconocido'}</td>
+                        <td>${formatDate(item.creado_en)}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary" data-action="update" title="Guardar cambios">
+                                <i class="fa fa-save"></i>
+                            </button>
+                        </td>
+                    `;
+
+                    const estadoCell = row.querySelector('.status-column');
+                    const estadoSelect = document.createElement('select');
+                    estadoSelect.className = 'form-select form-select-sm';
+                    estadoSelect.dataset.field = 'estado';
+                    renderOptions(estadoSelect, estadoOptions, item.estado);
+                    estadoCell.appendChild(estadoSelect);
+
+                    const prioridadCell = row.querySelector('.priority-column');
+                    const prioridadSelect = document.createElement('select');
+                    prioridadSelect.className = 'form-select form-select-sm';
+                    prioridadSelect.dataset.field = 'prioridad';
+                    renderOptions(prioridadSelect, prioridadOptions, item.prioridad);
+                    prioridadCell.appendChild(prioridadSelect);
+
+                    tableBody.appendChild(row);
+                });
+            }
+
+            function showLoadingState() {
+                if (!tableBody) return;
+                tableBody.innerHTML = '<tr class="placeholder"><td colspan="9" class="text-center text-muted py-4">Cargando información…</td></tr>';
+            }
+
+            function renderOriginTabs() {
+                if (!originTabsEl) return;
+                originTabsEl.innerHTML = '';
+
+                originOptions.forEach(option => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'nav-item';
+
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'nav-link' + (option.value === activeOrigin ? ' active' : '');
+                    button.dataset.origin = option.value;
+                    button.textContent = option.label;
+
+                    if (itemsCache.has(option.value)) {
+                        const badge = document.createElement('span');
+                        badge.className = 'badge text-bg-light ms-2';
+                        badge.textContent = itemsCache.get(option.value).length;
+                        button.append(' ', badge);
+                    }
+
+                    listItem.appendChild(button);
+                    originTabsEl.appendChild(listItem);
+                });
+            }
+
+            async function fetchFeedback(origin) {
+                const selectedOrigin = origin || activeOrigin;
+                if (!selectedOrigin) return;
+                try {
+                    setStatus('Cargando retroalimentación…', 'info');
+                    showLoadingState();
+                    renderTypeCounters([], { state: 'loading', origin: selectedOrigin });
+                    const query = new URLSearchParams({ origen: selectedOrigin });
+                    const response = await fetchJson(resolveAppUrl('/backend/feedback/list.php?' + query.toString()));
+                    const items = response && Array.isArray(response.items) ? response.items : [];
+                    const filteredItems = items.filter(item => normalizeOrigin(item && item.origen) === selectedOrigin);
+                    itemsCache.set(selectedOrigin, filteredItems);
+                    if (selectedOrigin === activeOrigin) {
+                        renderRows(filteredItems, selectedOrigin);
+                        setStatus('Listado actualizado.', 'success');
+                    }
+                    renderOriginTabs();
+                } catch (error) {
+                    if (selectedOrigin !== activeOrigin) {
+                        return;
+                    }
+                    if (error && error.status === 403) {
+                        setStatus('Acceso bloqueado: esta vista está reservada para superadministradores.', 'danger');
+                        if (tableBody) {
+                            tableBody.innerHTML = '<tr><td colspan="9" class="text-center text-danger py-4">Sin acceso.</td></tr>';
+                        }
+                        renderTypeCounters([], { state: 'forbidden', origin: selectedOrigin });
+                    } else {
+                        const msg = error && error.message ? error.message : 'No se pudo obtener la información.';
+                        setStatus(msg, 'danger');
+                        if (tableBody) {
+                            tableBody.innerHTML = '<tr><td colspan="9" class="text-center text-danger py-4">No se pudo obtener la información.</td></tr>';
+                        }
+                        renderTypeCounters([], { state: 'error', origin: selectedOrigin });
+                    }
+                }
+            }
+
+            function setActiveOrigin(origin) {
+                if (!origin) return;
+                activeOrigin = origin;
+                renderOriginTabs();
+                const cachedItems = itemsCache.get(origin);
+                if (cachedItems) {
+                    renderRows(cachedItems, origin);
+                    setStatus('Listado actualizado.', 'success');
+                } else {
+                    fetchFeedback(origin);
+                }
+            }
+
+            if (originTabsEl) {
+                originTabsEl.addEventListener('click', function(event) {
+                    const button = event.target.closest('[data-origin]');
+                    if (!button) return;
+                    const origin = button.dataset.origin;
+                    if (origin && origin !== activeOrigin) {
+                        setActiveOrigin(origin);
+                    }
+                });
+            }
+
+            async function updateReport(row) {
+                if (!row) return;
+                const id = row.dataset.id;
+                if (!id) return;
+
+                const estado = row.querySelector('[data-field="estado"]').value;
+                const prioridad = row.querySelector('[data-field="prioridad"]').value;
+
+                const formData = new FormData();
+                formData.set('id', id);
+                formData.set('estado', estado);
+                formData.set('prioridad', prioridad);
+
+                try {
+                    setStatus('Guardando cambios…', 'info');
+                    const response = await fetchJson(resolveAppUrl('/backend/feedback/update.php'), {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (response && response.success) {
+                        setStatus('Cambios guardados correctamente.', 'success');
+                    } else {
+                        setStatus('No fue posible actualizar el registro.', 'danger');
+                    }
+                } catch (error) {
+                    if (error && error.status === 403) {
+                        setStatus('Acceso bloqueado: esta acción está reservada para superadministradores.', 'danger');
+                    } else {
+                        const msg = error && error.message ? error.message : 'No fue posible actualizar el registro.';
+                        setStatus(msg, 'danger');
+                    }
+                }
+            }
+
+            if (tableBody) {
+                tableBody.addEventListener('click', function(event) {
+                    const button = event.target.closest('[data-action="update"]');
+                    if (!button) return;
+                    const row = button.closest('tr');
+                    updateReport(row);
+                });
+            }
+
+            document.addEventListener('permissionsready', function(event) {
+                const flags = event && event.detail ? event.detail : window.permissionFlags;
+                if (!flags || !flags.canReviewFeedback) {
+                    setStatus('Acceso bloqueado: esta vista está reservada para superadministradores.', 'danger');
+                    if (tableBody) {
+                        tableBody.innerHTML = '<tr><td colspan="9" class="text-center text-danger py-4">Sin acceso.</td></tr>';
+                    }
+                    renderTypeCounters([], { state: 'forbidden', origin: activeOrigin });
+                    return;
+                }
+                renderOriginTabs();
+                setActiveOrigin(activeOrigin);
+            });
+        })();
+    </script>
+</body>
+</html>

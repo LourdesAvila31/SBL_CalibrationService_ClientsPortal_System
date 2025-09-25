@@ -1,0 +1,22 @@
+[
+  {
+    "plan_id": 1,
+    "instrumento_id": 101,
+    "empresa_id": 1,
+    "tecnico_id": 5,
+    "estado_orden": "Programada",
+    "fecha_inicio": "2024-06-10",
+    "fecha_cierre": null,
+    "observaciones": "Coordinar logística con el cliente"
+  },
+  {
+    "plan_id": 2,
+    "instrumento_id": 205,
+    "empresa_id": 1,
+    "tecnico_id": 7,
+    "estado_orden": "En proceso",
+    "fecha_inicio": "2024-06-05",
+    "fecha_cierre": "2024-06-07",
+    "observaciones": "Requiere validación de resultados"
+  }
+]

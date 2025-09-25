@@ -1,0 +1,18 @@
+[
+  {
+    "id": 101,
+    "instrumento_id": 1,
+    "folio": "CAL-2024-001",
+    "fecha_programada": "2024-01-15",
+    "fecha_ejecucion": "2024-01-18",
+    "resultado": "Aprobado"
+  },
+  {
+    "id": 102,
+    "instrumento_id": 2,
+    "folio": "CAL-2024-002",
+    "fecha_programada": "2024-02-10",
+    "fecha_ejecucion": "2024-02-12",
+    "resultado": "Aprobado"
+  }
+]

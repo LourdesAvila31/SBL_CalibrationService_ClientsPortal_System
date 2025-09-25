@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "correo": "admin@example.com",
+    "activo": 1,
+    "verificado": 1,
+    "dosfa": 0,
+    "ultima_ip": "127.0.0.1",
+    "last_login": "2024-01-01",
+    "created_at": "2023-01-01",
+    "role_id": "Admin",
+    "empresa_id": 1,
+    "delegated_roles": ["Delegado Calidad"]
+  },
+  {
+    "id": 2,
+    "correo": "usuario@example.com",
+    "activo": 0,
+    "verificado": 0,
+    "dosfa": 0,
+    "ultima_ip": null,
+    "last_login": null,
+    "created_at": "2023-02-15",
+    "role_id": "User",
+    "empresa_id": 2,
+    "delegated_roles": []
+  }
+]

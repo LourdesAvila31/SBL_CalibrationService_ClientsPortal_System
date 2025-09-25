@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "codigo": "EQ-001",
+    "nombre": "Calibrador digital",
+    "estado": "activo",
+    "ubicacion": "Laboratorio principal"
+  },
+  {
+    "id": 2,
+    "codigo": "EQ-002",
+    "nombre": "Micrómetro 0-25mm",
+    "estado": "activo",
+    "ubicacion": "Área de metrología"
+  }
+]

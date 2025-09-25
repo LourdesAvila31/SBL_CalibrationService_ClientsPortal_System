@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <title>Enviar retroalimentación interna</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <style>
+        body {
+            background: #f4f6f8;
+            min-height: 100vh;
+        }
+        .feedback-wrapper {
+            max-width: 720px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(12, 140, 152, 0.15);
+            padding: 32px 36px;
+        }
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .feedback-header h1 {
+            font-size: 1.6rem;
+            color: #0d575a;
+            margin: 0;
+        }
+        label {
+            font-weight: 600;
+            color: #0d575a;
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+        }
+        .btn-primary {
+            background: #0d575a;
+            border-color: #0d575a;
+            border-radius: 10px;
+            padding: 10px 24px;
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background: #0c8c98;
+            border-color: #0c8c98;
+        }
+        .alert {
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-wrapper">
+        <div class="feedback-header">
+            <i class="fa fa-comment-dots fa-lg text-primary"></i>
+            <h1>Enviar retroalimentación</h1>
+        </div>
+        <p class="text-muted">Comparte un problema o una sugerencia relacionada con el sistema. El equipo de soporte recibirá la información para su seguimiento.</p>
+        <form id="feedbackForm" class="mt-4" enctype="multipart/form-data">
+            <input type="hidden" name="origen" value="internal">
+            <input type="hidden" name="empresa_id" id="empresaId">
+            <div id="empresaSelector" class="mb-3 d-none">
+                <label for="empresaSelect" class="form-label">Empresa</label>
+                <select id="empresaSelect" class="form-select">
+                    <option value="">Selecciona una empresa…</option>
+                </select>
+            </div>
+            <div id="empresaInfo" class="text-muted small mb-3"></div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="tipo" class="form-label">Tipo</label>
+                    <select name="tipo" id="tipo" class="form-select" required>
+                        <option value="error">Error</option>
+                        <option value="sugerencia">Sugerencia</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="prioridad" class="form-label">Prioridad</label>
+                    <select name="prioridad" id="prioridad" class="form-select">
+                        <option value="baja">Baja</option>
+                        <option value="media" selected>Media</option>
+                        <option value="alta">Alta</option>
+                        <option value="critica">Crítica</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="resumen" class="form-label">Resumen</label>
+                <input type="text" id="resumen" name="resumen" class="form-control" maxlength="255" required placeholder="Describa brevemente el asunto">
+            </div>
+            <div class="mb-4">
+                <label for="descripcion" class="form-label">Descripción detallada</label>
+                <textarea id="descripcion" name="descripcion" class="form-control" rows="6" placeholder="Incluya pasos para reproducir, impacto o cualquier información adicional"></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="evidencias" class="form-label">Evidencias (opcional)</label>
+                <input type="file" id="evidencias" name="evidencias[]" class="form-control" multiple>
+                <div class="form-text">Puedes adjuntar capturas, documentos o archivos que ayuden a comprender el reporte.</div>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+                <div id="formStatus" class="flex-grow-1"></div>
+            </div>
+        </form>
+    </div>
+
+    <script src="assets/scripts/base-url.js"></script>
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script>
+        (function() {
+            const statusEl = document.getElementById('formStatus');
+            const empresaHidden = document.getElementById('empresaId');
+            const empresaInfo = document.getElementById('empresaInfo');
+            const empresaSelectContainer = document.getElementById('empresaSelector');
+            const empresaSelect = document.getElementById('empresaSelect');
+
+            function setStatus(message, type) {
+                if (!statusEl) return;
+                if (!message) {
+                    statusEl.innerHTML = '';
+                    return;
+                }
+                statusEl.innerHTML = '<div class="alert alert-' + type + ' mb-0 py-2 px-3">' + message + '</div>';
+            }
+
+            async function loadEmpresas() {
+                try {
+                    const empresas = await fetchJson(resolveAppUrl('/backend/empresas/list.php'));
+                    if (Array.isArray(empresas)) {
+                        empresaSelect.innerHTML = '<option value="">Selecciona una empresa…</option>';
+                        empresas.forEach(emp => {
+                            const option = document.createElement('option');
+                            option.value = emp.id;
+                            option.textContent = emp.nombre;
+                            empresaSelect.appendChild(option);
+                        });
+                    }
+                } catch (error) {
+                    console.error('No se pudo cargar la lista de empresas', error);
+                }
+            }
+
+            function applyEmpresaFromUser(user, flags) {
+                if (!user) return;
+                if (flags && flags.canReviewFeedback) {
+                    empresaSelectContainer.classList.remove('d-none');
+                    loadEmpresas();
+                    if (empresaHidden) {
+                        empresaHidden.value = '';
+                    }
+                    if (empresaInfo) {
+                        empresaInfo.textContent = '';
+                    }
+                } else {
+                    const empresaId = user.empresa_id ? String(user.empresa_id) : '';
+                    if (empresaHidden) {
+                        empresaHidden.value = empresaId;
+                    }
+                    if (empresaInfo) {
+                        const nombre = user.empresa_nombre || (empresaId ? 'Empresa asociada #' + empresaId : '');
+                        empresaInfo.textContent = nombre ? 'Reportando para: ' + nombre : '';
+                    }
+                    empresaSelectContainer.classList.add('d-none');
+                }
+            }
+
+            document.addEventListener('permissionsready', function(event) {
+                const flags = event && event.detail ? event.detail : window.permissionFlags;
+                applyEmpresaFromUser(window.currentUser, flags);
+            });
+
+            if (empresaSelect) {
+                empresaSelect.addEventListener('change', function() {
+                    if (empresaHidden) {
+                        empresaHidden.value = this.value || '';
+                    }
+                });
+            }
+
+            const form = document.getElementById('feedbackForm');
+            if (form) {
+                form.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    setStatus('Enviando…', 'info');
+                    try {
+                        const formData = new FormData(form);
+                        if (!formData.get('empresa_id') && empresaHidden) {
+                            formData.set('empresa_id', empresaHidden.value || '');
+                        }
+                        const response = await fetchJson(resolveAppUrl('/backend/feedback/create.php'), {
+                            method: 'POST',
+                            body: formData
+                        });
+                        if (response && response.success) {
+                            form.reset();
+                            if (empresaHidden && window.currentUser && (!window.permissionFlags || !window.permissionFlags.canReviewFeedback)) {
+                                empresaHidden.value = window.currentUser.empresa_id || '';
+                            }
+                            setStatus('¡Gracias! Tu reporte fue enviado correctamente.', 'success');
+                        } else {
+                            setStatus('No fue posible enviar el reporte.', 'danger');
+                        }
+                    } catch (error) {
+                        const message = error && error.message ? error.message : 'No fue posible enviar el reporte.';
+                        setStatus(message, 'danger');
+                    }
+                });
+            }
+        })();
+    </script>
+    <script src="assets/scripts/topbar.js"></script>
+</body>
+</html>

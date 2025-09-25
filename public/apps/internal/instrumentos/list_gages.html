@@ -1,0 +1,2903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <title>Instrumentos Registrados | SISTEMA ISO 17025</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Bootstrap, Montserrat, FontAwesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+         body {
+            background: #f4f6f8;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img {
+            width: 140px;
+            margin-bottom: 22px;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-nav .nav-link {
+            width: 92%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0 8px 0;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s;
+            position: relative;
+        }
+        .sidebar-nav .nav-link.active,
+        .sidebar-nav .nav-link:hover {
+            background: #0c8c98;
+            color: #fff;
+        }
+        .sidebar-nav .nav-link i {
+            font-size: 1.85rem;
+            margin-bottom: 8px;
+        }
+        .sidebar-nav .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 4px;
+            height: 32px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .main-content {
+            margin-left: 200px;
+            min-height: 100vh;
+            padding: 0;
+        }
+        .topbar {
+            background: #fff;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px 0 28px;
+            box-shadow: 0 1px 8px #0001;
+        }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+        .topbar-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #217b9b;
+            letter-spacing: 1px;
+        }
+        .topbar-user {
+            font-size: 1rem;
+            color: #217b9b;
+            font-weight: 400;
+            margin-left: 24px;
+        }
+        .topbar-icons {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .topbar-icons i {
+            font-size: 1.2rem;
+            color: #217b9b;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(60,60,100,0.07);
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px 0 20px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .logo {
+            width: 120px;
+        }
+        .header-title {
+            font-size: 1.1rem;
+            color: #227b9b;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .header-user {
+            font-size: 1rem;
+            color: #227b9b;
+            font-weight: 400;
+            margin-left: 24px;
+        }
+        .actions-bar {
+            background: #e9eff1;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .actions-bar .btn {
+            background: #227b9b;
+            color: #fff;
+            border: none;
+            border-radius: 22px;
+            padding: 7px 20px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        .actions-bar .btn:hover {
+            background: #08536a;
+        }
+        .actions-bar .bulk-btn {
+            background: #e0e7ff;
+            color: #08536a;
+            border: 1px solid #227b9b;
+        }
+        .context-alert {
+            margin: 16px 24px 0 24px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        .actions-bar select, .actions-bar input {
+            font-size: 1rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            margin-left: 8px;
+        }
+        .company-context-banner {
+            margin: 16px 24px 0 24px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .table-container {
+            background: #fff;
+            margin: 0 24px 0 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(60,60,100,0.09);
+            overflow-x: auto;
+            margin-top: 8px;
+        }
+        .table-reference {
+            background: #f8fafc;
+            border-radius: 8px;
+            margin: 12px 24px 0 24px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            color: #374151;
+            box-shadow: 0 2px 8px rgba(60,60,100,0.05);
+            line-height: 1.4;
+        }
+        .table-reference p {
+            margin: 4px 0;
+        }
+        .builder-table tbody tr.calibration-overdue {
+            background-color: #fdecea;
+        }
+        .builder-table tbody tr.calibration-overdue:hover {
+            background-color: #f8d7da;
+        }
+        .builder-table tbody tr.calibration-overdue td {
+            border-color: #f5c2c7;
+        }
+        .badge[data-calibration-status="vigente"] {
+            background-color: #198754 !important;
+        }
+        .badge[data-calibration-status="por_vencer"] {
+            background-color: #ffc107 !important;
+            color: #212529 !important;
+        }
+        .badge[data-calibration-status="vencido"] {
+            background-color: #dc3545 !important;
+        }
+        .operational-status-badge {
+            font-size: 0.85rem;
+            padding: 0.35rem 0.65rem;
+            border-radius: 999px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        .badge[data-operational-status="en_uso"] {
+            background-color: #0f766e !important;
+        }
+        .badge[data-operational-status="en_stock"] {
+            background-color: #2563eb !important;
+        }
+        .badge[data-operational-status="fuera_servicio"] {
+            background-color: #f97316 !important;
+            color: #1f2937 !important;
+        }
+        .badge[data-operational-status="baja"] {
+            background-color: #4b5563 !important;
+        }
+        .operational-status-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .operational-status-meta {
+            font-size: 0.8rem;
+            color: #64748b;
+            line-height: 1.2;
+        }
+        .quick-filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 12px 24px 0 24px;
+        }
+        .quick-filter-label {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .quick-filter-btn {
+            background: #e2e8f0;
+            color: #0f172a;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .quick-filter-btn:hover {
+            background: #cbd5f5;
+        }
+        .quick-filter-btn.active {
+            background: #227b9b;
+            color: #fff;
+            border-color: #1f5f79;
+        }
+        .empty-row {
+            text-align: center;
+            color: #555;
+            font-size: 1.08rem;
+            padding: 32px 0;
+        }
+        .pagination-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            background: #e9eff1;
+            padding: 10px 24px;
+            margin-top: 0px;
+            gap: 12px;
+        }
+        .pagination-bar select, .pagination-bar input {
+            font-size: 1rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+        }
+        .pagination-bar .btn {
+            background: #227b9b;
+            color: #fff;
+            border: none;
+            border-radius: 18px;
+            padding: 5px 16px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        .pagination-bar .btn:disabled {
+            background: #b1c9d1;
+            cursor: not-allowed;
+        }
+        .calibration-status-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .calibration-status-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            font-size: 0.85rem;
+            line-height: 1.2;
+        }
+        .calibration-status-meta .calibration-next-date {
+            font-weight: 600;
+        }
+        .reset-btn {
+            background: #fff;
+            color: #227b9b;
+            border: 1px solid #227b9b;
+            padding: 5px 16px;
+            border-radius: 18px;
+            margin-left: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        @media (max-width: 900px) {
+            .table-container { min-width: 100vw; }
+            .context-alert {
+                margin: 12px;
+            }
+        }
+        /* Panel lateral de detalles */
+        #detallesPanel {
+            width: 380px;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+            background: #fff;
+        }
+        #detallesPanel .offcanvas-header {
+            background: #227b9b;
+            color: #fff;
+        }
+        #detallesPanel .offcanvas-header .btn-close {
+            filter: invert(1);
+            opacity: 1;
+        }
+        #detallesPanel .offcanvas-title {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        #detallesPanelContenido {
+            padding: 1rem;
+            font-size: 0.95rem;
+            color: #2d3748;
+        }
+        #detallesPanelContenido p {
+            margin-bottom: 0.5rem;
+        }
+        #detallesPanelContenido strong {
+            color: #227b9b;
+        }
+        #detallesPanelContenido hr {
+            margin: 1rem 0;
+            border-top: 1px solid #e9eff1;
+        }
+        #detallesPanelContenido ul {
+            padding-left: 20px;
+        }
+        #detallesPanel .btn-primary {
+            background: #227b9b;
+            border: none;
+        }
+        #detallesPanel .btn-primary:hover {
+            background: #08536a;
+        }
+
+/* Estilos de ventanas modales acorde al sistema */
+        .modal-header {
+            background: #0d575a;
+            color: #fff;
+        }
+        .modal-footer .btn-primary {
+            background: #0d575a;
+            border-color: #0d575a;
+        }
+        .history-grid-wrapper {
+            position: relative;
+        }
+        .history-grid-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .history-grid-table caption {
+            caption-side: top;
+            font-weight: 600;
+            color: #0d575a;
+            text-align: left;
+            padding-bottom: 0.5rem;
+        }
+        .history-grid-table th,
+        .history-grid-table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .history-grid-table th {
+            background: #f5fafb;
+            color: #0d575a;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .history-grid-table td {
+            color: #2d3748;
+        }
+        .history-grid-status {
+            text-align: center;
+            color: #6c757d;
+            padding: 1.2rem 0.5rem;
+        }
+        .history-grid-item + .history-grid-item {
+            margin-top: 0.35rem;
+        }
+        .history-grid-table a.history-cert-link {
+            color: #0d575a;
+            text-decoration: underline;
+            word-break: break-word;
+        }
+        .history-grid-table a.history-cert-link:hover,
+        .history-grid-table a.history-cert-link:focus {
+            color: #094246;
+            text-decoration-thickness: 2px;
+        }
+        .history-grid-table .empty-cell {
+            color: #94a3b8;
+            font-style: italic;
+        }
+        .history-summary {
+            margin-top: 1.5rem;
+        }
+        .history-summary h6 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0d575a;
+        }
+        .history-summary-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            min-height: 96px;
+        }
+        .history-summary-box p {
+            margin-bottom: 0;
+            color: #6c757d;
+        }
+        .history-summary-box ul {
+            margin-bottom: 0;
+            padding-left: 1.25rem;
+        }
+        @media (max-width: 576px) {
+            .history-grid-table th,
+            .history-grid-table td {
+                font-size: 0.9rem;
+                padding: 0.65rem;
+            }
+            .context-alert {
+                margin: 12px 10px 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar"></aside>
+    <!-- FIN SIDEBAR -->
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-content">
+        <!-- Topbar -->
+         <div class="topbar">
+            <div class="topbar-left">
+        <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Gestión de Instrumentos</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <!-- Menú usuario -->
+                     <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/internal/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href=(window.BASE_URL || window.PAGE_BASE_URL || '') + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <!-- Notificaciones -->
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList">
+                        <div class="text-muted-sm">No hay notificaciones nuevas.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- Actions Bar -->
+        <div class="actions-bar">
+            <button class="btn" id="btnAddInstrument">+ Añadir instrumento</button>
+            <button class="btn" id="btnImportInventory">Importar inventario</button>
+            <button class="btn" id="btnEdit" disabled>Editar</button>
+            <button class="btn" id="btnDelete" disabled>Eliminar</button>
+            <button class="btn" id="btnPrintLabel" disabled>Imprimir etiqueta</button>
+            <button class="btn" id="toggleFilter">Opciones de filtro</button>
+        </div>
+        <div class="quick-filter-bar" id="operationalQuickFilters" role="group" aria-label="Filtro rápido por estado operativo">
+            <span class="quick-filter-label">Estado operativo:</span>
+            <button type="button" class="quick-filter-btn active" data-status="all">Todos</button>
+            <button type="button" class="quick-filter-btn" data-status="en_uso">En uso</button>
+            <button type="button" class="quick-filter-btn" data-status="fuera_servicio">Fuera de servicio</button>
+            <button type="button" class="quick-filter-btn" data-status="en_stock">En stock</button>
+            <button type="button" class="quick-filter-btn" data-status="baja">Baja</button>
+        </div>
+        <div id="filterPanel" class="actions-bar is-hidden">
+
+            <select id="filterPeriod">
+                <option value="all" selected>Todos</option>
+                <option value="vencido">Vencidos</option>
+                <option value="proximo">Próximo vencimiento</option>
+                <option value="vigente">Vigentes</option>
+                <option value="sin_programar">Sin programar</option>
+                <option value="30">Próximos 30 días</option>
+                <option value="60">Próximos 60 días</option>
+                <option value="90">Próximos 90 días</option>
+            </select>
+            <select id="filterStatus">
+                <option value="all" selected>Todos</option>
+            </select>
+            <select id="filterDept">
+                <option value="all" selected>Todos los departamentos</option>
+            </select>
+            <select id="sortOrder">
+                <option value="id" selected>Ordenar por</option>
+                <option value="alfabetico">Alfabético</option>
+                <option value="departamento">Departamento</option>
+                <option value="proxima">Próxima calibración</option>
+            </select>
+            <button class="btn" id="applyFilter">Aplicar</button>
+        </div>
+
+        <div id="empresaContextMessage" class="alert alert-info context-alert d-none" role="status" aria-live="polite"></div>
+
+        <!-- Tabla de instrumentos -->
+        <div class="table-container">
+            <table id="tablaInstrumentos" class="builder-table">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll" /></th>
+                        <th>ID</th>
+                        <th>Instrumento</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Serie</th>
+                        <th>Código</th>
+                        <th>Departamento</th>
+                        <th>Ubicación</th>
+                        <th class="text-center">Documentos</th>
+                        <th class="date-col">Fecha de Alta</th>
+                        <th class="date-col">Fecha de Baja</th>
+                        <th class="status-col">Estado operativo</th>
+                        <th class="status-col">Estado de calibración</th>
+                        <th class="date-col">Próxima Calibración</th>
+                    </tr>
+                </thead>
+                <tbody id="instrumentosTbody"></tbody>
+            </table>
+        </div>
+        <div class="table-reference" aria-label="Referencias de la tabla de instrumentos">
+            <p><strong>ND</strong> = No disponible</p>
+            <p><strong>NA</strong> = No aplica</p>
+            <p><strong>Rechazado, Dado de baja</strong> = Rechazado en su calibración</p>
+            <p><strong>Dado de baja</strong> = Pérdida, avería sin reparación, fuera de uso</p>
+            <p><strong>Semáforo de calibración</strong> = Vigente (verde, más de 30 días), Por vencer (amarillo, 0-30 días restantes) y Vencido (rojo, fecha expirada)</p>
+        </div>
+        <!-- Paginación -->
+        <div class="pagination-bar">
+            <button class="btn" id="btnFirst">&#60;&#60;</button>
+            <button class="btn" id="btnPrev">&#60;</button>
+            <span>Página <input type="number" id="currentPage" value="1" min="1" class="pagination-input" /> de <span id="totalPages">1</span></span>
+            <button class="btn" id="btnNext">&#62;</button>
+            <button class="btn" id="btnLast">&#62;&#62;</button>
+            <select id="selectPerPage">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100" selected>100</option>
+            </select>
+            <span>por página</span>
+            <button class="reset-btn" onclick="window.location.reload()">RESTABLECER VISTA</button>
+        </div>
+        <div class="export-actions">
+            <button class="btn-export excel" id="exportGagesExcel"><i class="fa fa-file-excel"></i> Exportar a Excel</button>
+            <button class="btn-export pdf" id="exportGagesPdf"><i class="fa fa-file-pdf"></i> Exportar a PDF</button>
+        </div>
+    </div>
+
+    <!-- Modal Detalles -->
+    <div class="modal fade" id="detallesModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Más información del Instrumento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+           <div class="modal-body" id="detallesModalContenido"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Panel lateral de detalles -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="detallesPanel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="detallesTitulo">Instrumento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+      </div>
+    <div class="offcanvas-body" id="detallesPanelContenido"></div>
+    </div>
+    
+ <!-- Modal de confirmación de baja -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirmar baja</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body" id="deleteModalBody"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Dar de baja</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para editar instrumento -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar instrumento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editForm">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="editNombre" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Marca</label>
+                  <input type="text" class="form-control" id="editMarca" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Modelo</label>
+                  <input type="text" class="form-control" id="editModelo" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Serie</label>
+                  <input type="text" class="form-control" id="editSerie" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Código</label>
+                  <input type="text" class="form-control" id="editCodigo" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Departamento</label>
+                  <select class="form-select" id="editDepartamento"></select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Ubicación</label>
+                  <select class="form-select" id="editUbicacion"></select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Fecha de Alta</label>
+                  <input type="date" class="form-control" id="editFechaAlta" />
+                </div>
+                <div class="col-md-6">
+                <label class="form-label">Fecha de Baja</label>
+                <input type="date" class="form-control" id="editFechaBaja" />
+              </div>
+                <div class="col-md-6">
+                  <label class="form-label">Estado</label>
+                  <input class="form-control" id="editEstado" type="text" readonly tabindex="-1" aria-readonly="true">
+                  <div class="form-text">El estado se determina automáticamente según la información registrada.</div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="saveEditBtn">Guardar</button>
+          </div>
+         </div>
+      </div>
+    </div>
+
+    <!-- Modal de confirmación de guardado -->
+    <div class="modal fade" id="confirmSaveModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirmar cambios</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body" id="confirmSaveBody"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="confirmSaveBtn">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de resultado -->
+    <div class="modal fade" id="resultModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Resultado</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body" id="resultModalBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal importar inventario -->
+    <div class="modal fade" id="importInventoryModal" tabindex="-1" aria-labelledby="importInventoryLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <form id="importInventoryForm">
+            <div class="modal-header">
+              <h5 class="modal-title" id="importInventoryLabel">Importar inventario</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <p>Selecciona un archivo CSV con los instrumentos que deseas importar o actualizar.</p>
+              <ol class="mb-3">
+                <li>Descarga y completa la <a href="#" id="importTemplateLink" target="_blank" rel="noopener">plantilla CSV</a>.</li>
+                <li>Verifica que las columnas obligatorias (Código, Estado, Programado) estén presentes.</li>
+                <li>Guarda el archivo en formato CSV (UTF-8).</li>
+              </ol>
+              <div class="mb-3">
+                <label for="importInventoryFile" class="form-label">Archivo CSV</label>
+                <input type="file" class="form-control" id="importInventoryFile" name="inventory_file" accept=".csv,text/csv" required>
+                <div class="form-text">Tamaño máximo 5 MB.</div>
+              </div>
+              <div class="alert alert-warning" role="alert">
+                El archivo debe incluir las columnas: Instrumento, Marca, Modelo, Serie, Código, Departamento responsable, Ubicación, Fecha de alta, Fecha de baja, Próxima calibración, Estado y Programado.
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" id="confirmImportBtn">Importar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="importResultModal" tabindex="-1" aria-labelledby="importResultLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="importResultLabel">Resultado de importación</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <div id="importResultBody"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de historial -->
+    <div class="modal fade" id="historialModal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="historialModalLabel">Historial</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="history-grid-wrapper">
+              <div class="table-responsive">
+                <table class="table history-grid-table align-middle">
+                  <caption class="visually-hidden">Historial de calibraciones por periodo</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Año</th>
+                      <th scope="col">Periodo 1</th>
+                      <th scope="col">Periodo 2</th>
+                      <th scope="col">Extraordinario</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historialGridBody">
+                    <tr>
+                      <td colspan="4" class="history-grid-status">Selecciona un instrumento para ver su historial.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="history-summary">
+              <div class="row g-3">
+                <div class="col-12 col-lg-6">
+                  <h6>Fechas relevantes</h6>
+                  <div id="historialFechas" class="history-summary-box">
+                    <p class="mb-0">Selecciona un instrumento para ver las fechas.</p>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                  <h6>Certificados vinculados</h6>
+                  <div id="historialCertificados" class="history-summary-box">
+                    <p class="mb-0">Selecciona un instrumento para ver los certificados.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para aprobación de certificados -->
+    <div class="modal fade" id="approveCalibrationModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="approveCalibrationForm">
+            <div class="modal-header">
+              <h5 class="modal-title">Firmar y liberar certificado</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <p id="approveCalibrationDetails" class="small text-muted mb-3">Confirma tu aprobación antes de liberar el certificado.</p>
+              <div class="mb-3">
+                <label for="approveCalibrationPassword" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="approveCalibrationPassword" autocomplete="current-password" required>
+              </div>
+              <div class="mb-3">
+                <label for="approveCalibrationTwoFactor" class="form-label">Código 2FA (opcional)</label>
+                <input type="text" class="form-control" id="approveCalibrationTwoFactor" inputmode="numeric" autocomplete="one-time-code">
+                <div class="form-text">Ingresa tu código de verificación si tu cuenta tiene 2FA activado.</div>
+              </div>
+              <div id="approveCalibrationError" class="alert alert-danger d-none" role="alert"></div>
+              <div id="approveCalibrationSuccess" class="alert alert-success d-none" role="alert"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Firmar y liberar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/F54q9WlH0I1GtIsfRSAxEPPGjBJOCa/MEGLjm+rXhN3kLBXjg5eQof8I4eAbOeXtfLOcAfeUOLVN2y5kqL/hg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="assets/scripts/exports.js"></script>
+    <script>
+    (() => {
+        const pageBaseUrl = window.BASE_URL || '';
+        window.PAGE_BASE_URL = window.PAGE_BASE_URL || pageBaseUrl;
+        // Fallback en caso de que scripts.js no se cargue correctamente
+        if (typeof window.formatNA !== 'function') {
+            window.formatNA = function(value) {
+                return (value === null || value === undefined ||
+                        (typeof value === 'string' && value.trim() === ''))
+                    ? 'NA'
+                    : value;
+            };
+        }
+
+        if (typeof window.formatFechaCorta !== 'function') {
+            window.formatFechaCorta = function(fecha) {
+                if (!fecha) return 'NA';
+                return new Date(fecha)
+                    .toLocaleDateString('es-ES', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    })
+                    .replace('.', '')
+                    .replace(/\b[a-z]/, m => m.toUpperCase());
+            };
+        }
+        if (typeof window.formatFechaMesAnio !== 'function') {
+            window.formatFechaMesAnio = function(fecha) {
+                if (!fecha) return 'NA';
+                const parsed = new Date(fecha);
+                if (Number.isNaN(parsed.getTime())) return 'NA';
+                return parsed
+                    .toLocaleDateString('es-ES', { month: 'short', year: 'numeric' })
+                    .replace('.', '')
+                    .replace(/\s+/g, '-');
+            };
+        }
+        const escapeHtml = (value) => {
+            if (value === null || value === undefined) return '';
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        };
+        const displayValue = (value) => escapeHtml(formatNA(value));
+        const formatProximaCalibracion = (value, mensaje) => {
+            const textoMensaje = typeof mensaje === 'string' ? mensaje.trim() : '';
+            if (textoMensaje) {
+                return textoMensaje;
+            }
+            if (!value) return 'NA';
+            if (typeof window.formatFechaMesAnio === 'function') {
+                const formatted = window.formatFechaMesAnio(value);
+                if (formatted && formatted !== 'NA') {
+                    return formatted;
+                }
+            }
+            return 'NA';
+        };
+        const displayProximaCalibracion = (value, mensaje) => escapeHtml(formatProximaCalibracion(value, mensaje));
+        const displayDate = (value) => escapeHtml(value ? formatFechaCorta(value) : 'NA');
+        const displayMonthYear = (value, mensaje) => escapeHtml(formatProximaCalibracion(value, mensaje));
+        const formatAttachmentCount = (value) => {
+            const num = Number(value);
+            return Number.isFinite(num) && num >= 0 ? num : 0;
+        };
+        const companyContextBanner = document.getElementById('companyContextBanner');
+        let lastCompanyContext = null;
+        const sanitizeContextMessage = (value) => {
+            if (typeof value !== 'string') return '';
+            return value.replace(/[\r\n]+/g, ' ').trim();
+        };
+        const updateCompanyContextBanner = (contextData) => {
+            if (!companyContextBanner) return;
+            const mensaje = contextData && contextData.message ? sanitizeContextMessage(contextData.message) : '';
+            if (!mensaje) {
+                if (lastCompanyContext !== null) {
+                    companyContextBanner.textContent = '';
+                    companyContextBanner.classList.add('d-none');
+                    lastCompanyContext = null;
+                }
+                return;
+            }
+
+            companyContextBanner.textContent = mensaje;
+            companyContextBanner.classList.remove('d-none');
+            lastCompanyContext = {
+                message: mensaje,
+                company_id: contextData && typeof contextData.company_id !== 'undefined'
+                    ? contextData.company_id
+                    : null,
+                mode: contextData && typeof contextData.mode !== 'undefined'
+                    ? contextData.mode
+                    : null,
+            };
+        };
+
+        const {
+            renderBadge: renderCalibrationBadge,
+            getStatusInfo: getCalibrationStatusInfo,
+            matchesPeriodFilter: matchesCalibrationPeriod,
+            describeDiasRestantes: describeCalibrationDays
+        } = window.CalibrationStatusHelpers || {
+            renderBadge: () => '',
+            getStatusInfo: () => ({ estado: '', label: '', badgeClass: 'bg-secondary', tooltip: '', dias_restantes: null }),
+            matchesPeriodFilter: () => true,
+            describeDiasRestantes: () => ''
+        };
+        const renderCalibrationBadgeWithNextDate = (infoOrRegistro, options = {}) => {
+            const badgeHtml = renderCalibrationBadge(infoOrRegistro, options);
+            if (!badgeHtml || typeof badgeHtml !== 'string' || badgeHtml.includes('Próxima:')) {
+                return badgeHtml;
+            }
+            const mensajeManual = options.nextMessage && typeof options.nextMessage === 'string'
+                ? options.nextMessage.trim()
+                : '';
+            const mensajeDato = !mensajeManual && infoOrRegistro && typeof infoOrRegistro === 'object'
+                ? ((infoOrRegistro.proxima_calibracion_mensaje
+                        || infoOrRegistro.fecha_proxima_mensaje
+                        || infoOrRegistro.mensaje_proxima_calibracion) || '').trim()
+                : '';
+            const mensaje = mensajeManual || mensajeDato;
+            if (mensaje) {
+                const insertion = escapeHtml(mensaje);
+                if (badgeHtml.includes('title="')) {
+                    return badgeHtml.replace('title="', `title="${insertion} · `);
+                }
+                return badgeHtml;
+            }
+            const nextCandidate = options.nextDate
+                || (infoOrRegistro && typeof infoOrRegistro === 'object'
+                    ? (infoOrRegistro.proxima_calibracion
+                        || infoOrRegistro.fecha_proxima
+                        || infoOrRegistro.fecha_programada)
+                    : null);
+            const formattedNext = typeof window.formatFechaMesAnio === 'function'
+                ? window.formatFechaMesAnio(nextCandidate)
+                : '';
+            if (!formattedNext || formattedNext === 'NA') {
+                return badgeHtml;
+            }
+            const insertion = escapeHtml(`Próxima: ${formattedNext}`);
+            if (badgeHtml.includes('title="')) {
+                return badgeHtml.replace('title="', `title="${insertion} · `);
+            }
+            return badgeHtml;
+        };
+
+        const operationalStatusLabels = {
+            en_uso: 'En uso',
+            fuera_servicio: 'Fuera de servicio',
+            en_stock: 'En stock',
+            baja: 'Baja'
+        };
+        const operationalStatusClassMap = {
+            en_uso: 'operational-status-badge badge bg-success',
+            fuera_servicio: 'operational-status-badge badge bg-warning text-dark',
+            en_stock: 'operational-status-badge badge bg-primary',
+            baja: 'operational-status-badge badge bg-secondary'
+        };
+
+        const getOperationalStatusInfo = (instrumento) => {
+            const estado = instrumento && instrumento.estado_operativo
+                ? instrumento.estado_operativo
+                : 'en_uso';
+            const label = instrumento && instrumento.estado_operativo_label
+                ? instrumento.estado_operativo_label
+                : (operationalStatusLabels[estado] || operationalStatusLabels.en_uso);
+            const historial = (instrumento && Array.isArray(instrumento.estado_operativo_historial))
+                ? instrumento.estado_operativo_historial
+                : [];
+            return { estado, label, historial };
+        };
+
+        const buildOperationalHistoryTooltip = (historial) => {
+            if (!Array.isArray(historial) || historial.length === 0) {
+                return 'Sin historial registrado';
+            }
+            const lines = historial.slice(0, 5).map((evento) => {
+                const fecha = evento && evento.fecha ? formatFechaCorta(evento.fecha) : 'Sin fecha';
+                const etiqueta = evento && (evento.estado_operativo_label || evento.estado)
+                    ? formatNA(evento.estado_operativo_label || evento.estado)
+                    : 'Sin etiqueta';
+                return `${fecha} · ${etiqueta}`;
+            });
+            if (historial.length > 5) {
+                lines.push(`+${historial.length - 5} eventos adicionales`);
+            }
+            return lines.join('\n');
+        };
+
+        const renderOperationalBadge = (instrumento) => {
+            const info = getOperationalStatusInfo(instrumento);
+            const badgeClass = operationalStatusClassMap[info.estado] || 'operational-status-badge badge bg-secondary';
+            const tooltip = buildOperationalHistoryTooltip(info.historial);
+            return `<span class="${badgeClass}" data-operational-status="${info.estado}" title="${escapeHtml(tooltip)}">${escapeHtml(info.label)}</span>`;
+        };
+
+// Variables de paginación
+    let gages = [];
+    let currentPage = 1;
+    let perPage = 100;
+    let filtroPeriodo = 'all';
+    let filtroEstado = 'all';
+    let filtroEstadoOperativo = 'all';
+    let filtroDept = 'all';
+    let orden = 'id';
+    const selectedIds = new Set();
+    const btnDelete = document.getElementById('btnDelete');
+    const btnEdit = document.getElementById('btnEdit');
+    const btnPrintLabel = document.getElementById('btnPrintLabel');
+    const btnAddInstrument = document.getElementById('btnAddInstrument');
+    const btnImportInventory = document.getElementById('btnImportInventory');
+    const importInventoryForm = document.getElementById('importInventoryForm');
+    const importInventoryFile = document.getElementById('importInventoryFile');
+    const importTemplateLink = document.getElementById('importTemplateLink');
+    const importModalElement = document.getElementById('importInventoryModal');
+    const importResultModalElement = document.getElementById('importResultModal');
+    const importResultBody = document.getElementById('importResultBody');
+    const confirmImportBtn = document.getElementById('confirmImportBtn');
+    const empresaContextMessage = document.getElementById('empresaContextMessage');
+    const importTemplateUrl = `${pageBaseUrl}/backend/instrumentos/gages/download_inventory_template.php`;
+    if (importTemplateLink) {
+        importTemplateLink.href = importTemplateUrl;
+    }
+    const importModalInstance = (typeof bootstrap !== 'undefined' && importModalElement)
+        ? new bootstrap.Modal(importModalElement)
+        : null;
+    const importResultModalInstance = (typeof bootstrap !== 'undefined' && importResultModalElement)
+        ? new bootstrap.Modal(importResultModalElement)
+        : null;
+    let canManageInstrumentos = Boolean(window.permissionFlags && window.permissionFlags.canManageInstrumentos);
+    const instrumentosExportColumns = [
+        { key: 'id', label: 'ID' },
+        { key: 'nombre', label: 'Instrumento' },
+        { key: 'marca', label: 'Marca' },
+        { key: 'modelo', label: 'Modelo' },
+        { key: 'serie', label: 'Serie' },
+        { key: 'codigo', label: 'Código' },
+        { key: 'departamento', label: 'Departamento' },
+        { key: 'ubicacion', label: 'Ubicación' },
+        { key: 'documentos', label: 'Documentos' },
+        { key: 'fecha_alta', label: 'Fecha de Alta' },
+        { key: 'fecha_baja', label: 'Fecha de Baja' },
+        { key: 'estado_operativo_label', label: 'Estado operativo' },
+        { key: 'estado_calibracion', label: 'Estado de calibración' },
+        { key: 'calibration_status', label: 'Semáforo calibración' },
+        { key: 'dias_restantes', label: 'Días restantes' },
+        { key: 'proxima_calibracion', label: 'Próxima Calibración' }
+    ];
+
+    const updateCompanyContextBanner = (message, companyId) => {
+        if (!empresaContextMessage) {
+            return;
+        }
+
+        const trimmedMessage = (message ?? '').toString().trim();
+        if (trimmedMessage) {
+            const trimmedId = (companyId ?? '').toString().trim();
+            empresaContextMessage.textContent = trimmedId
+                ? `${trimmedMessage} (ID ${trimmedId})`
+                : trimmedMessage;
+            empresaContextMessage.classList.remove('d-none');
+        } else {
+            empresaContextMessage.textContent = '';
+            if (!empresaContextMessage.classList.contains('d-none')) {
+                empresaContextMessage.classList.add('d-none');
+            }
+        }
+    };
+
+    const normalizeEstado = (value) => {
+        if (value === null || value === undefined) return '';
+        return value.toString().trim().toLowerCase();
+    };
+
+    const estadoCatalog = new Map();
+
+    function registerEstado(nombre) {
+        if (!nombre) return;
+        const raw = typeof nombre === 'object' && nombre !== null
+            ? (nombre.nombre ?? nombre.label ?? nombre.value ?? '')
+            : nombre;
+        const text = (raw ?? '').toString().trim();
+        if (!text) return;
+        const normalized = normalizeEstado(text);
+        if (!normalized || estadoCatalog.has(normalized)) return;
+        estadoCatalog.set(normalized, text);
+    }
+
+    function getEstadoLabel(value) {
+        const normalized = normalizeEstado(value);
+        if (normalized && estadoCatalog.has(normalized)) {
+            return estadoCatalog.get(normalized);
+        }
+        return value;
+    }
+
+    function refreshEstadoFilterOptions() {
+        const select = document.getElementById('filterStatus');
+        if (!select) return;
+        const previous = select.value;
+        Array.from(select.options).forEach(option => {
+            if (option.value !== 'all') {
+                option.remove();
+            }
+        });
+        const fragment = document.createDocumentFragment();
+        Array.from(estadoCatalog.entries())
+            .sort((a, b) => a[1].localeCompare(b[1], 'es', { sensitivity: 'base' }))
+            .forEach(([value, label]) => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = label;
+                fragment.appendChild(option);
+            });
+        select.appendChild(fragment);
+        if (previous && previous !== 'all') {
+            select.value = previous;
+            if (select.value !== previous) {
+                select.value = 'all';
+                filtroEstado = 'all';
+            }
+        }
+    }
+
+    const displayEstado = (value) => escapeHtml(formatNA(getEstadoLabel(value)));
+
+    function updateEstadoCatalogFromData(lista) {
+        if (!Array.isArray(lista)) return;
+        lista.forEach(item => {
+            if (item && Object.prototype.hasOwnProperty.call(item, 'estado')) {
+                registerEstado(item.estado);
+            }
+        });
+        refreshEstadoFilterOptions();
+    }
+
+    function cargarEstadosDisponibles() {
+        return fetch(pageBaseUrl + '/backend/instrumentos/gages/get_estados.php')
+            .then(r => r.json())
+            .then(estados => {
+                if (Array.isArray(estados)) {
+                    estados.forEach(registerEstado);
+                    refreshEstadoFilterOptions();
+                }
+            })
+            .catch(err => {
+                console.warn('No se pudieron cargar los estados de instrumentos', err);
+            });
+    }
+    function enforceInstrumentPermissions() {
+        updateButtonsState();
+        if (btnImportInventory) {
+            const disabled = !canManageInstrumentos;
+            btnImportInventory.disabled = disabled;
+            btnImportInventory.classList.toggle('disabled', disabled);
+            btnImportInventory.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+        }
+    }
+
+    if (btnAddInstrument) {
+        btnAddInstrument.addEventListener('click', () => {
+            window.location.href = pageBaseUrl + '/apps/internal/instrumentos/add_gage.html';
+        });
+    }
+
+    if (btnImportInventory && importModalInstance) {
+        btnImportInventory.addEventListener('click', () => {
+            if (!canManageInstrumentos) {
+                alert('No cuentas con permisos para importar inventario.');
+                return;
+            }
+            if (importInventoryForm) {
+                importInventoryForm.reset();
+            }
+            if (importResultBody) {
+                importResultBody.innerHTML = '';
+            }
+            importModalInstance.show();
+        });
+    }
+
+    const quickFiltersContainer = document.getElementById('operationalQuickFilters');
+    if (quickFiltersContainer) {
+        const quickButtons = Array.from(quickFiltersContainer.querySelectorAll('.quick-filter-btn'));
+        const updateActiveButton = (value) => {
+            quickButtons.forEach(btn => {
+                const status = btn.dataset.status || 'all';
+                btn.classList.toggle('active', status === value);
+            });
+        };
+        quickButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const status = btn.dataset.status || 'all';
+                if (filtroEstadoOperativo === status) {
+                    return;
+                }
+                filtroEstadoOperativo = status;
+                currentPage = 1;
+                updateActiveButton(status);
+                fetchGages();
+            });
+        });
+        updateActiveButton(filtroEstadoOperativo);
+    }
+
+    if (btnPrintLabel) {
+        btnPrintLabel.addEventListener('click', () => {
+            if (selectedIds.size !== 1) {
+                alert('Selecciona un único instrumento para imprimir su etiqueta.');
+                return;
+            }
+            const id = Array.from(selectedIds)[0];
+            const url = `${pageBaseUrl}/apps/internal/instrumentos/print_label.html?instrument_id=${encodeURIComponent(id)}`;
+            window.open(url, '_blank', 'noopener');
+        });
+    }
+
+    document.addEventListener('permissionsready', (event) => {
+        canManageInstrumentos = Boolean(event.detail && event.detail.canManageInstrumentos);
+        enforceInstrumentPermissions();
+    });
+
+    enforceInstrumentPermissions();
+
+    const headerCheckbox = document.querySelector('#tablaInstrumentos thead input[type="checkbox"]');
+
+    function cargarOpciones(url, selectId) {
+        const select = document.getElementById(selectId);
+        select.innerHTML = '<option value="">Cargando...</option>';
+        return fetch(url)
+            .then(r => r.json())
+            .then(opciones => {
+                select.innerHTML = '<option value=""></option>';
+                opciones.forEach(op => {
+                    const nombre = op.nombre || op;
+                    select.innerHTML += `<option value="${nombre}">${nombre}</option>`;
+                });
+            })
+            .catch(() => {
+                select.innerHTML = '<option value="">Error al cargar</option>';
+            });
+    }
+
+    function cargarDepartamentos() {
+        const select = document.getElementById('filterDept');
+        return fetch(pageBaseUrl + '/backend/departamentos/get_departamentos.php')
+            .then(r => r.json())
+            .then(data => {
+                data.forEach(dep => {
+                    const opt = document.createElement('option');
+                    opt.value = dep.nombre;
+                    opt.textContent = dep.nombre;
+                    select.appendChild(opt);
+                });
+            })
+            .catch(err => {
+                console.error('Error al cargar departamentos', err);
+            });
+    }
+
+    // Algunas vistas pueden no incluir el checkbox de selección masiva
+    if (headerCheckbox) {
+        headerCheckbox.addEventListener('change', () => {
+            const checked = headerCheckbox.checked;
+            document.querySelectorAll('#tablaInstrumentos tbody input[type="checkbox"]').forEach(cb => {
+                cb.checked = checked;
+                cb.dispatchEvent(new Event('change'));
+            });
+        });
+    }
+
+    function updateButtonsState() {
+        if (btnDelete) {
+            btnDelete.disabled = selectedIds.size === 0;
+        }
+        if (btnEdit) {
+            btnEdit.disabled = selectedIds.size !== 1;
+        }
+        if (btnPrintLabel) {
+            btnPrintLabel.disabled = selectedIds.size !== 1;
+        }
+    }
+
+    function renderImportSummary(result, status = 'success') {
+        const parts = [];
+        const safeResult = result || {};
+        const processed = Number.isFinite(safeResult.processed) ? safeResult.processed : 0;
+        const created = Number.isFinite(safeResult.created) ? safeResult.created : 0;
+        const updated = Number.isFinite(safeResult.updated) ? safeResult.updated : 0;
+        if (status === 'success') {
+            parts.push(`<p class="mb-1"><strong>Filas procesadas:</strong> ${processed}</p>`);
+            parts.push(`<p class="mb-2"><strong>Altas:</strong> ${created} · <strong>Actualizaciones:</strong> ${updated}</p>`);
+            if (processed === 0 && created === 0 && updated === 0) {
+                parts.push('<div class="alert alert-info" role="alert">No se realizaron cambios en el inventario.</div>');
+            } else {
+                parts.push('<div class="alert alert-success" role="alert">La importación se completó correctamente.</div>');
+            }
+        } else {
+            const message = safeResult.error ? escapeHtml(safeResult.error) : 'No se pudo completar la importación.';
+            parts.push(`<div class="alert alert-danger" role="alert">${message}</div>`);
+            if (processed > 0) {
+                parts.push(`<p class="mb-2"><strong>Filas procesadas:</strong> ${processed}</p>`);
+            }
+        }
+
+        const errors = Array.isArray(safeResult.row_errors) ? safeResult.row_errors : [];
+        if (errors.length) {
+            parts.push('<div class="alert alert-warning" role="alert">Algunas filas no se pudieron importar:</div>');
+            parts.push('<ul class="list-group list-group-flush">');
+            errors.slice(0, 20).forEach((err) => {
+                const rowDetails = [];
+                if (err && err.row !== undefined && err.row !== null && err.row !== '') {
+                    rowDetails.push(`Fila ${escapeHtml(String(err.row))}`);
+                }
+                if (err && err.codigo) {
+                    rowDetails.push(`Código ${escapeHtml(String(err.codigo))}`);
+                }
+                const prefix = rowDetails.length ? `<strong>${rowDetails.join(' · ')}</strong>` : '';
+                const message = err && (err.error || err.message)
+                    ? escapeHtml(err.error || err.message)
+                    : 'Error desconocido';
+                parts.push(`<li class="list-group-item small">${prefix ? `${prefix}: ` : ''}${message}</li>`);
+            });
+            parts.push('</ul>');
+            if (errors.length > 20) {
+                parts.push('<p class="text-muted small mt-2">Se muestran únicamente los primeros 20 errores.</p>');
+            }
+        }
+
+        return parts.join('');
+    }
+
+    function showImportResultModal(result, status = 'success') {
+        if (!importResultBody || !importResultModalInstance) {
+            return;
+        }
+        importResultBody.innerHTML = renderImportSummary(result, status);
+        importResultModalInstance.show();
+    }
+
+    if (importInventoryForm && confirmImportBtn) {
+        importInventoryForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            if (!canManageInstrumentos) {
+                alert('No cuentas con permisos para importar inventario.');
+                return;
+            }
+            if (!importInventoryFile || !importInventoryFile.files || importInventoryFile.files.length === 0) {
+                alert('Selecciona un archivo CSV para importar.');
+                return;
+            }
+
+            const originalText = confirmImportBtn.textContent;
+            confirmImportBtn.disabled = true;
+            confirmImportBtn.textContent = 'Importando...';
+
+            try {
+                const formData = new FormData();
+                formData.append('inventory_file', importInventoryFile.files[0]);
+                const response = await fetch(`${pageBaseUrl}/backend/instrumentos/gages/import_gages.php`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                let data = null;
+                const contentType = response.headers.get('Content-Type') || '';
+                if (contentType.includes('application/json')) {
+                    try {
+                        data = await response.json();
+                    } catch (parseErr) {
+                        data = null;
+                    }
+                }
+
+                if (importModalInstance) {
+                    importModalInstance.hide();
+                }
+
+                if (!response.ok || (data && data.error)) {
+                    showImportResultModal(data || { error: `Error ${response.status}`, row_errors: [] }, 'error');
+                } else {
+                    showImportResultModal(data, 'success');
+                    if (importInventoryForm) {
+                        importInventoryForm.reset();
+                    }
+                    fetchGages();
+                }
+            } catch (err) {
+                if (importModalInstance) {
+                    importModalInstance.hide();
+                }
+                const message = err && err.message ? err.message : 'No se pudo completar la importación.';
+                showImportResultModal({ error: message, row_errors: [] }, 'error');
+            } finally {
+                confirmImportBtn.disabled = false;
+                confirmImportBtn.textContent = originalText;
+            }
+        });
+    }
+
+    function syncSelects(value) {
+        document.getElementById('selectPerPage').value = value;
+         if (selectPerPageBottom) selectPerPageBottom.value = value;
+    }
+    const selectPerPageBottom = document.getElementById('selectPerPageBottom');
+    
+    document.getElementById('selectPerPage').addEventListener('change', (e) => {
+        perPage = parseInt(e.target.value);
+        syncSelects(perPage);
+        currentPage = 1;
+        renderTabla();
+    });
+    if (selectPerPageBottom) {
+        selectPerPageBottom.addEventListener('change', (e) => {
+            perPage = parseInt(e.target.value);
+            syncSelects(perPage);
+            currentPage = 1;
+            renderTabla();
+        });
+    }
+
+    document.getElementById('btnFirst').onclick = () => { currentPage = 1; renderTabla(); };
+    document.getElementById('btnPrev').onclick = () => { if (currentPage > 1) currentPage--; renderTabla(); };
+    document.getElementById('btnNext').onclick = () => {
+        const totalPages = Math.ceil(filtrarInstrumentos().length / perPage);
+        if (currentPage < totalPages) currentPage++;
+        renderTabla();
+    };
+    document.getElementById('btnLast').onclick = () => {
+        currentPage = Math.max(1, Math.ceil(filtrarInstrumentos().length / perPage));
+        renderTabla();
+    };
+    document.getElementById('currentPage').addEventListener('change', (e) => {
+        let val = parseInt(e.target.value);
+        const totalPages = Math.ceil(filtrarInstrumentos().length / perPage);
+        if (val < 1) val = 1;
+        if (val > totalPages) val = totalPages;
+        currentPage = val;
+        renderTabla();
+    });
+
+    // Eliminar auto-filtrado en selects, solo filtrar al dar clic en 'Aplicar'
+    document.getElementById('applyFilter').addEventListener('click', () => {
+        const periodSelect = document.getElementById('filterPeriod');
+        filtroPeriodo = normalizePeriodoFiltro(periodSelect ? periodSelect.value : 'all');
+        const estadoSelect = document.getElementById('filterStatus');
+        const selectedEstado = estadoSelect ? estadoSelect.value : 'all';
+        filtroEstado = selectedEstado === 'all' ? 'all' : normalizeEstado(selectedEstado);
+        filtroDept = document.getElementById('filterDept').value;
+        orden = document.getElementById('sortOrder').value;
+        currentPage = 1;
+        fetchGages();
+    });
+    document.getElementById('toggleFilter').addEventListener('click', () => {
+        const panel = document.getElementById('filterPanel');
+        if(panel){
+            panel.classList.toggle('is-hidden');
+        }
+    });
+    btnDelete.addEventListener('click', () => {
+        const instrumentos = gages.filter(inst => selectedIds.has(Number(inst.id)));
+        let html = '<p>¿Está seguro de dar de baja los siguientes instrumentos?</p><ul>';
+        instrumentos.forEach(inst => {
+            html += `<li>ID ${inst.id} - ${formatNA(inst.nombre)}</li>`;
+        });
+        html += '</ul>';
+        document.getElementById('deleteModalBody').innerHTML = html;
+        const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        modal.show();
+        const confirmBtn = document.getElementById('confirmDeleteBtn');
+        confirmBtn.onclick = () => {
+            confirmBtn.disabled = true;
+            fetch(pageBaseUrl + '/backend/instrumentos/gages/delete_gage.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ids: Array.from(selectedIds)})
+            })
+                .then(r => r.json())
+                .then(resp => {
+                    if (resp.success) {
+                        modal.hide();
+                        selectedIds.clear();
+                        fetchGages();
+                        const message = resp.message || 'Instrumentos dados de baja correctamente.';
+                        alert(message);
+                    } else {
+                        const baseMessage = resp.error || 'No se pudo dar de baja los instrumentos seleccionados.';
+                        const blocked = Array.isArray(resp.blocked_ids) && resp.blocked_ids.length
+                            ? `\nInstrumentos con calibraciones registradas: ${resp.blocked_ids.join(', ')}`
+                            : '';
+                        alert(baseMessage + blocked);
+                    }
+                })
+                .catch(() => {
+                    alert('No se pudo completar la solicitud de baja.');
+                })
+                .finally(() => {
+                    confirmBtn.disabled = false;
+                });
+        };
+    });
+
+     btnEdit.addEventListener('click', async () => {
+        const id = Array.from(selectedIds)[0];
+        const modalEl = document.getElementById('editModal');
+        const modal = new bootstrap.Modal(modalEl);
+
+        await Promise.all([
+            cargarOpciones(pageBaseUrl + '/backend/departamentos/get_departamentos.php','editDepartamento'),
+            cargarOpciones(pageBaseUrl + '/backend/instrumentos/gages/get_ubicaciones.php','editUbicacion')
+        ]);
+
+        const fillForm = data => {
+            document.getElementById('editNombre').value = data.nombre || '';
+            document.getElementById('editMarca').value = data.marca || '';
+            document.getElementById('editModelo').value = data.modelo || '';
+            document.getElementById('editSerie').value = data.serie || '';
+            document.getElementById('editCodigo').value = data.codigo || '';
+            document.getElementById('editDepartamento').value = data.departamento || '';
+            document.getElementById('editUbicacion').value = data.ubicacion || '';
+            document.getElementById('editFechaAlta').value = data.fecha_alta || '';
+            document.getElementById('editFechaBaja').value = data.fecha_baja || '';
+            const estadoInput = document.getElementById('editEstado');
+            if (estadoInput) {
+                const rawEstado = data.estado ?? '';
+                if (rawEstado) {
+                    registerEstado(rawEstado);
+                    refreshEstadoFilterOptions();
+                }
+                const label = getEstadoLabel(rawEstado) ?? rawEstado;
+                const displayText = formatNA(label);
+                estadoInput.value = displayText;
+                estadoInput.dataset.originalEstadoLabel = displayText;
+                estadoInput.dataset.originalEstadoRaw = rawEstado;
+                estadoInput.title = displayText;
+            }
+        };
+
+        fillForm(gages.find(inst => Number(inst.id) === Number(id)) || {});
+        modal.show();
+
+        try {
+               const resp = await fetch(`${pageBaseUrl}/backend/instrumentos/gages/get_gage_details.php?id=${id}`);
+            const data = await resp.json();
+            fillForm(data);
+        } catch (err) {
+            console.error('Error al obtener detalles del instrumento', err);
+            alert('No se pudieron cargar los datos del instrumento.');
+        }
+
+        const fechaBajaInput = document.getElementById('editFechaBaja');
+        if (fechaBajaInput) {
+            fechaBajaInput.onchange = () => {
+                const estadoInput = document.getElementById('editEstado');
+                if (!estadoInput) return;
+                if (fechaBajaInput.value) {
+                    const bajaLabel = getEstadoLabel('Dado de baja') ?? 'Dado de baja';
+                    const displayText = formatNA(bajaLabel);
+                    estadoInput.value = displayText;
+                    estadoInput.title = displayText;
+                } else {
+                    const original = estadoInput.dataset.originalEstadoLabel || formatNA('');
+                    estadoInput.value = original;
+                    estadoInput.title = original;
+                }
+            };
+        }
+        const confirmModal = new bootstrap.Modal(document.getElementById('confirmSaveModal'));
+        const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+        const resultModalBody = document.getElementById('resultModalBody');
+
+        document.getElementById('saveEditBtn').onclick = () => {
+         const payload = {
+                id,
+                nombre: document.getElementById('editNombre').value.trim(),
+                marca: document.getElementById('editMarca').value.trim(),
+                modelo: document.getElementById('editModelo').value.trim(),
+                serie: document.getElementById('editSerie').value.trim(),
+                codigo: document.getElementById('editCodigo').value.trim(),
+                departamento: document.getElementById('editDepartamento').value,
+                ubicacion: document.getElementById('editUbicacion').value,
+                fechaAlta: document.getElementById('editFechaAlta').value,
+                fechaBaja: document.getElementById('editFechaBaja').value
+            };
+
+            document.getElementById('confirmSaveBody').textContent = `¿Guardar cambios para el instrumento ${payload.nombre} (ID ${id})?`;
+            confirmModal.show();
+
+            document.getElementById('confirmSaveBtn').onclick = () => {
+                confirmModal.hide();
+                fetch(pageBaseUrl + '/backend/instrumentos/gages/edit_gage.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                }).then(r => r.json()).then(resp => {
+                    if (resp.success) {
+                        modal.hide();
+                        resultModalBody.textContent = 'Cambios guardados correctamente';
+                        resultModal.show();
+                        setTimeout(() => resultModal.hide(), 2000);
+                        fetchGages();
+                    } else {
+                        resultModalBody.textContent = resp.error || 'No se pudo actualizar el instrumento';
+                        resultModal.show();
+                    }
+                });
+            };
+        };
+    });
+
+    function filtrarInstrumentos() {
+        return gages.filter(inst => {
+            if (!inst || typeof inst !== 'object') return false;
+            const calibrationInfo = getCalibrationStatusInfo(inst);
+            inst._calibrationInfo = calibrationInfo;
+            if (!matchesCalibrationPeriod(calibrationInfo, filtroPeriodo)) {
+                return false;
+            }
+            const estadoInst = normalizeEstado(inst && inst.estado);
+            if (filtroEstado === 'all' && estadoInst === 'baja') return false;
+            if (filtroEstado !== 'all' && estadoInst !== filtroEstado) return false;
+            if (filtroEstadoOperativo !== 'all') {
+                const operativo = inst && inst.estado_operativo ? inst.estado_operativo : 'en_uso';
+                if (operativo !== filtroEstadoOperativo) {
+                    return false;
+                }
+            }
+            if (filtroDept !== 'all' && inst.departamento !== filtroDept) return false;
+            return true;
+        });
+    }
+
+    function fetchGages() {
+        const params = new URLSearchParams();
+        if (filtroEstado !== 'all') params.append('filtro', filtroEstado);
+        if (filtroDept !== 'all') params.append('departamento', filtroDept);
+        if (orden !== 'id') params.append('orden', orden);
+        if (filtroEstadoOperativo !== 'all') params.append('estado_operativo', filtroEstadoOperativo);
+        // Period filter is always client-side
+        const query = params.toString() ? `?${params.toString()}` : '';
+        return fetch(`${pageBaseUrl}/backend/instrumentos/gages/list_gages.php${query}`)
+            .then(r => {
+                if (!r.ok) {
+                    updateCompanyContextBanner('', null);
+                    throw new Error(`HTTP ${r.status}`);
+                }
+                const headerContext = {
+                    message: sanitizeContextMessage(r.headers.get('X-App-Company-Context') || ''),
+                    company_id: (() => {
+                        const headerValue = r.headers.get('X-App-Company-Id');
+                        if (!headerValue) return null;
+                        const parsed = Number(headerValue);
+                        return Number.isFinite(parsed) && parsed > 0 ? parsed : headerValue;
+                    })(),
+                    mode: sanitizeContextMessage(r.headers.get('X-App-Company-Mode') || ''),
+                };
+                return r.json().then(payload => ({ payload, headerContext }));
+            })
+            .then(({ payload, headerContext }) => {
+                let contextData = headerContext && headerContext.message ? headerContext : null;
+                if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
+                    if (payload.error) {
+                        console.error('API error:', payload.error);
+                        alert(`Error: ${payload.error}`);
+                        gages = [];
+                    } else {
+                        if (payload.meta && typeof payload.meta === 'object') {
+                            const ctx = payload.meta.company_context;
+                            if (ctx && typeof ctx === 'object') {
+                                contextData = {
+                                    message: sanitizeContextMessage(ctx.message || ''),
+                                    company_id: ctx.company_id ?? headerContext.company_id ?? null,
+                                    mode: ctx.mode ?? headerContext.mode ?? '',
+                                };
+                            }
+                        }
+                        gages = Array.isArray(payload.instrumentos) ? payload.instrumentos : [];
+                        updateEstadoCatalogFromData(gages);
+                    }
+                } else if (payload && payload.error) {
+                    console.error('API error:', payload.error);
+                    alert(`Error: ${payload.error}`);
+                    gages = [];
+                } else {
+                    gages = Array.isArray(payload) ? payload : [];
+                    updateEstadoCatalogFromData(gages);
+                }
+                updateCompanyContextBanner(contextData);
+                selectedIds.clear();
+                updateButtonsState();
+                renderTabla();
+            })
+            .catch(err => {
+                console.error('Fetch error:', err);
+                gages = []
+                updateCompanyContextBanner('', null);
+                selectedIds.clear();
+                updateButtonsState();
+                renderTabla();
+            });
+    }
+
+    function renderTabla() {
+        const tbody = document.querySelector('#tablaInstrumentos tbody');
+        tbody.innerHTML = '';
+        const lista = filtrarInstrumentos();
+        let totalPages = Math.max(1, Math.ceil(lista.length / perPage));
+        // Si no hay instrumentos, forzar una sola página y currentPage=1
+        if (lista.length === 0) {
+            totalPages = 1;
+            currentPage = 1;
+            document.getElementById('totalPages').textContent = 1;
+            document.getElementById('currentPage').value = 1;
+            document.getElementById('btnFirst').disabled = true;
+            document.getElementById('btnPrev').disabled = true;
+            document.getElementById('btnNext').disabled = true;
+            document.getElementById('btnLast').disabled = true;
+            const row = document.createElement('tr');
+            const td = document.createElement('td');
+            const columnCount = document.querySelectorAll('#tablaInstrumentos thead th').length;
+            td.colSpan = columnCount;
+            td.className = 'empty-row';
+            td.textContent = 'No hay instrumentos registrados.';
+            row.appendChild(td);
+            tbody.appendChild(row);
+            return;
+        }
+        document.getElementById('totalPages').textContent = totalPages;
+        document.getElementById('currentPage').value = currentPage;
+        document.getElementById('btnFirst').disabled = currentPage === 1;
+        document.getElementById('btnPrev').disabled = currentPage === 1;
+        document.getElementById('btnNext').disabled = currentPage === totalPages;
+        document.getElementById('btnLast').disabled = currentPage === totalPages;
+
+        const start = (currentPage - 1) * perPage;
+        const end = Math.min(start + perPage, lista.length);
+        for (let i = start; i < end; i++) {
+            const inst = lista[i];
+            const row = document.createElement('tr');
+            const statusInfo = inst._calibrationInfo || getCalibrationStatusInfo(inst);
+            inst._calibrationInfo = statusInfo;
+            const operationalInfo = getOperationalStatusInfo(inst);
+            const nextCalibrationDisplay = formatProximaCalibracion(
+                inst.proxima_calibracion,
+                inst.proxima_calibracion_mensaje
+            );
+            const nextDateLabel = inst.proxima_calibracion_mensaje
+                ? inst.proxima_calibracion_mensaje.trim() || 'Sin próxima fecha'
+                : (nextCalibrationDisplay !== 'NA'
+                    ? `Próxima: ${nextCalibrationDisplay}`
+                    : 'Sin próxima fecha');
+            const summaryText = describeCalibrationDays(statusInfo.dias_restantes);
+            const summaryClass = calibrationSummaryClassMap[statusInfo.estado] || 'text-muted';
+            const badgeHtml = renderCalibrationBadgeWithNextDate(
+                {
+                    ...statusInfo,
+                    proxima_calibracion: inst.proxima_calibracion,
+                    proxima_calibracion_mensaje: inst.proxima_calibracion_mensaje
+                },
+                { nextMessage: inst.proxima_calibracion_mensaje }
+            );
+            const operationalBadgeHtml = renderOperationalBadge(inst);
+            const lastOperationalEvent = operationalInfo.historial && operationalInfo.historial.length
+                ? operationalInfo.historial[0]
+                : null;
+            const lastOperationalDate = lastOperationalEvent && lastOperationalEvent.fecha
+                ? formatFechaCorta(lastOperationalEvent.fecha)
+                : 'Sin fecha';
+            const lastOperationalLabel = lastOperationalEvent
+                ? formatNA(lastOperationalEvent.estado_operativo_label || lastOperationalEvent.estado)
+                : 'Sin historial registrado';
+            const operationalMetaText = lastOperationalEvent
+                ? `${lastOperationalDate} · ${lastOperationalLabel}`
+                : 'Sin historial registrado';
+            const operationalMetaHtml = `<div class="operational-status-meta">${escapeHtml(operationalMetaText)}</div>`;
+            const statusMetaHtml = `
+                <div class="calibration-status-meta ${summaryClass}">
+                    <span class="calibration-next-date">${escapeHtml(nextDateLabel)}</span>
+                    <span class="calibration-summary small">${escapeHtml(summaryText)}</span>
+                </div>
+            `;
+            const nextDateCell = displayProximaCalibracion(
+                inst.proxima_calibracion,
+                inst.proxima_calibracion_mensaje
+            );
+            row.innerHTML = `
+                <td><input type="checkbox" class="select-gage" data-id="${inst.id}" /></td>
+                <td><a href="#" class="instrument-id" data-id="${inst.id}">${inst.id}</a></td>
+                <td><a href="#" class="instrument-name" data-id="${inst.id}" data-bs-toggle="modal" data-bs-target="#historialModal">${formatNA(inst.nombre)}</a></td>
+                <td>${formatNA(inst.marca)}</td>
+                <td>${formatNA(inst.modelo)}</td>
+                <td>${formatNA(inst.serie)}</td>
+                <td>${formatNA(inst.codigo)}</td>
+                <td>${formatNA(inst.departamento)}</td>
+                <td>${formatNA(inst.ubicacion)}</td>
+                <td class="text-center">${formatAttachmentCount(inst.adjuntos_total)}</td>
+                <td class="date-col">${inst.fecha_alta ? formatFechaCorta(inst.fecha_alta) : 'ND'}</td>
+                <td class="date-col">${inst.fecha_baja ? formatFechaCorta(inst.fecha_baja) : 'NA'}</td>
+                <td class="status-col">
+                    <div class="operational-status-cell">
+                        ${operationalBadgeHtml}
+                        ${operationalMetaHtml}
+                    </div>
+                </td>
+                <td class="status-col">
+                    <div class="calibration-status-cell">
+                        ${badgeHtml}
+                        ${statusMetaHtml.trim()}
+                    </div>
+                </td>
+                <td class="date-col">${nextDateCell}</td>
+            `;
+            const cb = row.querySelector('.select-gage');
+            if (selectedIds.has(Number(inst.id))) cb.checked = true;
+            cb.addEventListener('change', () => {
+                const id = Number(cb.dataset.id);
+                if (cb.checked) selectedIds.add(id); else selectedIds.delete(id);
+                updateButtonsState();
+            });
+            const idLink = row.querySelector('.instrument-id');
+            if (idLink) idLink.dataset.name = inst.nombre || '';
+            const nameLink = row.querySelector('.instrument-name');
+            if (nameLink) nameLink.dataset.name = inst.nombre || '';
+            tbody.appendChild(row);
+        }
+
+        tbody.querySelectorAll('.instrument-id').forEach(a => {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                const id = Number(a.dataset.id);
+                const nombre = a.dataset.name || a.textContent.trim();
+                mostrarDetallesInstrumento(id, nombre);
+            });
+        });
+        tbody.querySelectorAll('.instrument-name').forEach(a => {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                const id = Number(a.dataset.id);
+                const nombre = a.dataset.name || a.textContent.trim();
+                mostrarHistorialInstrumento(id, nombre);
+            });
+        });
+        refreshCalibrationTooltips(tbody);
+        updateButtonsState();
+    }
+
+    function buildInstrumentosExportData() {
+        const lista = filtrarInstrumentos();
+        return lista.map(function(inst) {
+            const cachedInfo = inst && inst._calibrationInfo;
+            const statusInfo = cachedInfo ? { ...cachedInfo } : getCalibrationStatusInfo(inst);
+            const operationalInfo = getOperationalStatusInfo(inst);
+            const diasRestantesExport = statusInfo.dias_restantes !== null && statusInfo.dias_restantes !== undefined
+                ? statusInfo.dias_restantes
+                : 'NA';
+            return {
+                id: formatNA(inst.id),
+                nombre: formatNA(inst.nombre),
+                marca: formatNA(inst.marca),
+                modelo: formatNA(inst.modelo),
+                serie: formatNA(inst.serie),
+                codigo: formatNA(inst.codigo),
+                departamento: formatNA(inst.departamento),
+                ubicacion: formatNA(inst.ubicacion),
+                documentos: formatAttachmentCount(inst.adjuntos_total),
+                fecha_alta: inst.fecha_alta ? formatFechaCorta(inst.fecha_alta) : 'ND',
+                fecha_baja: inst.fecha_baja ? formatFechaCorta(inst.fecha_baja) : 'NA',
+                estado_operativo: operationalInfo.estado,
+                estado_operativo_label: formatNA(operationalInfo.label),
+                estado_calibracion: statusInfo.label,
+                calibration_status: statusInfo.estado,
+                dias_restantes: diasRestantesExport,
+                proxima_calibracion: formatProximaCalibracion(
+                    inst.proxima_calibracion,
+                    inst.proxima_calibracion_mensaje
+                )
+            };
+        });
+    }
+
+    function initExportButtons() {
+        const excelBtn = document.getElementById('exportGagesExcel');
+        const pdfBtn = document.getElementById('exportGagesPdf');
+        if (excelBtn) {
+            excelBtn.addEventListener('click', function() {
+                const data = buildInstrumentosExportData();
+                if (data.length) {
+                    exportToExcel(data, instrumentosExportColumns, 'instrumentos');
+                }
+            });
+        }
+        if (pdfBtn) {
+            pdfBtn.addEventListener('click', function() {
+                const data = buildInstrumentosExportData();
+                if (data.length) {
+                    exportToPDF(data, instrumentosExportColumns, 'instrumentos');
+                }
+            });
+        }
+    }
+
+
+
+    function mostrarHistorialInstrumento(id, nombre) {
+        const modalEl = document.getElementById('historialModal');
+        const gridBody = document.getElementById('historialGridBody');
+        const fechasEl = document.getElementById('historialFechas');
+        const certsEl = document.getElementById('historialCertificados');
+        if (!modalEl || !gridBody) return;
+
+        currentInstrumentId = id;
+        currentInstrumentName = nombre || '';
+
+        const title = document.getElementById('historialModalLabel');
+        if (title) {
+            const etiqueta = nombre ? `${nombre} (ID ${id})` : `Instrumento ${id}`;
+            title.textContent = `Historial de ${etiqueta}`;
+        }
+
+        const renderStatusRow = (mensaje, cssClass = 'history-grid-status') => {
+            gridBody.innerHTML = `<tr><td colspan="4" class="${cssClass}">${mensaje}</td></tr>`;
+        };
+
+        renderStatusRow('Cargando historial...');
+        if (fechasEl) fechasEl.innerHTML = '<p class="mb-0">Cargando fechas relevantes...</p>';
+        if (certsEl) certsEl.innerHTML = '<p class="mb-0">Cargando certificados...</p>';
+
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.show();
+
+        const obtenerRegistros = (payload) => {
+            if (!payload || typeof payload !== 'object') return [];
+
+            const registrosBase = (() => {
+                if (Array.isArray(payload.history)) return payload.history;
+                if (payload.history && typeof payload.history === 'object') {
+                    return Object.entries(payload.history).map(([anio, info]) => ({ year: anio, ...info }));
+                }
+                if (Array.isArray(payload.registros)) return payload.registros;
+                if (Array.isArray(payload)) return payload;
+                return [];
+            })();
+
+            const pick = (fuente, claves) => {
+                if (!fuente || typeof fuente !== 'object') return undefined;
+                for (const clave of claves) {
+                    if (fuente[clave] !== undefined) return fuente[clave];
+                }
+                return undefined;
+            };
+
+            return registrosBase.map((entrada) => {
+                const periodos = (entrada && typeof entrada.periods === 'object') ? entrada.periods : entrada;
+                const yearValue = pick(entrada, ['year', 'anio', 'ano', 'label', 'nombre', 'titulo']);
+                return {
+                    year: yearValue !== undefined ? yearValue : entrada.year,
+                    periodo1: pick(periodos, ['periodo1', 'periodo_1', 'period1', 'period_1', 'primer_periodo', 'p1']),
+                    periodo2: pick(periodos, ['periodo2', 'periodo_2', 'period2', 'period_2', 'segundo_periodo', 'p2']),
+                    extraordinario: pick(periodos, ['extraordinario', 'extraordinary', 'extra', 'periodo_extra', 'periodo3', 'p3'])
+                };
+            });
+        };
+
+        const crearContenidoCelda = (entradas) => {
+            if (!entradas) {
+                return '<span class="empty-cell">Sin registro</span>';
+            }
+
+            const lista = Array.isArray(entradas) ? entradas : [entradas];
+
+            const construirEnlace = (item) => {
+                if (!item || typeof item !== 'object') return '';
+                const certificado = typeof item.certificate === 'object' && item.certificate !== null ? item.certificate : item;
+                const archivo = certificado.file || certificado.archivo || certificado.filename || certificado.nombre_archivo;
+                const estado = (certificado.certificado_estado || certificado.estado || '').toLowerCase();
+                const urlDirecta = certificado.url || certificado.href || item.url || item.href;
+                const href = urlDirecta || (archivo ? `${pageBaseUrl}/backend/calibraciones/certificates/${encodeURIComponent(archivo)}` : '');
+
+                const fecha = item.date || item.fecha || item.fecha_calibracion || item.calibration_date || certificado.date;
+                const etiqueta = item.label || item.etiqueta || item.period || item.periodo || certificado.label;
+                const resultado = item.result || item.resultado || certificado.result;
+
+                const partes = [];
+                if (fecha) partes.push(displayDate(fecha));
+                if (etiqueta) partes.push(displayValue(etiqueta));
+                if (resultado) partes.push(displayValue(resultado));
+                const texto = partes.length ? partes.join(' · ') : (archivo ? escapeHtml(archivo) : 'Ver certificado');
+
+                if (estado === 'pendiente') {
+                    const etiqueta = texto !== 'Ver certificado' ? texto : (archivo ? escapeHtml(archivo) : 'Certificado');
+                    return `<span class="history-grid-pending text-warning">${etiqueta} · pendiente de aprobación</span>`;
+                }
+
+                if (!href) {
+                    return `<span class="empty-cell">${texto}</span>`;
+                }
+
+                const downloadAttr = archivo ? ` download="${escapeHtml(archivo)}"` : '';
+                return `<a class="history-cert-link" href="${escapeHtml(href)}" target="_blank" rel="noopener"${downloadAttr}>${texto}</a>`;
+            };
+
+            const elementos = lista
+                .map(construirEnlace)
+                .filter(Boolean)
+                .map((contenido) => `<div class="history-grid-item">${contenido}</div>`);
+
+            return elementos.length ? elementos.join('') : '<span class="empty-cell">Sin certificado</span>';
+        };
+
+        fetch(`${pageBaseUrl}/backend/instrumentos/gages/get_gage_history.php?instrument_id=${id}`)
+            .then((response) => {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return response.json();
+            })
+            .then((data) => {
+                if (data && data.error) {
+                    renderStatusRow(escapeHtml(data.error), 'history-grid-status text-danger');
+                    return;
+                }
+
+                const registros = obtenerRegistros(data);
+                const periodsOrder = (data && Array.isArray(data.periods) && data.periods.length)
+                    ? data.periods
+                    : ['P1', 'P2', 'EXTRA'];
+                const periodLabels = { P1: 'Periodo 1', P2: 'Periodo 2', EXTRA: 'Extraordinario' };
+
+                if (!registros.length) {
+                    const emptyCell = '<span class="empty-cell">Sin registro</span>';
+                    gridBody.innerHTML = `
+                        <tr>
+                            <th scope="row">Sin datos</th>
+                            <td>${emptyCell}</td>
+                            <td>${emptyCell}</td>
+                            <td>${emptyCell}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="history-grid-status">No hay registros de calibración disponibles.</td>
+                        </tr>
+                    `;
+                    if (fechasEl) {
+                        const placeholders = periodsOrder.map((periodo) => {
+                            const nombre = periodLabels[periodo] || periodo;
+                            return `<li>${escapeHtml(nombre)}: Sin registros.</li>`;
+                        });
+                        fechasEl.innerHTML = `<ul class="mb-0">${placeholders.join('')}</ul>`;
+                    }
+                    if (certsEl) {
+                        certsEl.innerHTML = '<p class="mb-0">No hay certificados registrados.</p>';
+                    }
+                    return;
+                }
+
+                registros.sort((a, b) => {
+                    const toNumber = (valor) => {
+                        const numero = Number(valor);
+                        return Number.isFinite(numero) ? numero : null;
+                    };
+                    const anoA = toNumber(a.year);
+                    const anoB = toNumber(b.year);
+                    if (anoA !== null && anoB !== null) return anoB - anoA;
+                    if (anoA !== null) return -1;
+                    if (anoB !== null) return 1;
+                    return String(b.year || '').localeCompare(String(a.year || ''));
+                });
+
+                const calendarData = (data && typeof data.calendar === 'object' && data.calendar !== null)
+                    ? data.calendar
+                    : {};
+
+                const sortedYears = Object.keys(calendarData)
+                    .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+
+                if (fechasEl) {
+                    if (sortedYears.length) {
+                        const rows = [];
+                        sortedYears.forEach(year => {
+                            const yearData = calendarData[year] || {};
+                            periodsOrder.forEach(period => {
+                                const entry = yearData[period] || null;
+                                const fecha = entry && entry.fecha ? displayDate(entry.fecha) : 'Sin registro';
+                                const proxima = entry && entry.fecha_proxima ? displayDate(entry.fecha_proxima) : 'NA';
+                                const resultado = entry ? displayValue(entry.resultado) : 'NA';
+                                const periodoNombre = periodLabels[period] || period;
+                                rows.push(`<li>${escapeHtml(year)} - ${escapeHtml(periodoNombre)}: ${fecha} · Próxima: ${proxima} · Resultado: ${resultado}</li>`);
+                            });
+                        });
+                        fechasEl.innerHTML = `<ul class="mb-0">${rows.join('')}</ul>`;
+                    } else {
+                        fechasEl.innerHTML = '<p class="mb-0">No hay fechas relevantes.</p>';
+                    }
+                }
+
+                const certificateItems = [];
+                const pendingCertificates = [];
+                sortedYears.forEach(year => {
+                    const yearData = calendarData[year] || {};
+                    periodsOrder.forEach(period => {
+                        const entry = yearData[period];
+                        if (entry) {
+                            const estado = (entry.certificado_estado || '').toLowerCase();
+                            if (estado === 'liberado' && entry.certificado_url) {
+                                certificateItems.push({
+                                    year,
+                                    period,
+                                    url: normalizeAppUrl(entry.certificado_url),
+                                    file: entry.certificado_archivo || '',
+                                    date: entry.fecha || null
+                                });
+                            } else if (estado === 'pendiente' && entry.id && (entry.certificado_archivo || entry.fecha)) {
+                                pendingCertificates.push({
+                                    id: entry.id,
+                                    year,
+                                    period,
+                                    file: entry.certificado_archivo || '',
+                                    date: entry.fecha || null,
+                                    resultado: entry.resultado || '',
+                                    rawPeriod: period
+                                });
+                            }
+                        }
+                    });
+                });
+
+                if (certsEl) {
+                    if (certificateItems.length || pendingCertificates.length) {
+                        const bloques = [];
+                        if (certificateItems.length) {
+                            const items = certificateItems.map(item => {
+                                const fecha = item.date ? displayDate(item.date) : 'Sin fecha';
+                                const periodoNombre = periodLabels[item.period] || item.period;
+                                const texto = item.file ? escapeHtml(item.file) : 'Descargar';
+                                return `<li>${fecha} (${escapeHtml(item.year)} - ${escapeHtml(periodoNombre)}) - <a href="${item.url}" target="_blank" rel="noopener" download>${texto}</a></li>`;
+                            });
+                            bloques.push(`<h6 class="mb-2">Certificados liberados</h6><ul class="mb-0">${items.join('')}</ul>`);
+                        }
+                        if (pendingCertificates.length) {
+                            const itemsPend = pendingCertificates.map(item => {
+                                const fecha = item.date ? displayDate(item.date) : 'Sin fecha';
+                                const periodoNombre = periodLabels[item.rawPeriod] || item.rawPeriod;
+                                const texto = item.file ? escapeHtml(item.file) : 'Certificado';
+                                const boton = `<button type="button" class="btn btn-sm btn-outline-primary ms-2 approve-calibration-btn" data-calibration-id="${escapeHtml(item.id)}" data-calibration-date="${escapeHtml(item.date || '')}" data-calibration-period="${escapeHtml(periodoNombre)}" data-calibration-result="${escapeHtml(item.resultado || '')}" data-calibration-file="${escapeHtml(item.file || '')}">Firmar y liberar</button>`;
+                                return `<li>${fecha} (${escapeHtml(item.year)} - ${escapeHtml(periodoNombre)}) - <span class="text-warning">${texto} pendiente de aprobación</span>${boton}</li>`;
+                            });
+                            bloques.push(`<h6 class="mb-2 mt-3">En espera de aprobación</h6><ul class="mb-0">${itemsPend.join('')}</ul>`);
+                        }
+                        certsEl.innerHTML = bloques.join('');
+                        bindApprovalButtons(certsEl);
+                    } else {
+                        certsEl.innerHTML = '<p class="mb-0">No hay certificados.</p>';
+                    }
+                }
+
+                gridBody.innerHTML = '';
+
+                registros.forEach((registro) => {
+                    const fila = document.createElement('tr');
+                    const yearLabel = registro.year !== undefined && registro.year !== null && registro.year !== ''
+                        ? escapeHtml(String(registro.year))
+                        : 'Sin año';
+                    fila.innerHTML = `
+                        <th scope="row">${yearLabel}</th>
+                        <td>${crearContenidoCelda(registro.periodo1)}</td>
+                        <td>${crearContenidoCelda(registro.periodo2)}</td>
+                        <td>${crearContenidoCelda(registro.extraordinario)}</td>
+                    `;
+                    gridBody.appendChild(fila);
+                });
+
+            })
+            .catch((err) => {
+                console.error('Error al cargar historial del instrumento', err);
+                renderStatusRow('No se pudo cargar el historial.', 'history-grid-status text-danger');
+                if (fechasEl) fechasEl.innerHTML = '<p class="mb-0 text-danger">No se pudieron cargar las fechas.</p>';
+                if (certsEl) certsEl.innerHTML = '<p class="mb-0 text-danger">No se pudieron cargar los certificados.</p>';
+            });
+    }
+
+    function mostrarDetallesInstrumento(id, nombre) {
+        const panelEl = document.getElementById('detallesPanel');
+        const panelContent = document.getElementById('detallesPanelContenido');
+        if (!panelEl || !panelContent) return;
+
+        const titleEl = document.getElementById('detallesTitulo');
+        if (titleEl) {
+            const partes = [];
+            if (nombre) partes.push(nombre);
+            partes.push(`ID ${id}`);
+            titleEl.textContent = partes.join(' · ');
+        }
+
+        panelContent.innerHTML = '<p class="text-center my-3">Cargando detalles...</p>';
+        const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(panelEl);
+        offcanvas.show();
+
+        fetch(`${pageBaseUrl}/backend/instrumentos/gages/get_gage_details.php?id=${id}`)
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                if (!data || typeof data !== 'object') {
+                    panelContent.innerHTML = '<div class="text-danger">Respuesta inválida del servidor.</div>';
+                    return;
+                }
+                if (data.error) {
+                    panelContent.innerHTML = `<div class="text-danger">${escapeHtml(data.error)}</div>`;
+                    return;
+                }
+
+                if (data.estado) {
+                    registerEstado(data.estado);
+                    refreshEstadoFilterOptions();
+                }
+
+                const plan = data.plan_riesgos || {};
+                const estadoInstrumento = normalizeEstado(data.estado);
+                const puedeEditarPlan = canManageInstrumentos && ['activo', 'stock', 'en stock'].includes(estadoInstrumento);
+                const selectedAttr = (valor, esperado) => String(valor ?? '') === String(esperado) ? ' selected' : '';
+                const calibrationStatusInfo = getCalibrationStatusInfo(data);
+                const badgeData = {
+                    ...calibrationStatusInfo,
+                    proxima_calibracion: data.proxima_calibracion,
+                    proxima_calibracion_mensaje: data.proxima_calibracion_mensaje
+                };
+                const calibrationBadge = renderCalibrationBadgeWithNextDate(
+                    badgeData,
+                    { nextMessage: data.proxima_calibracion_mensaje }
+                );
+                const calibrationSummary = describeCalibrationDays(badgeData.dias_restantes);
+                const calibrationSummaryClass = calibrationSummaryClassMap[badgeData.estado] || 'text-muted';
+
+                let panelHtml = `
+                    <p><strong>ID:</strong> ${escapeHtml(data.id ?? id)}</p>
+                    <p><strong>Nombre del instrumento:</strong> ${displayValue(data.nombre)}</p>
+                    <p><strong>Marca:</strong> ${displayValue(data.marca)}</p>
+                    <p><strong>Modelo:</strong> ${displayValue(data.modelo)}</p>
+                    <p><strong>Serie:</strong> ${displayValue(data.serie)}</p>
+                    <p><strong>Código Interno:</strong> ${displayValue(data.codigo)}</p>
+                    <p><strong>Departamento Responsable:</strong> ${displayValue(data.departamento)}</p>
+                    <p><strong>Ubicación:</strong> ${displayValue(data.ubicacion)}</p>
+                    <p><strong>Estado:</strong> ${displayEstado(data.estado)}</p>
+                    <p><strong>Estado de calibración:</strong> ${calibrationBadge} <span class="${calibrationSummaryClass} small">${escapeHtml(calibrationSummary)}</span></p>
+                    <p><strong>Fecha de Alta:</strong> ${displayDate(data.fecha_alta)}</p>
+                    <p><strong>Fecha de Baja:</strong> ${displayDate(data.fecha_baja)}</p>
+                    <p><strong>Próxima Calibración:</strong> ${displayMonthYear(
+                        data.proxima_calibracion,
+                        data.proxima_calibracion_mensaje
+                    )}</p>
+                    <p><strong>Documentos registrados:</strong> <span data-role="adjuntosTotal">${formatAttachmentCount(data.adjuntos_total)}</span></p>
+                    <p><strong>Requerimientos de calibración:</strong></p>
+                    <textarea id="reqCal" class="form-control" rows="3">${escapeHtml(data.requerimientos_calibracion || '')}</textarea>
+                    <button class="btn btn-primary btn-sm mt-2" id="guardarReqCal"${canManageInstrumentos ? '' : ' disabled'}>Guardar</button>
+                    <hr><p><strong>Plan basado en riesgos</strong></p>
+                `;
+
+                if (puedeEditarPlan) {
+                    panelHtml += `
+                        <div class="mb-2">
+                            <label class="form-label"><strong>Requerimiento:</strong></label>
+                            <select id="planRequerimiento" class="form-select form-select-sm">
+                                <option value="Calibración"${selectedAttr(plan.requerimiento, 'Calibración')}>Calibración</option>
+                                <option value="Verificación"${selectedAttr(plan.requerimiento, 'Verificación')}>Verificación</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label"><strong>Impacto de la falla:</strong></label>
+                            <select id="planImpacto" class="form-select form-select-sm">
+                                <option value="1"${selectedAttr(plan.impacto_falla, 1)}>1</option>
+                                <option value="2"${selectedAttr(plan.impacto_falla, 2)}>2</option>
+                                <option value="3"${selectedAttr(plan.impacto_falla, 3)}>3</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label"><strong>Consideraciones de falla:</strong></label>
+                            <select id="planConsideraciones" class="form-select form-select-sm">
+                                <option value="1"${selectedAttr(plan.consideraciones_falla, 1)}>1</option>
+                                <option value="2"${selectedAttr(plan.consideraciones_falla, 2)}>2</option>
+                                <option value="3"${selectedAttr(plan.consideraciones_falla, 3)}>3</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label"><strong>Capacidad de detección:</strong></label>
+                            <select id="planDeteccion" class="form-select form-select-sm">
+                                <option value="1"${selectedAttr(plan.capacidad_deteccion, 1)}>1</option>
+                                <option value="2"${selectedAttr(plan.capacidad_deteccion, 2)}>2</option>
+                                <option value="3"${selectedAttr(plan.capacidad_deteccion, 3)}>3</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label"><strong>Observaciones:</strong></label>
+                            <textarea id="planObservaciones" class="form-control" rows="2">${escapeHtml(plan.observaciones || '')}</textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label"><strong>Tipo de calibración:</strong></label>
+                            <select id="planTipoCal" class="form-select form-select-sm">
+                                <option value=""${selectedAttr(plan.tipo_calibracion, '')}></option>
+                                <option value="Externa"${selectedAttr(plan.tipo_calibracion, 'Externa')}>Externa</option>
+                                <option value="Interna"${selectedAttr(plan.tipo_calibracion, 'Interna')}>Interna</option>
+                                <option value="En planta"${selectedAttr(plan.tipo_calibracion, 'En planta')}>En planta</option>
+                                <option value="En planta + Mantenimiento"${selectedAttr(plan.tipo_calibracion, 'En planta + Mantenimiento')}>En planta + Mantenimiento</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary btn-sm mt-2" id="guardarPlanRiesgos">Guardar</button>
+                        <p class="mt-2"><strong>Clase de riesgo:</strong> <span id="planClaseRiesgo">${displayValue(plan.clase_riesgo)}</span></p>
+                        <p><strong>Frecuencia:</strong> <span id="planFrecuencia">${displayValue(plan.frecuencia)}</span></p>
+                        <p><strong>Descripción:</strong> <span id="planDescripcion">${displayValue(plan.descripcion || plan.clase_riesgo)}</span></p>
+                        <p><strong>Especificaciones:</strong></p>
+                        <textarea id="specsPlan" class="form-control" rows="3">${escapeHtml(plan.especificaciones || '')}</textarea>
+                        <button class="btn btn-primary btn-sm mt-2" id="guardarSpecs">Guardar</button>
+                    `;
+                } else {
+                    panelHtml += `
+                        <p><strong>Requerimiento:</strong> ${displayValue(plan.requerimiento)}</p>
+                        <p><strong>Impacto de la falla:</strong> ${displayValue(plan.impacto_falla)}</p>
+                        <p><strong>Consideraciones de falla:</strong> ${displayValue(plan.consideraciones_falla)}</p>
+                        <p><strong>Clase de riesgo:</strong> ${displayValue(plan.clase_riesgo)}</p>
+                        <p><strong>Capacidad de detección:</strong> ${displayValue(plan.capacidad_deteccion)}</p>
+                        <p><strong>Frecuencia:</strong> ${displayValue(plan.frecuencia)}</p>
+                        <p><strong>Observaciones:</strong> ${displayValue(plan.observaciones)}</p>
+                        <p><strong>Tipo de calibración:</strong> ${displayValue(plan.tipo_calibracion)}</p>
+                        <p><strong>Especificaciones:</strong> ${displayValue(plan.especificaciones)}</p>
+                    `;
+                }
+
+                panelContent.innerHTML = panelHtml;
+                refreshCalibrationTooltips(panelContent);
+
+                const attachmentsSection = document.createElement('section');
+                attachmentsSection.className = 'mt-3';
+                const attachmentsHr = document.createElement('hr');
+                const attachmentsTitle = document.createElement('h6');
+                attachmentsTitle.className = 'fw-bold';
+                attachmentsTitle.textContent = 'Documentos';
+                const attachmentsStatusEl = document.createElement('div');
+                attachmentsStatusEl.className = 'text-muted small mb-2';
+                const attachmentsListEl = document.createElement('ul');
+                attachmentsListEl.className = 'list-group list-group-flush mb-3';
+
+                attachmentsSection.append(attachmentsHr, attachmentsTitle, attachmentsStatusEl, attachmentsListEl);
+
+                let attachmentsForm = null;
+                if (canManageInstrumentos) {
+                    attachmentsForm = document.createElement('form');
+                    attachmentsForm.className = 'attachments-form mb-3';
+                    attachmentsForm.innerHTML = `
+                        <div class="row g-2 align-items-end">
+                            <div class="col-12 col-sm-4">
+                                <label class="form-label small fw-semibold">Archivo</label>
+                                <input type="file" name="archivo" class="form-control form-control-sm" required>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <label class="form-label small">Tipo (opcional)</label>
+                                <input type="text" name="tipo" class="form-control form-control-sm" maxlength="60">
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <label class="form-label small">Descripción (opcional)</label>
+                                <input type="text" name="descripcion" class="form-control form-control-sm" maxlength="120">
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button type="submit" class="btn btn-primary btn-sm">Subir documento</button>
+                        </div>
+                    `;
+                    attachmentsSection.appendChild(attachmentsForm);
+                }
+
+                panelContent.appendChild(attachmentsSection);
+
+                const attachmentsState = {
+                    items: Array.isArray(data.adjuntos) ? data.adjuntos.slice() : [],
+                    total: Number.isFinite(Number(data.adjuntos_total)) ? Number(data.adjuntos_total) : null,
+                };
+
+                function setAttachmentsStatus(message, isError = false) {
+                    attachmentsStatusEl.textContent = message;
+                    attachmentsStatusEl.classList.toggle('text-danger', Boolean(isError));
+                    attachmentsStatusEl.classList.toggle('text-muted', !isError);
+                }
+
+                function updateAttachmentTotalDisplay(value) {
+                    const totalSpan = panelContent.querySelector('[data-role="adjuntosTotal"]');
+                    const count = formatAttachmentCount(value);
+                    if (totalSpan) {
+                        totalSpan.textContent = count;
+                    }
+                    setAttachmentsStatus(`Total: ${count}`);
+                }
+
+                function updateTableAttachmentCount(value) {
+                    const index = gages.findIndex(inst => Number(inst.id) === Number(id));
+                    const count = formatAttachmentCount(value);
+                    if (index >= 0) {
+                        const previous = formatAttachmentCount(gages[index].adjuntos_total);
+                        if (previous !== count) {
+                            gages[index].adjuntos_total = count;
+                            renderTabla();
+                        }
+                    }
+                }
+
+                function formatFileSize(bytes) {
+                    const value = Number(bytes);
+                    if (!Number.isFinite(value) || value <= 0) {
+                        return '—';
+                    }
+                    if (value >= 1024 * 1024) {
+                        return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+                    }
+                    if (value >= 1024) {
+                        return `${(value / 1024).toFixed(1)} KB`;
+                    }
+                    return `${value} B`;
+                }
+
+                function buildDownloadUrl(item) {
+                    const raw = item && typeof item.download_url === 'string'
+                        ? item.download_url
+                        : (item && item.ruta_archivo ? `/${item.ruta_archivo}` : '#');
+                    if (typeof normalizeAppUrl === 'function') {
+                        return normalizeAppUrl(raw);
+                    }
+                    return raw;
+                }
+
+                async function handleDelete(attachmentId) {
+                    if (!Number.isFinite(Number(attachmentId))) return;
+                    if (!confirm('¿Eliminar este documento?')) return;
+                    const formData = new FormData();
+                    formData.append('attachment_id', attachmentId);
+                    formData.append('instrumento_id', id);
+                    setAttachmentsStatus('Eliminando documento...');
+                    try {
+                        const resp = await fetch(`${pageBaseUrl}/backend/instrumentos/attachments/delete.php`, {
+                            method: 'POST',
+                            body: formData,
+                        });
+                        const payload = await resp.json();
+                        if (!resp.ok || (payload && payload.error)) {
+                            throw new Error(payload && payload.error ? payload.error : 'No se pudo eliminar el documento.');
+                        }
+                        await refreshAttachments({ updateTable: true });
+                    } catch (error) {
+                        setAttachmentsStatus(error && error.message ? error.message : 'No se pudo eliminar el documento.', true);
+                    }
+                }
+
+                function renderAttachmentsList(items) {
+                    attachmentsListEl.innerHTML = '';
+                    if (!Array.isArray(items) || items.length === 0) {
+                        const empty = document.createElement('li');
+                        empty.className = 'list-group-item small text-muted';
+                        empty.textContent = 'No hay documentos registrados.';
+                        attachmentsListEl.appendChild(empty);
+                        return;
+                    }
+                    items.forEach((item) => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item';
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'd-flex justify-content-between align-items-start flex-column flex-sm-row gap-2';
+                        const info = document.createElement('div');
+                        info.className = 'flex-grow-1';
+
+                        const link = document.createElement('a');
+                        link.href = buildDownloadUrl(item);
+                        link.textContent = item && item.nombre_visible ? item.nombre_visible : 'Documento';
+                        link.target = '_blank';
+                        link.rel = 'noopener';
+                        link.download = '';
+                        info.appendChild(link);
+
+                        const metaParts = [];
+                        if (item && item.tipo) {
+                            metaParts.push(`Tipo: ${escapeHtml(item.tipo)}`);
+                        }
+                        if (item && item.usuario_firma_interna) {
+                            metaParts.push(`Firma interna: ${escapeHtml(item.usuario_firma_interna)}`);
+                        }
+                        if (item && item.usuario) {
+                            metaParts.push(`Usuario: ${escapeHtml(item.usuario)}`);
+                        } else if (item && item.usuario_nombre) {
+                            metaParts.push(`Usuario: ${escapeHtml(item.usuario_nombre)}`);
+                        }
+                        if (item && item.created_at) {
+                            metaParts.push(`Fecha: ${displayDate(item.created_at)}`);
+                        }
+                        if (item && item.tamano) {
+                            metaParts.push(`Tamaño: ${escapeHtml(formatFileSize(item.tamano))}`);
+                        }
+
+                        if (metaParts.length) {
+                            const meta = document.createElement('div');
+                            meta.className = 'small text-muted';
+                            meta.innerHTML = metaParts.join(' · ');
+                            info.appendChild(meta);
+                        }
+
+                        if (item && item.descripcion) {
+                            const desc = document.createElement('div');
+                            desc.className = 'small';
+                            desc.textContent = item.descripcion;
+                            info.appendChild(desc);
+                        }
+
+                        wrapper.appendChild(info);
+
+                        if (canManageInstrumentos) {
+                            const actions = document.createElement('div');
+                            actions.className = 'text-nowrap';
+                            const deleteBtn = document.createElement('button');
+                            deleteBtn.type = 'button';
+                            deleteBtn.className = 'btn btn-outline-danger btn-sm';
+                            deleteBtn.textContent = 'Eliminar';
+                            deleteBtn.addEventListener('click', () => handleDelete(item.id));
+                            actions.appendChild(deleteBtn);
+                            wrapper.appendChild(actions);
+                        }
+
+                        li.appendChild(wrapper);
+                        attachmentsListEl.appendChild(li);
+                    });
+                }
+
+                function applyAttachmentsState(items, total, options = {}) {
+                    const list = Array.isArray(items) ? items : [];
+                    const resolvedTotal = Number.isFinite(Number(total)) ? Number(total) : list.length;
+                    attachmentsState.items = list;
+                    attachmentsState.total = resolvedTotal;
+                    renderAttachmentsList(list);
+                    updateAttachmentTotalDisplay(resolvedTotal);
+                    if (options.updateTable) {
+                        updateTableAttachmentCount(resolvedTotal);
+                    }
+                }
+
+                async function refreshAttachments(options = {}) {
+                    setAttachmentsStatus('Cargando documentos...');
+                    try {
+                        const resp = await fetch(`${pageBaseUrl}/backend/instrumentos/attachments/list.php?instrumento_id=${id}`);
+                        const payload = await resp.json();
+                        if (!resp.ok || (payload && payload.error)) {
+                            throw new Error(payload && payload.error ? payload.error : 'No se pudieron obtener los documentos.');
+                        }
+                        const items = Array.isArray(payload.attachments) ? payload.attachments : [];
+                        applyAttachmentsState(items, payload.total, options);
+                    } catch (error) {
+                        setAttachmentsStatus(error && error.message ? error.message : 'No se pudieron cargar los documentos.', true);
+                    }
+                }
+
+                if (attachmentsForm) {
+                    attachmentsForm.addEventListener('submit', async (event) => {
+                        event.preventDefault();
+                        const formData = new FormData(attachmentsForm);
+                        const fileInput = attachmentsForm.querySelector('input[type="file"]');
+                        if (!fileInput || fileInput.files.length === 0) {
+                            alert('Seleccione un archivo antes de subir.');
+                            return;
+                        }
+                        formData.append('instrumento_id', id);
+                        setAttachmentsStatus('Cargando documento...');
+                        try {
+                            const resp = await fetch(`${pageBaseUrl}/backend/instrumentos/attachments/upload.php`, {
+                                method: 'POST',
+                                body: formData,
+                            });
+                            const payload = await resp.json();
+                            if (!resp.ok || (payload && payload.error)) {
+                                throw new Error(payload && payload.error ? payload.error : 'No se pudo subir el documento.');
+                            }
+                            attachmentsForm.reset();
+                            await refreshAttachments({ updateTable: true });
+                            setAttachmentsStatus('Documento registrado correctamente.');
+                        } catch (error) {
+                            setAttachmentsStatus(error && error.message ? error.message : 'No se pudo subir el documento.', true);
+                        }
+                    });
+                }
+
+                if (attachmentsState.items.length) {
+                    applyAttachmentsState(attachmentsState.items, attachmentsState.total);
+                } else {
+                    refreshAttachments();
+                }
+
+                if (titleEl) {
+                    const partes = [];
+                    if (data.nombre) partes.push(data.nombre);
+                    partes.push(`ID ${data.id ?? id}`);
+                    titleEl.textContent = partes.join(' · ');
+                }
+
+                const btnReqCal = panelContent.querySelector('#guardarReqCal');
+                if (btnReqCal) {
+                    btnReqCal.addEventListener('click', () => {
+                        if (!canManageInstrumentos) return;
+                        const req = panelContent.querySelector('#reqCal');
+                        const requerimiento = req ? req.value : '';
+                        fetch(pageBaseUrl + '/backend/instrumentos/update_calibration_requirements.php', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            body: `instrumento_id=${id}&requerimiento=${encodeURIComponent(requerimiento)}`
+                        })
+                            .then(r => r.json())
+                            .then(resp => {
+                                alert(resp && resp.success ? 'Requerimiento guardado' : 'No se pudo guardar');
+                            })
+                            .catch(() => alert('No se pudo guardar'));
+                    });
+                }
+
+                const btnSpecs = panelContent.querySelector('#guardarSpecs');
+                if (btnSpecs) {
+                    btnSpecs.addEventListener('click', () => {
+                        if (!canManageInstrumentos) return;
+                        const specs = panelContent.querySelector('#specsPlan');
+                        const especificaciones = specs ? specs.value : '';
+                        fetch(pageBaseUrl + '/backend/instrumentos/update_specifications.php', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            body: `instrumento_id=${id}&especificaciones=${encodeURIComponent(especificaciones)}`
+                        })
+                            .then(r => r.json())
+                            .then(resp => {
+                                alert(resp && resp.success ? 'Especificaciones guardadas' : 'No se pudieron guardar');
+                            })
+                            .catch(() => alert('No se pudieron guardar'));
+                    });
+                }
+
+                const btnPlan = panelContent.querySelector('#guardarPlanRiesgos');
+                if (btnPlan) {
+                    btnPlan.addEventListener('click', () => {
+                        if (!canManageInstrumentos) return;
+                        const params = new URLSearchParams();
+                        const requerimiento = panelContent.querySelector('#planRequerimiento');
+                        const impacto = panelContent.querySelector('#planImpacto');
+                        const consideraciones = panelContent.querySelector('#planConsideraciones');
+                        const deteccion = panelContent.querySelector('#planDeteccion');
+                        const observaciones = panelContent.querySelector('#planObservaciones');
+                        const tipoCal = panelContent.querySelector('#planTipoCal');
+                        params.append('instrumento_id', id);
+                        params.append('requerimiento', requerimiento ? requerimiento.value : '');
+                        params.append('impacto_falla', impacto ? impacto.value : '');
+                        params.append('consideraciones_falla', consideraciones ? consideraciones.value : '');
+                        params.append('capacidad_deteccion', deteccion ? deteccion.value : '');
+                        params.append('observaciones', observaciones ? observaciones.value : '');
+                        params.append('tipo_calibracion', tipoCal ? tipoCal.value : '');
+                        fetch(pageBaseUrl + '/backend/instrumentos/update_risk_plan.php', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            body: params.toString()
+                        })
+                            .then(r => r.json())
+                            .then(resp => {
+                                if (resp && resp.success) {
+                                    const clase = panelContent.querySelector('#planClaseRiesgo');
+                                    const frecuencia = panelContent.querySelector('#planFrecuencia');
+                                    const descripcion = panelContent.querySelector('#planDescripcion');
+                                    if (clase) clase.textContent = formatNA(resp.clase_riesgo || '');
+                                    if (frecuencia) frecuencia.textContent = formatNA(resp.frecuencia || '');
+                                    if (descripcion) descripcion.textContent = formatNA(resp.descripcion || '');
+                                    alert('Plan de riesgos actualizado');
+                                } else {
+                                    alert('No se pudo guardar');
+                                }
+                            })
+                            .catch(() => alert('No se pudo guardar'));
+                    });
+                }
+            })
+            .catch(err => {
+                console.error('Error al cargar detalles del instrumento', err);
+                panelContent.innerHTML = '<div class="text-danger">No se pudieron cargar los detalles.</div>';
+            });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        initExportButtons();
+        const params = new URLSearchParams(window.location.search);
+        const detalleId = params.get('id');
+        const filtroInicial = params.get('filtro');
+        const periodoInicial = params.get('periodo');
+        const deptInicial = params.get('departamento');
+        const ordenInicial = params.get('orden');
+
+        ['Activo', 'En stock', 'Stock', 'Inactivo', 'Programado', 'No programado', 'Baja', 'Dado de baja', 'Rechazado', 'Rechazado por metrología']
+            .forEach(registerEstado);
+
+        if (periodoInicial) {
+            filtroPeriodo = normalizePeriodoFiltro(periodoInicial);
+        }
+        const selectPeriodo = document.getElementById('filterPeriod');
+        if (selectPeriodo) {
+            selectPeriodo.value = filtroPeriodo;
+            if (selectPeriodo.value !== filtroPeriodo) {
+                filtroPeriodo = 'all';
+                selectPeriodo.value = 'all';
+            }
+        }
+
+        if (filtroInicial && filtroInicial !== 'all') {
+            filtroEstado = normalizeEstado(filtroInicial);
+            registerEstado(filtroInicial);
+        } else {
+            filtroEstado = 'all';
+        }
+
+        if (deptInicial) {
+            filtroDept = deptInicial;
+        }
+        if (ordenInicial) {
+            orden = ordenInicial;
+        }
+
+        refreshEstadoFilterOptions();
+
+        Promise.all([cargarDepartamentos(), cargarEstadosDisponibles()]).then(() => {
+            const selectDept = document.getElementById('filterDept');
+            if (deptInicial && selectDept) selectDept.value = filtroDept;
+            const selectOrden = document.getElementById('sortOrder');
+            if (ordenInicial && selectOrden) selectOrden.value = orden;
+            const selectEstado = document.getElementById('filterStatus');
+            if (selectEstado) {
+                if (filtroEstado !== 'all') {
+                    selectEstado.value = filtroEstado;
+                    if (selectEstado.value !== filtroEstado) {
+                        const label = estadoCatalog.get(filtroEstado) || filtroInicial;
+                        if (label) {
+                            registerEstado(label);
+                            refreshEstadoFilterOptions();
+                            selectEstado.value = filtroEstado;
+                        }
+                    }
+                } else {
+                    selectEstado.value = 'all';
+                }
+            }
+            fetchGages().then(() => {
+                if (detalleId) {
+                    selectedIds.add(Number(detalleId));
+                    updateButtonsState();
+                    btnEdit.click();
+                } else {
+                    updateButtonsState();
+                }
+            });
+        });
+    });
+    })();
+    </script>
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        fetch(BASE_URL + '/apps/internal/sidebar.html')
+          .then(response => response.text())
+          .then(html => {
+            const sidebarContainer = document.getElementById('sidebar');
+            if (!sidebarContainer) return;
+            sidebarContainer.innerHTML = html;
+            if (typeof initSidebar === 'function') initSidebar();
+            const instrumentosLink = sidebarContainer.querySelector('.nav-link[data-section="instrumentos"]');
+            if (instrumentosLink) {
+              sidebarContainer.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+              instrumentosLink.classList.add('active');
+            }
+            if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+            if (typeof window.applyApiTokenVisibility === 'function') window.applyApiTokenVisibility();
+            if (typeof window.activateApiTokensIfAvailable === 'function') window.activateApiTokensIfAvailable();
+          });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+
+    <title>Configuraciones | SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Google Fonts y tus estilos -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/internal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <style>
+        body { background: #f4f6f8; font-family: 'Montserrat', Arial, sans-serif; margin: 0;}
+        .main-content { margin-left: 200px; min-height: 100vh; padding: 0;}
+        .form-group { margin-bottom: 16px;}
+        .form-label { font-weight: 600; color: #217b9b; margin-bottom: 7px; display: block;}
+        .form-control { border-radius: 8px; border: 1.5px solid #a3defd; font-size: 1.05rem; padding: 10px; width: 100%;}
+        .form-control:focus { border-color: #0d575a; box-shadow: 0 0 0 2px #a3defd88;}
+        @media (max-width: 800px) {
+            .main-content {margin-left:0; padding:18px;}
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img {
+            width: 140px;
+            margin-bottom: 22px;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-nav .nav-link {
+            width: 92%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0 8px 0;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 10px;
+            margin-bottom: 2px;
+            transition: background 0.2s, color 0.2s;
+            position: relative;
+        }
+        .sidebar-nav .nav-link.active,
+        .sidebar-nav .nav-link:hover {
+            background: #0c8c98;
+            color: #fff;
+        }
+        .sidebar-nav .nav-link i {
+            font-size: 1.85rem;
+            margin-bottom: 8px;
+        }
+        .sidebar-nav .nav-link.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 16px;
+            width: 4px;
+            height: 32px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .topbar {
+            background: #fff;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 34px 0 28px;
+            box-shadow: 0 1px 8px #0001;
+        }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+        .topbar-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #217b9b;
+            letter-spacing: 1px;
+        }
+        .topbar-user {
+            font-size: 1rem;
+            color: #217b9b;
+            font-weight: 400;
+            margin-left: 24px;
+        }
+        .topbar-icons {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .topbar-icons i {
+            font-size: 1.2rem;
+            color: #217b9b;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .dashboard-section {
+            padding: 32px 28px;
+        }
+        .dashboard-bar {
+            background: #0d575a;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            margin-bottom: 22px;
+            padding: 10px 18px;
+            letter-spacing: 0.5px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+        .dashboard-btn {
+            background: #0c8c98;
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            padding: 28px 12px 16px 12px;
+            min-width: 130px;
+            text-align: left;
+            font-size: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            transition: background 0.18s, color 0.18s;
+            text-decoration: none;
+        }
+        .dashboard-btn .panel-title {
+            font-size: 1.06rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            white-space: pre-line;
+        }
+        .dashboard-btn .panel-value {
+            font-size: 2.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            word-break: break-word;
+        }
+        .dashboard-btn:hover {
+            background: #217b9b;
+            color: #fff;
+        }
+        .dashboard-btn .icon-btn {
+            font-size: 1.7rem;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        /* Responsivo para textos */
+        @media (max-width: 900px) {
+            .main-content { margin-left: 0; }
+            .dashboard-section { padding: 18px 6px; }
+            .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+            .dashboard-btn { padding: 20px 8px 12px 8px; font-size: 0.95rem; }
+            .dashboard-btn .panel-title { font-size: 0.96rem; }
+            .dashboard-btn .panel-value { font-size: 1.3rem; }
+        }
+        @media (max-width: 600px) {
+            .dashboard-grid { grid-template-columns: 1fr 1fr; }
+            .dashboard-btn { font-size: 0.88rem; }
+            .dashboard-btn .panel-value { font-size: 1.1rem; }
+        }
+        .form-message--info {
+            background: #e8f6fb;
+            color: #0d575a;
+            border: 1.5px solid #9fd4e4;
+        }
+        .backups-helper-text {
+            margin: 0 0 18px;
+            color: #4a6b80;
+            font-size: 0.95rem;
+        }
+        .backups-helper-text strong {
+            color: #0d575a;
+        }
+        .backups-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(13, 87, 90, 0.08);
+            padding: 20px 24px;
+            margin-bottom: 28px;
+        }
+        .backups-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .backups-description {
+            color: #4a6b80;
+            font-size: 0.98rem;
+            font-weight: 500;
+            max-width: 520px;
+            line-height: 1.5;
+        }
+        .backups-create-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 26px;
+        }
+        .backups-create-btn i {
+            font-size: 1.1rem;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 10px;
+        }
+        .backups-table {
+            width: 100%;
+            min-width: 320px;
+            border-collapse: collapse;
+        }
+        .backups-table thead {
+            background: #0d575a;
+            color: #fff;
+        }
+        .backups-table th,
+        .backups-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        .backups-table th {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .backups-table tbody tr:hover {
+            background: #f4fbfd;
+        }
+        .actions-column {
+            text-align: center;
+            width: 160px;
+        }
+        .backups-empty {
+            text-align: center;
+            padding: 18px 12px;
+            color: #64748b;
+            font-style: italic;
+        }
+        .backups-restore-btn {
+            background: #1f9d6c;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.18s ease-in-out;
+        }
+        .backups-restore-btn:hover {
+            background: #157653;
+        }
+        .backups-restore-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(31, 157, 108, 0.25);
+        }
+        .backups-restore-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .backups-no-actions {
+            color: #94a3b8;
+            font-style: italic;
+        }
+        @media (max-width: 768px) {
+            .backups-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .actions-column {
+                width: 120px;
+            }
+        }
+        /* Complemento para menú desplegable y Notificaciones */
+        .topbar-user-box { display:inline-block; position:relative; }
+        #userMenu, #notificationsMenu {
+            display:none;
+            position:absolute;
+            right:0;
+            top:32px;
+            background:#fff;
+            border-radius:10px;
+            box-shadow:0 2px 12px #0d575a22;
+            min-width:180px;
+            z-index:99;
+            padding:12px;
+        }
+        #notificationsMenu { right:64px; top:40px; min-width:260px; padding:15px;}
+        #userMenu button, #userMenu .btn-perfil {
+            width:100%;
+            background:#0d575a;
+            color:#fff;
+            border:none;
+            border-radius:6px;
+            margin:8px 0 0 0;
+            padding:7px 0;
+            font-weight:700;
+            font-size:1rem;
+        }
+        #userMenu .btn-cerrar {
+            background:#fff; color:#0d575a; border:1px solid #0d575a;
+        }
+        #userMenu div { padding:6px 0; border-bottom:1px solid #e0f7fa; }
+        #userMenu div:last-child { border-bottom:none; }
+    </style>
+</head>
+<body>
+    <aside id="sidebar" class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link" href="apps/internal/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link" href="apps/internal/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/internal/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/internal/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link" href="apps/internal/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/internal/configuracion/api_tokens.html" data-section="configuracion" data-requires-api-tokens="manage">
+            <i class="fa fa-key"></i>
+            <span>TOKENS API</span>
+        </a>
+        <a class="nav-link" href="apps/internal/ayuda/help_center.html" data-section="ayuda">
+            <i class="fa fa-circle-question"></i>
+            <span>AYUDA</span>
+        </a>
+        <a class="nav-link" href="apps/internal/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </aside>
+    <div class="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+                <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Configuración</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/internal/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="formbar">
+            <button class="btn-back" onclick="window.location.href = BASE_URL + '/apps/internal/index.html'">
+                <i class="fa fa-arrow-left"></i>
+            </button>
+            <div class="formbar-title">Configuración</div>
+        </div>
+        <div class="form-container">
+            <div class="form-title">Configuraciones del Sistema</div>
+            <div id="msg-box"></div>
+            <div class="dashboard-grid">
+                <a href="apps/internal/configuracion/api_tokens.html" class="dashboard-btn sbl-skyblue" data-section="configuracion" data-requires-api-tokens="manage" data-api-tokens-activator>
+                    <span class="panel-title">Administrar Tokens API</span>
+                    <span class="panel-value"><i class="fa fa-key icon-btn"></i></span>
+                </a>
+            </div>
+            <div class="form-section-title">Datos Generales</div>
+            <form id="settingsForm" autocomplete="off">
+                <div class="form-group">
+                    <label class="form-label" for="labName">Nombre del laboratorio</label>
+                    <input type="text" class="form-control" id="labName" name="labName" required maxlength="120">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="labEmail">Correo principal</label>
+                    <input type="email" class="form-control" id="labEmail" name="labEmail" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="qualityOwner">Responsable de calidad</label>
+                    <select class="form-control" id="qualityOwner" name="qualityOwner">
+                        <option value="">Selecciona un responsable…</option>
+                    </select>
+                    <small id="qualityOwnerInfo" class="form-text text-muted"></small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="timezone">Zona horaria</label>
+                    <select class="form-control" id="timezone" name="timezone" required>
+                        <option value="">Selecciona una zona horaria...</option>
+                        <option value="America/Mexico_City">Ciudad de México (GMT-6)</option>
+                        <option value="America/Monterrey">Monterrey (GMT-6)</option>
+                        <option value="America/Tijuana">Tijuana (GMT-8)</option>
+                        <option value="America/Bogota">Bogotá (GMT-5)</option>
+                        <option value="America/Lima">Lima (GMT-5)</option>
+                        <option value="America/Santiago">Santiago (GMT-4)</option>
+                        <!-- Agrega más si lo necesitas -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="logo">Logo del laboratorio</label>
+                    <input type="file" class="form-control" id="logo" name="logo" accept="image/*">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Guardar</button>
+                </div>
+            </form>
+            <div class="form-section-title">Respaldos de base de datos</div>
+            <p class="backups-helper-text">Gestiona los respaldos manuales de la base de datos y descarga el historial en caso de auditorías o restauraciones.</p>
+            <div id="backupsPermissionMessage" class="form-message form-message--info is-hidden"></div>
+            <div id="backupsSection" class="backups-card is-hidden">
+                <div class="backups-header">
+                    <div class="backups-description">Crea un respaldo manual cuando lo necesites y restaura una copia existente si debes recuperar la información del sistema.</div>
+                    <button id="createBackupBtn" type="button" class="btn backups-create-btn is-hidden"><i class="fa fa-database"></i> Crear respaldo</button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="backups-table">
+                        <thead>
+                            <tr>
+                                <th>Archivo</th>
+                                <th class="actions-column">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="backupsTbody">
+                            <tr>
+                                <td colspan="2" class="backups-empty">Cargando respaldos…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="export-actions">
+                    <button class="btn-export excel" id="exportBackupsExcel"><i class="fa fa-file-excel"></i> Exportar a Excel</button>
+                    <button class="btn-export pdf" id="exportBackupsPdf"><i class="fa fa-file-pdf"></i> Exportar a PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sidebar JS -->
+    <script type="module" src="assets/scripts/scripts-internal.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/F54q9WlH0I1GtIsfRSAxEPPGjBJOCa/MEGLjm+rXhN3kLBXjg5eQof8I4eAbOeXtfLOcAfeUOLVN2y5kqL/hg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="assets/scripts/exports.js"></script>
+    <script>
+
+      // Carga el sidebar dinámico
+        window.addEventListener('DOMContentLoaded', function() {
+          fetch(BASE_URL + '/apps/internal/sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+              document.getElementById('sidebar').innerHTML = html;
+              if (typeof initSidebar === 'function') initSidebar();
+              if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+            if (typeof window.applyApiTokenVisibility === 'function') window.applyApiTokenVisibility();
+            if (typeof window.activateApiTokensIfAvailable === 'function') window.activateApiTokensIfAvailable();
+            });
+
+          const settingsForm = document.getElementById('settingsForm');
+          if (settingsForm) {
+            settingsForm.addEventListener('submit', function(event) {
+              event.preventDefault();
+              guardarConfig();
+            });
+          }
+
+          const qualitySelect = document.getElementById('qualityOwner');
+          if (qualitySelect) {
+            qualitySelect.addEventListener('change', updateQualityHelper);
+          }
+
+          loadCompanySettings();
+
+        initBackupsModule();
+        });
+
+      // Validación y guardado simulado
+      function guardarConfig() {
+        const nombre = document.getElementById('labName').value.trim();
+        const email = document.getElementById('labEmail').value.trim();
+        const tz = document.getElementById('timezone').value;
+        if (!nombre) return mostrarMsg("El nombre del laboratorio es obligatorio.", false);
+        if (!email || !email.includes('@')) return mostrarMsg("El correo principal es obligatorio y debe ser válido.", false);
+        if (!tz) return mostrarMsg("Selecciona una zona horaria.", false);
+
+        const qualitySelect = document.getElementById('qualityOwner');
+        const qualityValue = qualitySelect ? qualitySelect.value : '';
+        const payload = new URLSearchParams();
+        payload.set('responsable_calidad_id', qualityValue);
+
+        fetch(BASE_URL + '/backend/configuracion/update_company_settings.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: payload.toString()
+        })
+          .then(function(response) { return response.json(); })
+          .then(function(result) {
+            if (result && result.success) {
+              mostrarMsg("¡Configuración guardada correctamente!", true);
+              loadCompanySettings();
+            } else {
+              const message = result && result.message ? result.message : 'No se pudo guardar la configuración.';
+              mostrarMsg(message, false);
+            }
+          })
+          .catch(function() {
+            mostrarMsg('No se pudo guardar la configuración.', false);
+          });
+      }
+      function mostrarMsg(msg, ok) {
+        document.getElementById('msg-box').innerHTML =
+          `<div class="form-message ${ok ? 'form-message--success' : 'form-message--error'}">${msg}</div>`;
+      }
+      function loadCompanySettings() {
+        fetch(BASE_URL + '/backend/configuracion/get_company_settings.php')
+          .then(function(response) { return response.json(); })
+          .then(function(data) {
+            populateQualityCandidates(Array.isArray(data.candidatos) ? data.candidatos : []);
+            applyQualitySelection(data.empresa || {});
+          })
+          .catch(function() {
+            populateQualityCandidates([]);
+            applyQualitySelection({});
+            mostrarMsg('No se pudieron cargar los datos de la empresa.', false);
+          });
+      }
+      function populateQualityCandidates(candidates) {
+        const select = document.getElementById('qualityOwner');
+        if (!select) {
+          return;
+        }
+        const currentValue = select.value;
+        select.innerHTML = '<option value="">Selecciona un responsable…</option>';
+        candidates.forEach(function(candidate) {
+          const option = document.createElement('option');
+          option.value = candidate.id;
+          option.textContent = candidate.nombre + (candidate.correo ? ' (' + candidate.correo + ')' : '');
+          if (candidate.correo) {
+            option.dataset.email = candidate.correo;
+          }
+          select.appendChild(option);
+        });
+        if (currentValue && select.querySelector('option[value="' + currentValue + '"]')) {
+          select.value = currentValue;
+        }
+        updateQualityHelper();
+      }
+      function applyQualitySelection(empresa) {
+        const select = document.getElementById('qualityOwner');
+        if (!select) {
+          return;
+        }
+        const responsableId = empresa.responsable_calidad_id ? String(empresa.responsable_calidad_id) : '';
+        if (responsableId && select.querySelector('option[value="' + responsableId + '"]')) {
+          select.value = responsableId;
+        } else {
+          select.value = '';
+        }
+        updateQualityHelper(empresa.responsable_correo || '');
+      }
+      function updateQualityHelper(explicitEmail) {
+        const info = document.getElementById('qualityOwnerInfo');
+        const select = document.getElementById('qualityOwner');
+        if (!info || !select) {
+          return;
+        }
+        let email = explicitEmail || '';
+        if (!email) {
+          const selectedOption = select.options[select.selectedIndex];
+          email = selectedOption && selectedOption.dataset ? selectedOption.dataset.email || '' : '';
+        }
+        if (select.value && email) {
+          info.textContent = 'Correo: ' + email;
+        } else if (select.value) {
+          info.textContent = 'El usuario seleccionado no tiene correo registrado.';
+        } else {
+          info.textContent = 'Selecciona un responsable para recibir alertas de no conformidades.';
+        }
+      }
+      function initBackupsModule() {
+        const section = document.getElementById('backupsSection');
+        const messageEl = document.getElementById('backupsPermissionMessage');
+        const createBtn = document.getElementById('createBackupBtn');
+        const tbody = document.getElementById('backupsTbody');
+        const excelBtn = document.getElementById('exportBackupsExcel');
+        const pdfBtn = document.getElementById('exportBackupsPdf');
+
+        if (!section || !messageEl || !tbody || !excelBtn || !pdfBtn) {
+          return;
+        }
+
+        let backupsList = [];
+        let canRestore = false;
+        const backupsExportColumns = [
+          { key: 'archivo', label: 'Archivo' }
+        ];
+
+        function showBackupsMessage(text, type) {
+          if (!messageEl) {
+            return;
+          }
+          if (!text) {
+            messageEl.classList.add('is-hidden');
+            messageEl.textContent = '';
+            return;
+          }
+          const variant = type === 'error' ? 'form-message--error' : 'form-message--info';
+          messageEl.className = 'form-message ' + variant;
+          messageEl.textContent = text;
+          messageEl.classList.remove('is-hidden');
+        }
+
+        function updateExportButtonsState() {
+          const hasData = Array.isArray(backupsList) && backupsList.length > 0;
+          if (excelBtn) excelBtn.disabled = !hasData;
+          if (pdfBtn) pdfBtn.disabled = !hasData;
+        }
+
+        function getBackupsExportData() {
+          return Array.isArray(backupsList)
+            ? backupsList.map(function(file) { return { archivo: file }; })
+            : [];
+        }
+
+        function renderRows() {
+          if (!tbody) {
+            return;
+          }
+          tbody.innerHTML = '';
+
+          if (!Array.isArray(backupsList) || backupsList.length === 0) {
+            const emptyRow = document.createElement('tr');
+            const emptyCell = document.createElement('td');
+            emptyCell.colSpan = 2;
+            emptyCell.className = 'backups-empty';
+            emptyCell.textContent = 'Sin respaldos';
+            emptyRow.appendChild(emptyCell);
+            tbody.appendChild(emptyRow);
+            return;
+          }
+
+          backupsList.forEach(function(file) {
+            const row = document.createElement('tr');
+            const fileCell = document.createElement('td');
+            fileCell.textContent = file;
+            row.appendChild(fileCell);
+
+            const actionsCell = document.createElement('td');
+            actionsCell.classList.add('actions-column');
+
+            if (canRestore) {
+              const restoreBtn = document.createElement('button');
+              restoreBtn.type = 'button';
+              restoreBtn.className = 'backups-restore-btn';
+              restoreBtn.textContent = 'Restaurar';
+              restoreBtn.addEventListener('click', function() {
+                restoreBackup(file);
+              });
+              actionsCell.appendChild(restoreBtn);
+            } else {
+              actionsCell.textContent = '—';
+              actionsCell.classList.add('backups-no-actions');
+            }
+
+            row.appendChild(actionsCell);
+            tbody.appendChild(row);
+          });
+        }
+
+        function restoreBackup(file) {
+          if (!file) {
+            return;
+          }
+          if (!window.confirm('¿Restaurar respaldo ' + file + '?')) {
+            return;
+          }
+
+          fetch(BASE_URL + '/backend/backups/restore.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'file=' + encodeURIComponent(file)
+          })
+            .then(function(response) { return response.json(); })
+            .then(function(result) {
+              window.alert(result.ok ? 'Respaldo restaurado' : 'Error al restaurar el respaldo');
+              loadBackups();
+            })
+            .catch(function() {
+              window.alert('Error al restaurar el respaldo');
+            });
+        }
+
+        function loadBackups() {
+          showBackupsMessage('');
+          fetch(BASE_URL + '/backend/backups/list.php')
+            .then(function(response) { return response.json(); })
+            .then(function(files) {
+              backupsList = Array.isArray(files) ? files : [];
+              renderRows();
+              updateExportButtonsState();
+            })
+            .catch(function() {
+              backupsList = [];
+              renderRows();
+              updateExportButtonsState();
+              showBackupsMessage('No se pudieron obtener los respaldos. Intenta nuevamente más tarde.', 'error');
+            });
+        }
+
+        function initExports() {
+          if (excelBtn) {
+            excelBtn.addEventListener('click', function() {
+              const data = getBackupsExportData();
+              if (data.length) {
+                exportToExcel(data, backupsExportColumns, 'respaldos');
+              }
+            });
+          }
+          if (pdfBtn) {
+            pdfBtn.addEventListener('click', function() {
+              const data = getBackupsExportData();
+              if (data.length) {
+                exportToPDF(data, backupsExportColumns, 'respaldos');
+              }
+            });
+          }
+          updateExportButtonsState();
+        }
+
+        function applyActionPermissions() {
+          return Promise.all([
+            fetch(BASE_URL + '/backend/check_permission.php?permiso=backups_create').then(function(r) { return r.json(); }),
+            fetch(BASE_URL + '/backend/check_permission.php?permiso=backups_restore').then(function(r) { return r.json(); })
+          ]).then(function(results) {
+            const createPermission = results[0];
+            const restorePermission = results[1];
+
+            if (createBtn && createPermission && createPermission.allowed) {
+              createBtn.classList.remove('is-hidden');
+            }
+
+            canRestore = !!(restorePermission && restorePermission.allowed);
+          }).catch(function() {
+            canRestore = false;
+          });
+        }
+
+        if (createBtn) {
+          createBtn.addEventListener('click', function() {
+            fetch(BASE_URL + '/backend/backups/create.php', { method: 'POST' })
+              .then(function(response) { return response.json(); })
+              .then(function(result) {
+                window.alert(result.ok ? 'Respaldo creado' : 'Error al crear el respaldo');
+                loadBackups();
+              })
+              .catch(function() {
+                window.alert('Error al crear el respaldo');
+              });
+          });
+        }
+
+        initExports();
+
+        fetch(BASE_URL + '/backend/check_permission.php?permiso=backups_view')
+          .then(function(response) { return response.json(); })
+          .then(function(permission) {
+            if (permission && permission.allowed) {
+              showBackupsMessage('');
+              section.classList.remove('is-hidden');
+              return applyActionPermissions().then(function() {
+                loadBackups();
+              });
+            }
+
+            section.classList.add('is-hidden');
+            showBackupsMessage('No cuentas con permiso para consultar los respaldos.');
+            updateExportButtonsState();
+          })
+          .catch(function() {
+            section.classList.add('is-hidden');
+            showBackupsMessage('No se pudo verificar los permisos de respaldos.', 'error');
+            updateExportButtonsState();
+          });
+      }
+    </script>
+</body>
+</html>
+
+
+
+

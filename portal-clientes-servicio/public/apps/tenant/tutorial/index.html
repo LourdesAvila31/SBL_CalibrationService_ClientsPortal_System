@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <title>Tutorial de inicio | Portal de clientes</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <link rel="stylesheet" href="apps/tenant/tutorial/tutorial.css">
+</head>
+<body>
+    <aside id="sidebar" class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link" href="apps/tenant/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+            <i class="fa fa-user-shield"></i>
+            <span>ROLES</span>
+        </a>
+        <a class="nav-link active" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+            <i class="fa fa-circle-question"></i>
+            <span>TUTORIAL</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </aside>
+
+    <div class="main-content">
+        <div class="topbar" data-feedback-url="feedback_externos.html">
+            <div class="topbar-left">
+                <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Tutorial de inicio</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch" title="Buscar en el portal"></i>
+                <i class="fa fa-circle-question" id="btnTutorial" data-tutorial-url="/apps/tenant/tutorial/index.html" title="Volver al tutorial" role="button" tabindex="0"></i>
+                <i class="fa fa-comment-dots" id="btnFeedback" data-feedback-url="feedback_externos.html" title="Compartir comentarios"></i>
+                <i class="fa fa-bell" id="btnBell" title="Notificaciones"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel"></div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+
+        <main class="tutorial-wrapper">
+            <section class="tutorial-hero" data-guide-step="1" data-guide-title="Bienvenida" data-guide-description="Conoce las secciones clave del portal y los recursos disponibles para comenzar.">
+                <div>
+                    <span class="badge-soft"><i class="fa fa-wand-magic-sparkles"></i> Nuevo usuario</span>
+                    <h1>Bienvenido al portal de clientes</h1>
+                    <p>Configura tu cuenta, prepara tu inventario y conoce el flujo de calibraciones en menos de 10 minutos. Este tutorial se puede retomar cuando lo necesites.</p>
+                    <div class="hero-actions">
+                        <button type="button" class="btn-primary-hero" id="startGuidedTour"><i class="fa fa-route"></i> Iniciar recorrido guiado</button>
+                        <button type="button" class="btn-secondary-hero" id="focusChecklist"><i class="fa fa-list-check"></i> Ver checklist</button>
+                        <a class="btn-secondary-hero" href="apps/tenant/index.html"><i class="fa fa-arrow-left"></i> Volver al panel</a>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="section-title" style="color:#fff;">Lo esencial</h2>
+                    <p>Guarda esta página entre tus favoritos, consulta los videos y marca cada paso completado para llevar el control del onboarding de tu empresa.</p>
+                </div>
+            </section>
+
+            <section class="tutorial-section" id="primerosPasos">
+                <h2 class="section-title">Primeros pasos</h2>
+                <p class="section-subtitle">Sigue estos pasos en orden para dejar tu cuenta lista. Puedes volver a cualquiera cuando quieras repasar.</p>
+                <div class="tutorial-steps">
+                    <article class="tutorial-step-card" data-guide-step="2" data-guide-title="Actualiza tu perfil" data-guide-description="Edita tu información de contacto y confirma que tus datos sean correctos para recibir notificaciones.">
+                        <span class="step-number">1</span>
+                        <div class="step-title">Actualiza tu perfil <span class="tooltip-trigger" data-tooltip="Incluye tu teléfono y puesto para habilitar avisos personalizados."><i class="fa fa-info"></i></span></div>
+                        <p class="step-description">Revisa tu información personal y asigna un método de contacto para recibir las alertas de calibración.</p>
+                        <div class="step-links">
+                            <a href="apps/tenant/usuarios/my_information.html"><i class="fa fa-id-card"></i> Mi información</a>
+                            <a href="apps/tenant/usuarios/service_contacts.html"><i class="fa fa-address-book"></i> Contactos de servicio</a>
+                        </div>
+                    </article>
+                    <article class="tutorial-step-card" data-guide-step="3" data-guide-title="Organiza tu inventario" data-guide-description="Carga los instrumentos que utilizarás, sus estados y responsables.">
+                        <span class="step-number">2</span>
+                        <div class="step-title">Organiza tu inventario <span class="tooltip-trigger" data-tooltip="Importa el inventario con la plantilla para evitar capturas manuales."><i class="fa fa-info"></i></span></div>
+                        <p class="step-description">Da de alta tus instrumentos, asigna responsables y establece recordatorios para cada calibración programada.</p>
+                        <div class="step-links">
+                            <a href="apps/tenant/instrumentos/list_gages.html"><i class="fa fa-boxes-stacked"></i> Ver instrumentos</a>
+                            <a href="apps/tenant/instrumentos/add_gage.html"><i class="fa fa-plus"></i> Añadir instrumento</a>
+                        </div>
+                    </article>
+                    <article class="tutorial-step-card" data-guide-step="4" data-guide-title="Planifica tus calibraciones" data-guide-description="Utiliza el calendario para programar calibraciones y registrar compromisos.">
+                        <span class="step-number">3</span>
+                        <div class="step-title">Planifica calibraciones <span class="tooltip-trigger" data-tooltip="Consulta los próximos vencimientos para priorizar tu agenda."><i class="fa fa-info"></i></span></div>
+                        <p class="step-description">Define la programación de calibraciones y monitorea los vencimientos desde el calendario y el panel de alertas.</p>
+                        <div class="step-links">
+                            <a href="apps/tenant/planeacion/calendar.html"><i class="fa fa-calendar"></i> Calendario</a>
+                            <a href="apps/tenant/calibraciones/alert_notifications.html"><i class="fa fa-bell"></i> Alertas</a>
+                        </div>
+                    </article>
+                    <article class="tutorial-step-card" data-guide-step="5" data-guide-title="Comparte la información" data-guide-description="Aprende a compartir reportes y certificados con tu equipo.">
+                        <span class="step-number">4</span>
+                        <div class="step-title">Comparte resultados <span class="tooltip-trigger" data-tooltip="Descarga certificados o comparte enlaces temporales desde el módulo de reportes."><i class="fa fa-info"></i></span></div>
+                        <p class="step-description">Descarga reportes, comparte certificados y da seguimiento a las calibraciones completadas con tu equipo.</p>
+                        <div class="step-links">
+                            <a href="apps/tenant/reportes/reports.html"><i class="fa fa-file-pdf"></i> Reportes</a>
+                            <a href="apps/tenant/mensajeria/index.html"><i class="fa fa-envelope"></i> Mensajería</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="tutorial-section" id="tutorialChecklist">
+                <h2 class="section-title">Checklist interactivo</h2>
+                <p class="section-subtitle">Marca cada elemento al completarlo para llevar control de tu implementación. Puedes reiniciar la lista cuando quieras.</p>
+                <div class="tutorial-progress">
+                    <div class="progress-header">
+                        <strong>Avance general</strong>
+                        <span id="tutorialProgressBadge">0/0 completados (0%)</span>
+                    </div>
+                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar-fill"></div>
+                    </div>
+                    <div class="tutorial-checklist">
+                        <div class="checklist-item">
+                            <input type="checkbox" id="checkPerfil" value="perfil">
+                            <label for="checkPerfil">Actualizar mi información y la de mi empresa.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="checkEquipo" value="equipo">
+                            <label for="checkEquipo">Registrar el inventario base de instrumentos con fechas de vencimiento.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="checkPlan" value="plan">
+                            <label for="checkPlan">Programar las calibraciones prioritarias en el calendario.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="checkAlertas" value="alertas">
+                            <label for="checkAlertas">Configurar los contactos que recibirán alertas y recordatorios.</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="checkReportes" value="reportes">
+                            <label for="checkReportes">Descargar o compartir el primer reporte de calibración.</label>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-end">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="resetChecklist"><i class="fa fa-rotate-left"></i> Reiniciar checklist</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="tutorial-section">
+                <h2 class="section-title">Recursos recomendados</h2>
+                <p class="section-subtitle">Profundiza en el uso del portal y consulta material de apoyo para tu equipo.</p>
+                <div class="resources-grid">
+                    <article class="resource-card">
+                        <h3>Manual del portal (PDF)</h3>
+                        <p>Descarga la guía paso a paso para administrar instrumentos, calibraciones y reportes desde el portal.</p>
+                        <a href="https://drive.google.com/file/d/1DQ-ManualPortal/view" target="_blank" rel="noopener">Abrir documento</a>
+                    </article>
+                    <article class="resource-card">
+                        <h3>Video: Recorrido general</h3>
+                        <p>Mira el flujo completo de registro, programación y seguimiento de calibraciones en menos de 6 minutos.</p>
+                        <a href="https://www.youtube.com/watch?v=EPq9bP2NGeE" target="_blank" rel="noopener">Ver video</a>
+                    </article>
+                    <article class="resource-card">
+                        <h3>Preguntas frecuentes</h3>
+                        <p>Consulta respuestas a los escenarios más comunes de usuarios nuevos: creación de usuarios, permisos y vencimientos.</p>
+                        <a href="https://support.iso.org/home" target="_blank" rel="noopener">Abrir FAQs</a>
+                    </article>
+                </div>
+            </section>
+
+            <section class="tutorial-section">
+                <h2 class="section-title">Consejos rápidos</h2>
+                <p class="section-subtitle">Aprovecha estos tips para acelerar la adopción en tu organización.</p>
+                <div class="quick-tips">
+                    <div class="quick-tip" data-guide-step="6" data-guide-title="Comparte el acceso" data-guide-description="Invita a tu equipo a revisar el tutorial y asigna responsables por módulo.">
+                        <h4><i class="fa fa-users"></i> Comparte el acceso</h4>
+                        <p>Invita a los responsables de calidad y mantenimiento para que den seguimiento a su propio avance dentro del tutorial.</p>
+                    </div>
+                    <div class="quick-tip">
+                        <h4><i class="fa fa-clock"></i> Revisa el panel semanalmente</h4>
+                        <p>Monitorea los vencimientos desde la tarjeta de alertas para adelantarte a cualquier desviación.</p>
+                    </div>
+                    <div class="quick-tip">
+                        <h4><i class="fa fa-shield-halved"></i> Mantén la trazabilidad</h4>
+                        <p>Sube la evidencia de tus calibraciones y conserva el historial de certificados en un solo lugar.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="guide-overlay" id="guideOverlay">
+        <div class="guide-dialog" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+            <div class="guide-step-label"></div>
+            <h2 id="guideTitle" class="guide-step-title">Paso</h2>
+            <p class="guide-step-description">Descripción del paso.</p>
+            <div class="guide-actions">
+                <button type="button" class="btn-outline" data-guide-action="previous"><i class="fa fa-arrow-left"></i> Anterior</button>
+                <div>
+                    <button type="button" class="btn-outline" data-guide-action="close">Cerrar</button>
+                    <button type="button" class="btn-filled" data-guide-action="next">Siguiente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="assets/scripts/scripts-tenant.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script src="apps/tenant/tutorial/tutorial.js"></script>
+</body>
+</html>

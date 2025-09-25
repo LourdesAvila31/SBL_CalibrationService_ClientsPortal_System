@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ficha digital del instrumento | Portal de clientes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        (function () {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var idx = path.indexOf(marker);
+            var base = idx !== -1 ? path.slice(0, idx + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <style>
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 24px 12px;
+        }
+        .detail-wrapper {
+            max-width: 720px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.15);
+            padding: 32px 28px;
+        }
+        .detail-header {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 18px;
+        }
+        .detail-header h1 {
+            font-size: 1.6rem;
+            margin: 0;
+            color: #1d4ed8;
+        }
+        .detail-header .company-name {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .detail-header .identifier {
+            color: #0f172a;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .grid-two {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            margin-bottom: 18px;
+        }
+        .info-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+        .info-card strong {
+            display: block;
+            color: #0f172a;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+        .info-card span {
+            display: block;
+            color: #1f2937;
+            font-size: 0.95rem;
+            word-break: break-word;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 0.85rem;
+        }
+        .links-block {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .links-block a {
+            word-break: break-all;
+        }
+        .meta-info {
+            margin-top: 18px;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+        .hidden {
+            display: none !important;
+        }
+        #detailStatus[data-type="error"] {
+            color: #dc2626;
+        }
+        #detailStatus[data-type="info"] {
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-wrapper">
+        <div id="detailStatus" class="mb-3" data-type="info">Cargando ficha...</div>
+        <div id="detailContent" class="hidden">
+            <div class="detail-header">
+                <span class="company-name" id="detailCompany">&nbsp;</span>
+                <h1 id="detailName">Instrumento</h1>
+                <span class="identifier" id="detailIdentifier">ID</span>
+                <span class="status-badge" id="detailStatusBadge">Sin estado</span>
+            </div>
+            <div class="grid-two">
+                <div class="info-card">
+                    <strong>Ubicación</strong>
+                    <span id="detailLocation">Sin ubicación</span>
+                </div>
+                <div class="info-card">
+                    <strong>Departamento</strong>
+                    <span id="detailDepartment">Sin departamento</span>
+                </div>
+                <div class="info-card">
+                    <strong>Marca</strong>
+                    <span id="detailBrand">Sin marca</span>
+                </div>
+                <div class="info-card">
+                    <strong>Modelo</strong>
+                    <span id="detailModel">Sin modelo</span>
+                </div>
+                <div class="info-card">
+                    <strong>Próxima calibración</strong>
+                    <span id="detailNextCalibration">-</span>
+                </div>
+                <div class="info-card">
+                    <strong>Última calibración</strong>
+                    <span id="detailIssuedAt">-</span>
+                </div>
+            </div>
+            <div class="links-block">
+                <div>
+                    <strong>Ficha compartida:</strong>
+                    <div><a id="detailShareLink" href="#" target="_blank" rel="noopener">-</a></div>
+                </div>
+                <div>
+                    <strong>Certificado:</strong>
+                    <div><a id="detailCertificateLink" href="#" target="_blank" rel="noopener">Sin certificado disponible</a></div>
+                </div>
+            </div>
+            <div class="meta-info">
+                <div>Enlace vigente hasta: <span id="detailExpiresAt">-</span></div>
+                <div>Información generada: <span id="detailGeneratedAt">-</span></div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/scripts/instrument_detail_share.js"></script>
+</body>
+</html>

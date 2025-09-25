@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function() {
+            var marker = '/public/';
+            var path = window.location.pathname || '';
+            var index = path.indexOf(marker);
+            var base = index !== -1 ? path.slice(0, index + marker.length) : '/';
+            if (!base.endsWith('/')) {
+                base += '/';
+            }
+            window.BASE_URL = base === '/' ? '' : base.replace(/\/$/, '');
+            document.write('<base href="' + base + '">');
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+    <title>Carga masiva de instrumentos | SBL Pharma</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/tenant.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <style>
+        :root {
+            --sidebar-bg: #0d575a;
+            --sidebar-active: #0c8c98;
+            --sidebar-hover: #17b6c1;
+            --table-header-bg: #0d575a;
+            --table-header-color: #fff;
+            --page-bg: #f4f6f8;
+            --actionbar-bg: #ececec;
+            --actionbar-icon-bg: #176d72;
+        }
+        body {
+            background: var(--page-bg);
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #0d575a;
+            color: #fff;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            box-shadow: 1px 0 6px #0002;
+        }
+        .sidebar-logo img {
+            width: 140px;
+            margin-bottom: 22px;
+        }
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 26px;
+        }
+        .main-content {
+            margin-left: 200px;
+            min-height: 100vh;
+        }
+        .topbar {
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 32px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .topbar-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #217b9b;
+            letter-spacing: 1px;
+        }
+        .topbar-icons {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .topbar-icons i {
+            font-size: 1.2rem;
+            color: #217b9b;
+            cursor: pointer;
+        }
+        .formbar {
+            background: var(--actionbar-bg);
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .formbar .btn-back {
+            background: var(--actionbar-icon-bg);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        .formbar .btn-back:hover {
+            background: #218fa1;
+        }
+        .formbar-title {
+            font-weight: 500;
+            color: #217b9b;
+            font-size: 1.1rem;
+        }
+        .form-container {
+            max-width: 960px;
+            margin: 28px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px #0d575a11;
+            padding: 30px 38px;
+        }
+        .form-title {
+            font-size: 1.32rem;
+            color: #0d575a;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+        .import-instructions {
+            background: #eef8f9;
+            border: 1px solid #cde5e8;
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 22px;
+        }
+        .import-instructions h4 {
+            font-size: 1.1rem;
+            color: #0d575a;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .import-instructions ul {
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+        .download-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 26px;
+        }
+        .download-card h5 {
+            margin: 0;
+            color: #0d575a;
+            font-weight: 600;
+        }
+        .download-card .btn-download {
+            background: #0d575a;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .download-card .btn-download:hover {
+            background: #0c8c98;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            font-weight: 600;
+            color: #0d575a;
+        }
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #b0bec5;
+            border-radius: 6px;
+            background: #f9fafb;
+        }
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .form-actions .btn {
+            background: #0d575a;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .form-actions .btn:hover {
+            background: #0c8c98;
+        }
+        .form-actions .btn.btn-cancel {
+            background: #fff;
+            color: #217b9b;
+            border: 2px solid #217b9b;
+        }
+        .msg {
+            margin-top: 14px;
+            font-weight: 600;
+            color: #217b9b;
+        }
+        .results-container {
+            max-width: 960px;
+            margin: 0 auto 40px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px #0d575a11;
+            padding: 26px 32px;
+        }
+        .results-container h3 {
+            font-size: 1.2rem;
+            color: #0d575a;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+        .summary-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 18px;
+            text-align: center;
+        }
+        .summary-card h6 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            color: #0d575a;
+        }
+        .summary-card p {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0;
+            color: #217b9b;
+        }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .results-table th,
+        .results-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+        .results-table th {
+            background: #0d575a;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .badge-success {
+            background: #13a37b;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .badge-error {
+            background: #c53030;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .results-table td ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        @media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+            }
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside id="sidebar" class="sidebar">
+    <!-- SIDEBAR CONTENT -->
+    <style>
+        .sidebar-nav {
+            gap: 12px;
+        }
+    
+        .sidebar-nav .nav-link {
+            width: 90%;
+            padding: 16px 0 10px 0;
+            font-size: 1.02rem;
+            letter-spacing: 0.5px;
+        }
+    
+        .sidebar-nav .nav-link i {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+    
+        @media (max-width: 900px) {
+            .sidebar-nav .nav-link {
+                width: 92%;
+            }
+        }
+    </style>
+    <button class="sidebar-close" id="sidebarToggle"><i class="fa fa-times"></i></button>
+    <div class="sidebar-logo">
+        <img src="assets/images/sbl-logo.png" alt="Logo SBL Pharma" class="logo"/>
+    </div>
+    <nav class="sidebar-nav">
+        <a class="nav-link" href="apps/tenant/index.html" data-section="menu">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>MENÚ</span>
+        </a>
+        <a class="nav-link active" href="apps/tenant/instrumentos/list_gages.html" data-section="instrumentos">
+            <i class="fa fa-boxes-stacked"></i>
+            <span>INSTRUMENTOS</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/planeacion/list_planning.html" data-section="planeacion">
+            <i class="fa fa-calendar-alt"></i>
+            <span>PLANEACIÓN</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calibraciones/list_calibrations.html" data-section="calibraciones">
+            <i class="fa fa-balance-scale"></i>
+            <span>CALIBRACIONES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/reportes/reports.html" data-section="reportes">
+            <i class="fa fa-file-alt"></i>
+            <span>REPORTES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/usuarios/roles.html" data-section="roles">
+            <i class="fa fa-user-shield"></i>
+            <span>ROLES</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/tutorial/index.html" data-section="tutorial">
+            <i class="fa fa-circle-question"></i>
+            <span>TUTORIAL</span>
+        </a>
+        <a class="nav-link" href="apps/tenant/calidad/index.html" data-section="calidad">
+            <i class="fa fa-award"></i>
+            <span>CALIDAD</span>
+        </a>
+    </nav>
+    </aside>
+    <div class="main-content">
+        <div class="topbar">
+            <div class="topbar-left">
+                <i class="fa fa-bars menu-toggle" id="sidebarOpen"></i>
+                <span class="topbar-title">Gestión de Instrumentos</span>
+            </div>
+            <div class="topbar-icons">
+                <i class="fa fa-search" id="btnSearch"></i>
+                <i class="fa fa-bell" id="btnBell"></i>
+                <div class="topbar-user-box">
+                    <i class="fa fa-user-circle" id="btnUser"></i>
+                    <span class="topbar-user" id="userName"></span>
+                    <div id="userMenu" class="dropdown-panel">
+                        <div class="menu-section-title">Mi perfil</div>
+                        <div id="menuNombre"></div>
+                        <div id="menuRol"></div>
+                        <button class="btn-perfil" onclick="window.location.href = BASE_URL + '/apps/tenant/usuarios/my_information.html'">Mi información</button>
+                        <button class="btn-cerrar" onclick="window.location.href = BASE_URL + '/backend/usuarios/logout.php'">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div id="notificationsMenu" class="dropdown-panel">
+                    <div class="menu-section-title">Notificaciones</div>
+                    <div id="notiList"><div class="text-muted-sm">No hay notificaciones nuevas.</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="formbar">
+            <button class="btn-back" id="btnBack"><i class="fa fa-arrow-left"></i></button>
+            <div class="formbar-title">Instrumentos &gt; Carga masiva</div>
+        </div>
+        <div class="form-container">
+            <div class="form-title">Importar instrumentos desde archivo</div>
+            <div class="import-instructions">
+                <h4>Cómo funciona</h4>
+                <ul>
+                    <li>Descarga la plantilla oficial para respetar el orden de las columnas.</li>
+                    <li>Completa los datos obligatorios: catálogo, marca, modelo, serie, código, departamento, ubicación y fecha de alta.</li>
+                    <li>Guarda el archivo en formato CSV o Excel (.xlsx) y súbelo desde esta pantalla.</li>
+                    <li>El sistema validará cada fila, normalizará los catálogos y derivará el estado del instrumento automáticamente.</li>
+                </ul>
+            </div>
+            <div class="download-card">
+                <div>
+                    <h5>Plantilla de importación</h5>
+                    <p class="mb-0">Incluye los campos obligatorios y ejemplos de formato.</p>
+                </div>
+                <a id="templateLink" class="btn-download" download>
+                    <i class="fa fa-file-arrow-down me-1"></i> Descargar plantilla
+                </a>
+            </div>
+            <form id="bulkImportForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="archivo">Archivo CSV o Excel</label>
+                    <input type="file" id="archivo" name="archivo" accept=".csv,.xlsx,.xls" required>
+                    <small class="text-muted">Tamaño máximo recomendado: 5&nbsp;MB. Solo se procesarán las columnas reconocidas.</small>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn" id="btnImportar">Importar instrumentos</button>
+                    <button type="button" class="btn btn-cancel" id="btnCancelar">Cancelar</button>
+                </div>
+                <div class="msg" id="importFeedback" role="status" aria-live="polite"></div>
+            </form>
+        </div>
+        <div class="results-container" id="resultsContainer" hidden>
+            <h3>Resultado de la importación</h3>
+            <div class="summary-grid" id="summaryGrid"></div>
+            <div class="table-responsive">
+                <table class="results-table" id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Fila</th>
+                            <th>Estado</th>
+                            <th>Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="assets/scripts/scripts-tenant.js"></script>
+    <script src="assets/scripts/topbar.js"></script>
+    <script>
+        (function() {
+            const pageBaseUrl = (window.PAGE_BASE_URL && window.PAGE_BASE_URL !== '')
+                ? window.PAGE_BASE_URL
+                : (window.BASE_URL || '');
+            window.PAGE_BASE_URL = pageBaseUrl;
+            const templateLink = document.getElementById('templateLink');
+            if (templateLink) {
+                templateLink.href = pageBaseUrl + '/apps/tenant/instrumentos/templates/plantilla_instrumentos.csv';
+            }
+            const btnBack = document.getElementById('btnBack');
+            if (btnBack) {
+                btnBack.addEventListener('click', () => {
+                    window.location.href = pageBaseUrl + '/apps/tenant/instrumentos/list_gages.html';
+                });
+            }
+            const btnCancelar = document.getElementById('btnCancelar');
+            if (btnCancelar) {
+                btnCancelar.addEventListener('click', () => {
+                    window.location.href = pageBaseUrl + '/apps/tenant/instrumentos/list_gages.html';
+                });
+            }
+
+            const form = document.getElementById('bulkImportForm');
+            const archivoInput = document.getElementById('archivo');
+            const feedback = document.getElementById('importFeedback');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const summaryGrid = document.getElementById('summaryGrid');
+            const resultsTableBody = document.querySelector('#resultsTable tbody');
+            const importButton = document.getElementById('btnImportar');
+            const endpoint = pageBaseUrl + '/backend/instrumentos/gages/import_bulk.php';
+
+            function setFeedback(message, type = 'info') {
+                if (!feedback) return;
+                feedback.textContent = message || '';
+                feedback.classList.remove('text-success', 'text-danger');
+                if (type === 'success') feedback.classList.add('text-success');
+                if (type === 'error') feedback.classList.add('text-danger');
+            }
+
+            function renderSummary(summary) {
+                if (!summaryGrid) return;
+                summaryGrid.innerHTML = '';
+                const entries = [
+                    { label: 'Registros en archivo', value: summary.total ?? 0 },
+                    { label: 'Procesados', value: summary.processed ?? 0 },
+                    { label: 'Importados', value: summary.inserted ?? 0 },
+                    { label: 'Con errores', value: summary.failed ?? 0 }
+                ];
+                entries.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'summary-card';
+                    card.innerHTML = `<h6>${item.label}</h6><p>${item.value}</p>`;
+                    summaryGrid.appendChild(card);
+                });
+            }
+
+            function renderResults(results) {
+                if (!resultsTableBody) return;
+                resultsTableBody.innerHTML = '';
+                if (!Array.isArray(results) || results.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = '<td colspan="3" class="text-center text-muted">No se encontraron resultados para mostrar.</td>';
+                    resultsTableBody.appendChild(row);
+                    return;
+                }
+                results.forEach(item => {
+                    const row = document.createElement('tr');
+                    const colRow = document.createElement('td');
+                    colRow.textContent = item.row ?? '';
+
+                    const colStatus = document.createElement('td');
+                    colStatus.innerHTML = item.status === 'success'
+                        ? '<span class="badge-success">Registrado</span>'
+                        : '<span class="badge-error">Error</span>';
+
+                    const colDetail = document.createElement('td');
+                    if (item.status === 'success' && item.instrument) {
+                        const inst = item.instrument;
+
+                        const codeLine = document.createElement('div');
+                        const codeLabel = document.createElement('strong');
+                        codeLabel.textContent = 'Código:';
+                        const codeValue = document.createTextNode(` ${inst.codigo || 'NA'}`);
+                        codeLine.append(codeLabel, codeValue);
+
+                        const stateLine = document.createElement('div');
+                        const stateLabel = document.createElement('strong');
+                        stateLabel.textContent = 'Estado:';
+                        const stateValue = document.createTextNode(` ${inst.estado || 'NA'}`);
+                        stateLine.append(stateLabel, stateValue);
+
+                        const locationLine = document.createElement('div');
+                        const locationLabel = document.createElement('strong');
+                        locationLabel.textContent = 'Ubicación:';
+                        const locationValue = document.createTextNode(` ${inst.ubicacion || 'NA'}`);
+                        locationLine.append(locationLabel, locationValue);
+
+                        colDetail.append(codeLine, stateLine, locationLine);
+                    } else if (Array.isArray(item.errors)) {
+                        const list = document.createElement('ul');
+                        item.errors.forEach(err => {
+                            const li = document.createElement('li');
+                            li.textContent = err;
+                            list.appendChild(li);
+                        });
+                        colDetail.appendChild(list);
+                    } else if (item.error) {
+                        const span = document.createElement('span');
+                        span.textContent = item.error;
+                        colDetail.appendChild(span);
+                    }
+
+                    row.append(colRow, colStatus, colDetail);
+                    resultsTableBody.appendChild(row);
+                });
+            }
+
+            async function handleSubmit(event) {
+                event.preventDefault();
+                if (!archivoInput || archivoInput.files.length === 0) {
+                    setFeedback('Selecciona un archivo para continuar.', 'error');
+                    return;
+                }
+
+                const file = archivoInput.files[0];
+                setFeedback('Procesando archivo, por favor espera...');
+                resultsContainer.hidden = true;
+                if (importButton) importButton.disabled = true;
+
+                const formData = new FormData();
+                formData.append('archivo', file);
+
+                try {
+                    const response = await fetch(endpoint, { method: 'POST', body: formData });
+                    const payload = await response.json();
+                    if (!response.ok || payload.success === false) {
+                        const message = payload.error || 'No se pudo completar la importación.';
+                        setFeedback(message, 'error');
+                        return;
+                    }
+                    renderSummary(payload.summary || {});
+                    renderResults(payload.results || []);
+                    resultsContainer.hidden = false;
+                    const message = payload.message || 'Importación completada.';
+                    setFeedback(message, payload.hasFailures ? 'error' : 'success');
+                } catch (error) {
+                    console.error('Error en la importación masiva', error);
+                    setFeedback('Ocurrió un error al comunicarse con el servidor.', 'error');
+                } finally {
+                    if (importButton) importButton.disabled = false;
+                    form.reset();
+                }
+            }
+
+            if (form) {
+                form.addEventListener('submit', handleSubmit);
+            }
+
+            window.addEventListener('DOMContentLoaded', function() {
+                fetch(pageBaseUrl + '/apps/tenant/sidebar.html')
+                    .then(response => response.text())
+                    .then(html => {
+                        const sidebar = document.getElementById('sidebar');
+                        if (sidebar) {
+                            sidebar.innerHTML = html;
+                            if (typeof initSidebar === 'function') initSidebar();
+                            if (typeof window.initializeSidebarControls === 'function') window.initializeSidebarControls();
+            if (typeof window.applyApiTokenVisibility === 'function') window.applyApiTokenVisibility();
+            if (typeof window.activateApiTokensIfAvailable === 'function') window.activateApiTokensIfAvailable();
+                        }
+                    });
+            });
+
+            (function(){
+                if(window.currentUser && window.updateUserDisplay){
+                    window.updateUserDisplay(window.currentUser);
+                }
+            })();
+        })();
+    </script>
+    <!-- Rutas relativizadas para cumplir ISO 17025/NOM-059 -->
+</body>
+</html>
