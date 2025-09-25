@@ -5,7 +5,7 @@ require_once __DIR__ . '/../app/Core/permissions.php';
 
 session_start();
 
-$scopes = ['internal', 'tenant', 'service'];
+$scopes = ['tenant', 'service'];
 
 $requestedScope = $_GET['portal'] ?? $_GET['app'] ?? null;
 if (is_string($requestedScope)) {
@@ -38,7 +38,7 @@ if ($requestPath === '/index.php') {
     $requestPath = '/';
 }
 
-if (preg_match('#^/(internal|tenant|service)(/.*)?$#', $requestPath, $matches)) {
+if (preg_match('#^/(tenant|service)(/.*)?$#', $requestPath, $matches)) {
     $scope = $matches[1];
     $resource = ltrim($matches[2] ?? '', '/');
     if ($resource === '') {
@@ -46,7 +46,7 @@ if (preg_match('#^/(internal|tenant|service)(/.*)?$#', $requestPath, $matches)) 
     }
   
     if ($scope === 'service' && !can_access_service_module()) {
-        $scope = 'internal';
+        $scope = 'tenant';
         $resource = 'index.html';
     }
 
@@ -62,20 +62,20 @@ if ($requestPath === '/' || $requestPath === '') {
         if ($context === 'service' && can_access_service_module()) {
             $target = 'service/index.html';
         } else {
-            $target = $context === 'tenant' ? 'tenant/index.html' : 'internal/index.html';
+            $target = $context === 'tenant' ? 'tenant/index.html' : 'tenant/index.html';
         }
     } else {
         $target = $context === 'tenant'
             ? 'tenant/usuarios/login.html'
-            : 'internal/usuarios/login.html';
+            : 'tenant/usuarios/login.html';
     }
 
     header('Location: ' . Paths::app($target));
     exit;
 }
 
-if ($requestPath === '/internal' || $requestPath === '/tenant') {
-    $target = $context === 'tenant' ? 'tenant/index.html' : 'internal/index.html';
+if ($requestPath === '/tenant') {
+    $target = 'tenant/index.html';
     header('Location: ' . Paths::app($target));
     exit;
 }

@@ -1,31 +1,27 @@
-# Sistema Computarizado ISO 17025
+# Portal Clientes y Servicios ISO 17025
 
-Aplicación web para la gestión de calibraciones que combina un backend PHP modular y una
-interfaz HTML5/Bootstrap. El proyecto ahora se organiza en torno a una carpeta `app/`
-para el código del dominio y a `public/` como punto de entrada HTTP.
+Portal web para clientes externos y gestión de servicios de calibración que combina un backend PHP modular y una interfaz HTML5/Bootstrap. Este sistema está dedicado exclusivamente a la interacción con clientes y la gestión de servicios de calibración.
 
 ## Arquitectura de carpetas
 
 - `app/`
-  - `Core/`: utilidades compartidas (conexión a base de datos, protección de sesión,
+  - `Core/`: utilidades compartidas (conexión a base de datos `iso17025_clientes`, protección de sesión,
     helpers y control de permisos).
-  - `Modules/`: lógica de negocio segmentada por ámbito. Dentro encontrarás
-    `Modules/Internal/` (auditoría, planeación, configuración, usuarios, etc.),
-    `Modules/Tenant/` (operaciones disponibles para las empresas externas como
-    instrumentos, calibraciones, reportes) y los recursos SQL en
-    `Modules/Internal/ArchivosSql/`.
+  - `Modules/`: lógica de negocio segmentada por ámbito. Contiene:
+    - `Modules/Service/` (gestión de servicios de calibración, clientes, instrumentos)
+    - `Modules/Tenant/` (operaciones disponibles para las empresas externas como
+      instrumentos, calibraciones, reportes, mensajería, patrones, proveedores, análisis de riesgo)
+    - `Modules/Api/` (APIs para servicios y clientes)
+    - `Modules/Database/` (gestión de base de datos)
   - `index.php`: comprobación básica para el estado del backend.
 - `public/`
-  - `assets/`: recursos estáticos compartidos (CSS, JS, imágenes, incluyendo el
-    núcleo JS `portal-base.js`, los bundles por portal (`scripts-internal.js`,
-    `scripts-service.js`, `scripts-tenant.js`) y `topbar.js`).
-  - `apps/internal/`: aplicación HTML para los usuarios internos (auditoría,
-    planeación, catálogos, administración, etc.).
+  - `assets/`: recursos estáticos (CSS, JS, imágenes, incluyendo el
+    núcleo JS `portal-base.js`, bundles por portal `scripts-service.js`, `scripts-tenant.js` y `topbar.js`).
+  - `apps/service/`: aplicación HTML para la gestión de servicios de calibración.
   - `apps/tenant/`: portal simplificado para empresas cliente con acceso a
     instrumentos, planeación, calibraciones y reportes filtrados por empresa.
     Los códigos QR generados para etiquetas y certificados redirigen a
-    `apps/tenant/instrumentos/qr_details.html`; el flujo QR es exclusivo del
-    portal tenant y no existe una vista compartida en `apps/shared`.
+    `apps/tenant/instrumentos/qr_details.html`.
   - `backend/`: fachada pública que enruta las peticiones HTTP hacia los módulos en
     `app/Modules/` sin exponer el código fuente.
   - `index.php`: router contextual que expone rutas `/internal/...` y

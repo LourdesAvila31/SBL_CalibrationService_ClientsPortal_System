@@ -1,0 +1,2 @@
+<?php
+require_once __DIR__ . '/../../../../app/Modules/Tenant/Instrumentos/attachments/list.php';

@@ -1,0 +1,38 @@
+# Archivos de entorno
+.env
+.env.local
+.env.production
+
+# Logs
+storage/logs/
+*.log
+
+# Cache y temporales
+storage/cache/
+storage/temp/
+/tmp/
+
+# Dependencias
+node_modules/
+vendor/
+
+# Archivos de configuración IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Backups de base de datos
+*.sql
+*.dump
+
+# Archivos subidos por usuarios
+storage/uploads/
+public/uploads/
+
+# Archivos de sesión
+storage/sessions/

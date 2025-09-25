@@ -42,7 +42,7 @@ class DatabaseManager {
         $host = self::envValue('DB_HOST', 'localhost');
         $user = self::envValue('DB_USER', 'root');
         $pass = self::envValue('DB_PASS', '', true);
-        $db   = self::envValue('DB_NAME', 'iso17025');
+        $db   = self::envValue('DB_NAME', 'iso17025_clientes');
 
         $conn = new mysqli($host, $user, $pass, $db);
         if ($conn->connect_errno !== 0) {
