@@ -21,6 +21,7 @@ function session_role_alias(): ?string
             'lector' => 'lector',
             'cliente' => 'cliente',
             'sistemas' => 'sistemas',
+            'developer' => 'developer',
         ];
         $key = strtolower(trim($roleName));
         return $map[$key] ?? $key;
@@ -35,6 +36,7 @@ function session_role_alias(): ?string
             5 => 'lector',
             6 => 'cliente',
             7 => 'sistemas',
+            8 => 'developer',
         ];
         return $numMap[(int) $roleNum] ?? null;
     }
@@ -45,11 +47,20 @@ function session_role_alias(): ?string
 function session_is_superadmin(): bool
 {
     $alias = session_role_alias();
-    if ($alias !== null && in_array($alias, ['superadministrador'], true)) {
+    if ($alias !== null && in_array($alias, ['superadministrador', 'developer'], true)) {
         return true;
     }
     $roleNum = $_SESSION['role_num'] ?? null;
     return $roleNum !== null && (int) $roleNum === 1;
+}
+
+/**
+ * Verifica si el usuario tiene permisos de developer con privilegios de superadministrador
+ */
+function session_is_developer_superadmin(): bool
+{
+    $alias = session_role_alias();
+    return $alias === 'developer';
 }
 
 function session_empresa_id(): ?int
@@ -316,6 +327,11 @@ function check_permission(string $permiso): bool
     }
 
     if (session_is_superadmin()) {
+        return true;
+    }
+
+    // Developer con privilegios de superadministrador
+    if (session_is_developer_superadmin()) {
         return true;
     }
 

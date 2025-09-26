@@ -738,11 +738,10 @@ $conn->query("INSERT INTO role_permissions (role_id, permission_id)
             WHERE rp.role_id = r.id AND rp.permission_id = p.id
         )");
 
-// Developer: seguimiento técnico limitado a bitácoras
+// Developer: permisos de superadministrador (acceso total)
 $conn->query("INSERT INTO role_permissions (role_id, permission_id)
     SELECT r.id, p.id
-    FROM roles r
-    JOIN permissions p ON p.nombre IN ('auditoria_leer','auditoria_crear')
+    FROM roles r CROSS JOIN permissions p
     WHERE r.nombre = 'Developer'
       AND NOT EXISTS (
             SELECT 1 FROM role_permissions rp
