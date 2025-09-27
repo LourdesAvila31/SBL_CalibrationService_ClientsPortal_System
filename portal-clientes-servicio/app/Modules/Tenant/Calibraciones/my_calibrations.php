@@ -5,7 +5,7 @@ $roleAlias  = session_role_alias() ?? '';
 $allowedRol = ['operador', 'cliente', 'superadministrador'];
 $allowed    = ['Operador', 'Cliente', 'Superadministrador'];
 $portalScopes = $roleAlias === 'cliente' ? ['tenant'] : ['internal'];
-$basePath = '/SISTEMA-COMPUTARIZADO-ISO-17025/public';
+$basePath = '/SBL_SISTEMA_INTERNO/public';
 $activeSection = 'calibraciones';
 
 ensure_portal_access($portalScopes);

@@ -167,7 +167,7 @@ id  nombre
 52  Dwyer Instruments / Dwyer
 53  SENSOCON
 54  Dewit / DEWIT
-55  aquex
+55  Aquex
 56  ENERPAC
 57  MASS
 58  SNS

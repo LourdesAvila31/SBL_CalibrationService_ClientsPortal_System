@@ -1,7 +1,7 @@
 (function(global){
   'use strict';
 
-  const PROJECT_ROOT = '/SISTEMA-COMPUTARIZADO-ISO-17025/public';
+  const PROJECT_ROOT = '/SBL_SISTEMA_INTERNO/public';
   const ABSOLUTE_PROTOCOL_REGEX = /^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i;
 
   function trimTrailingSlash(value){

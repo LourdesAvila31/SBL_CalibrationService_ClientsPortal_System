@@ -231,7 +231,7 @@ Manómetro de presión,SMC,BG,ND,MAP-MA-34,Mantenimiento,"Encapsulado y Abrillan
 Manómetro de presión,SMC,BG,ND,MAP-MA-35,Mantenimiento,"Encapsulado y Abrillantado 1, en AC-07",Calibración,3,3,Alto,2,6,01-sep-25,Mar-26,,En planta + Mantenimiento,"0.00, 30.00, 50.00, 100.00, 150.00 PSI, ± 10.00 PSI"
 Manómetro de presión,ND,ND,ND,MAP-MA-36,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,,NA,NA
 Manómetro de presión,Dewit,ND,ND,MAP-MA-37,Mantenimiento,"Cuarto Técnico, en salida del Tanque Pulmón de aire comprimido",Calibración,2,2,Medio,2,12,10-oct-24,Oct-25,,En planta + Mantenimiento,"0.00 PSI, 40.00 PSI, 80.00 PSI, 120.00 PSI, 160.00 PSI, 200.00 PSI Tolerancia de acuerdo a especificación de proveedor."
-Manómetro de presión,aquex,ND,ND,MAP-MA-38,Mantenimiento,"Cuarto Técnico, en Tanque hidroneumático (TH 02)",Calibración,2,2,Medio,2,12,05-dic-24,Dic-25,,En planta + Mantenimiento,"0.00 PSI, 20.00 PSI, 40.00 PSI, 60.00 PSI, 80.00 PSI, 100.00 PSI Tol. ± 2.00 PSI"
+Manómetro de presión,Aquex,ND,ND,MAP-MA-38,Mantenimiento,"Cuarto Técnico, en Tanque hidroneumático (TH 02)",Calibración,2,2,Medio,2,12,05-dic-24,Dic-25,,En planta + Mantenimiento,"0.00 PSI, 20.00 PSI, 40.00 PSI, 60.00 PSI, 80.00 PSI, 100.00 PSI Tol. ± 2.00 PSI"
 Manómetro de presión,SMC,150 PSI,ND,MAP-PR-01,NA,NA,NA,NA,NA,NA,NA,NA,13-jul-21,NA,Baja: 08-Jun-22,NA,NA
 Manómetro de presión,ENERPAC,G2535L,180515,MAP-PR-02,NA,NA,NA,NA,NA,NA,NA,NA,12-Nov-18,NA,Baja: 11-Nov-19,NA,NA
 Manómetro de presión,ENERPAC,G2535L,180511,MAP-PR-03,NA,NA,NA,NA,NA,NA,NA,NA,11-Nov-19,NA,Baja: 18-Ene-21,NA,NA

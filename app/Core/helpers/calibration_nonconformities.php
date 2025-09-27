@@ -210,7 +210,7 @@ if (!function_exists('calibration_nonconformities_register')) {
             $codigo = $context['instrumento_codigo'] ?? '';
             $fechaTexto = $fechaCalibracion ?: 'sin fecha registrada';
             $subject = sprintf('No conformidad en calibración de %s', $instrumentoNombre);
-            $link = '/SISTEMA-COMPUTARIZADO-ISO-17025/public/apps/tenant/calibraciones/non_conformity_flow.html?nc_id=' . $nonConformityId . '&calibracion_id=' . $calibracionId;
+            $link = '/SBL_SISTEMA_INTERNO/public/apps/tenant/calibraciones/non_conformity_flow.html?nc_id=' . $nonConformityId . '&calibracion_id=' . $calibracionId;
 
             $htmlBody = '<p>Se detectó una no conformidad en una calibración reciente.</p>'
                 . '<ul>'
@@ -241,7 +241,7 @@ if (!function_exists('calibration_nonconformities_register')) {
 
         $updateNotify = $conn->prepare('UPDATE calibraciones_no_conformidades SET notified_at = NOW(), corrective_url = ? WHERE id = ?');
         if ($updateNotify) {
-            $linkValue = '/SISTEMA-COMPUTARIZADO-ISO-17025/public/apps/tenant/calibraciones/non_conformity_flow.html?nc_id=' . $nonConformityId . '&calibracion_id=' . $calibracionId;
+            $linkValue = '/SBL_SISTEMA_INTERNO/public/apps/tenant/calibraciones/non_conformity_flow.html?nc_id=' . $nonConformityId . '&calibracion_id=' . $calibracionId;
             $updateNotify->bind_param('si', $linkValue, $nonConformityId);
             $updateNotify->execute();
             $updateNotify->close();

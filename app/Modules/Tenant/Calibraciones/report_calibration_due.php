@@ -59,7 +59,7 @@ foreach ($rows as $row) {
 
     $certificadoTexto = $patronCertNumero !== '' ? $patronCertNumero : '-';
     if ($patronCertUrl !== '') {
-        $basePath = '/SISTEMA-COMPUTARIZADO-ISO-17025/public';
+        $basePath = '/SBL_SISTEMA_INTERNO/public';
         $fullUrl = $patronCertUrl;
         if (strpos($patronCertUrl, 'http') !== 0) {
             $fullUrl = $basePath . ((isset($patronCertUrl[0]) && $patronCertUrl[0] === '/') ? $patronCertUrl : '/' . $patronCertUrl);

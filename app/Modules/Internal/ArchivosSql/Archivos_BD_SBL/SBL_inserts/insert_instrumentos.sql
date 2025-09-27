@@ -192,7 +192,7 @@ VALUES
     ('Watson Marlow', 1),
     ('Wika', 1),
     ('Winters', 1),
-    ('aquex', 1)
+    ('Aquex', 1)
 ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
 COMMIT;
 
@@ -453,7 +453,7 @@ VALUES
     ('NA', (SELECT id FROM marcas WHERE nombre = 'Winters' AND empresa_id = 1 LIMIT 1), 1),
     ('ND', (SELECT id FROM marcas WHERE nombre = 'Winters' AND empresa_id = 1 LIMIT 1), 1),
     ('PFQ-LF', (SELECT id FROM marcas WHERE nombre = 'Winters' AND empresa_id = 1 LIMIT 1), 1),
-    ('ND', (SELECT id FROM marcas WHERE nombre = 'aquex' AND empresa_id = 1 LIMIT 1), 1)
+    ('ND', (SELECT id FROM marcas WHERE nombre = 'Aquex' AND empresa_id = 1 LIMIT 1), 1)
 ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), marca_id = VALUES(marca_id);
 COMMIT;
 
@@ -885,7 +885,7 @@ VALUES
     ((SELECT id FROM catalogo_instrumentos WHERE nombre = 'Manómetro de presión' AND empresa_id = 1 LIMIT 1), (SELECT id FROM marcas WHERE nombre = 'SMC / SMC Pneumatics' AND empresa_id = 1 LIMIT 1), (SELECT mo.id FROM modelos mo WHERE mo.nombre = 'BG' AND mo.empresa_id = 1 AND mo.marca_id = (SELECT id FROM marcas WHERE nombre = 'SMC / SMC Pneumatics' AND empresa_id = 1 LIMIT 1) LIMIT 1), 'ND', 'MAP-MA-35', (SELECT id FROM departamentos WHERE nombre = 'Mantenimiento' AND empresa_id = 1 LIMIT 1), 'Encapsulado y Abrillantado 1, en AC-07', '2023-07-12', NULL, NULL, 'Stock', 0, 1),
     ((SELECT id FROM catalogo_instrumentos WHERE nombre = 'Manómetro de presión' AND empresa_id = 1 LIMIT 1), (SELECT id FROM marcas WHERE nombre = 'ND' AND empresa_id = 1 LIMIT 1), (SELECT mo.id FROM modelos mo WHERE mo.nombre = 'ND' AND mo.empresa_id = 1 AND mo.marca_id = (SELECT id FROM marcas WHERE nombre = 'ND' AND empresa_id = 1 LIMIT 1) LIMIT 1), 'ND', 'MAP-MA-36', (SELECT id FROM departamentos WHERE nombre = 'NA' AND empresa_id = 1 LIMIT 1), 'NA', '2023-07-12', '2024-01-15', NULL, 'Inactivo', 0, 1),
     ((SELECT id FROM catalogo_instrumentos WHERE nombre = 'Manómetro de presión' AND empresa_id = 1 LIMIT 1), (SELECT id FROM marcas WHERE nombre = 'Dewit / DEWIT' AND empresa_id = 1 LIMIT 1), (SELECT mo.id FROM modelos mo WHERE mo.nombre = 'ND' AND mo.empresa_id = 1 AND mo.marca_id = (SELECT id FROM marcas WHERE nombre = 'Dewit / DEWIT' AND empresa_id = 1 LIMIT 1) LIMIT 1), 'ND', 'MAP-MA-37', (SELECT id FROM departamentos WHERE nombre = 'Mantenimiento' AND empresa_id = 1 LIMIT 1), 'Cuarto Técnico, en salida del Tanque Pulmón de aire comprimido', '2023-10-02', NULL, NULL, 'Stock', 0, 1),
-    ((SELECT id FROM catalogo_instrumentos WHERE nombre = 'Manómetro de presión' AND empresa_id = 1 LIMIT 1), (SELECT id FROM marcas WHERE nombre = 'aquex' AND empresa_id = 1 LIMIT 1), (SELECT mo.id FROM modelos mo WHERE mo.nombre = 'ND' AND mo.empresa_id = 1 AND mo.marca_id = (SELECT id FROM marcas WHERE nombre = 'aquex' AND empresa_id = 1 LIMIT 1) LIMIT 1), 'ND', 'MAP-MA-38', (SELECT id FROM departamentos WHERE nombre = 'Mantenimiento' AND empresa_id = 1 LIMIT 1), 'Cuarto Técnico, en Tanque hidroneumático (TH 02)', '2024-12-03', NULL, NULL, 'Stock', 0, 1),
+    ((SELECT id FROM catalogo_instrumentos WHERE nombre = 'Manómetro de presión' AND empresa_id = 1 LIMIT 1), (SELECT id FROM marcas WHERE nombre = 'Aquex' AND empresa_id = 1 LIMIT 1), (SELECT mo.id FROM modelos mo WHERE mo.nombre = 'ND' AND mo.empresa_id = 1 AND mo.marca_id = (SELECT id FROM marcas WHERE nombre = 'Aquex' AND empresa_id = 1 LIMIT 1) LIMIT 1), 'ND', 'MAP-MA-38', (SELECT id FROM departamentos WHERE nombre = 'Mantenimiento' AND empresa_id = 1 LIMIT 1), 'Cuarto Técnico, en Tanque hidroneumático (TH 02)', '2024-12-03', NULL, NULL, 'Stock', 0, 1),
     ((SELECT id FROM catalogo_instrumentos WHERE nombre = 'Manómetro de presión' AND empresa_id = 1 LIMIT 1), (SELECT id FROM marcas WHERE nombre = 'Wika' AND empresa_id = 1 LIMIT 1), (SELECT mo.id FROM modelos mo WHERE mo.nombre = 'ND' AND mo.empresa_id = 1 AND mo.marca_id = (SELECT id FROM marcas WHERE nombre = 'Wika' AND empresa_id = 1 LIMIT 1) LIMIT 1), 'ND', 'MAP-MI-01', (SELECT id FROM departamentos WHERE nombre = 'Microbiología' AND empresa_id = 1 LIMIT 1), 'Preparación Microbiológica, en EST-MI-01.', '2022-04-08', NULL, NULL, 'Stock', 0, 1),
     ((SELECT id FROM catalogo_instrumentos WHERE nombre = 'Manómetro de presión' AND empresa_id = 1 LIMIT 1), (SELECT id FROM marcas WHERE nombre = 'SMC / SMC Pneumatics' AND empresa_id = 1 LIMIT 1), (SELECT mo.id FROM modelos mo WHERE mo.nombre = '150 PSI' AND mo.empresa_id = 1 AND mo.marca_id = (SELECT id FROM marcas WHERE nombre = 'SMC / SMC Pneumatics' AND empresa_id = 1 LIMIT 1) LIMIT 1), 'ND', 'MAP-PR-01', (SELECT id FROM departamentos WHERE nombre = 'NA' AND empresa_id = 1 LIMIT 1), 'NA', '2018-08-09', '2022-06-08', NULL, 'Inactivo', 0, 1),
     ((SELECT id FROM catalogo_instrumentos WHERE nombre = 'Manómetro de presión' AND empresa_id = 1 LIMIT 1), (SELECT id FROM marcas WHERE nombre = 'ENERPAC' AND empresa_id = 1 LIMIT 1), (SELECT mo.id FROM modelos mo WHERE mo.nombre = 'G2535L' AND mo.empresa_id = 1 AND mo.marca_id = (SELECT id FROM marcas WHERE nombre = 'ENERPAC' AND empresa_id = 1 LIMIT 1) LIMIT 1), '180515', 'MAP-PR-02', (SELECT id FROM departamentos WHERE nombre = 'NA' AND empresa_id = 1 LIMIT 1), 'NA', '2018-10-19', '2019-11-11', NULL, 'Inactivo', 0, 1),

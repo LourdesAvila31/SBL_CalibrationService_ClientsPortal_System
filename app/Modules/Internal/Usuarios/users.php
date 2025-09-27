@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__DIR__, 3) . '/Core/auth.php';
 require_once dirname(__DIR__, 3) . '/Core/permissions.php';
-$basePath = '/SISTEMA-COMPUTARIZADO-ISO-17025/public';
+$basePath = '/SBL_SISTEMA_INTERNO/public';
 $activeSection = 'usuarios';
 
 if (!check_permission('usuarios_view')) {

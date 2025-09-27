@@ -206,8 +206,8 @@
       var base = '';
       if(typeof window.BASE_URL === 'string' && window.BASE_URL){
         base = window.BASE_URL;
-      } else if(window.location && window.location.pathname && window.location.pathname.indexOf('/SISTEMA-COMPUTARIZADO-ISO-17025') !== -1){
-        base = '/SISTEMA-COMPUTARIZADO-ISO-17025';
+      } else if(window.location && window.location.pathname && window.location.pathname.indexOf('/SBL_SISTEMA_INTERNO') !== -1){
+        base = '/SBL_SISTEMA_INTERNO';
       }
       if(path.charAt(0) !== '/'){
         path = '/' + path;

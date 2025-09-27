@@ -21,7 +21,7 @@ $isSuperAdmin = session_is_superadmin();
 
 $reports = [];
 $errorCarga = null;
-$basePath = '/SISTEMA-COMPUTARIZADO-ISO-17025/public';
+$basePath = '/SBL_SISTEMA_INTERNO/public';
 $activeSection = 'reportes';
 
 global $conn;

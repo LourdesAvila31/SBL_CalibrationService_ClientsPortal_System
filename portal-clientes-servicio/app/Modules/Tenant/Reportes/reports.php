@@ -6,7 +6,7 @@ $rol        = $_SESSION['rol'] ?? '';
 $roleAlias  = session_role_alias() ?? '';
 $allowedRol = ['superadministrador', 'administrador', 'supervisor', 'operador', 'lector'];
 $allowed    = ['Superadministrador', 'Administrador', 'Supervisor', 'Operador', 'Lector'];
-$basePath = '/SISTEMA-COMPUTARIZADO-ISO-17025/public';
+$basePath = '/SBL_SISTEMA_INTERNO/public';
 $activeSection = 'reportes';
 
 if (!in_array($roleAlias, $allowedRol, true)) {

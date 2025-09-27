@@ -65,7 +65,7 @@ $stmt->bind_param('ii', $usuarioId, $empresaId);
 $stmt->execute();
 $result = $stmt->get_result();
 
-$basePath = '/SISTEMA-COMPUTARIZADO-ISO-17025/storage/usuarios/competencias/';
+$basePath = '/SBL_SISTEMA_INTERNO/storage/usuarios/competencias/';
 $records = [];
 while ($row = $result->fetch_assoc()) {
     $archivo = $row['archivo'] ?? null;

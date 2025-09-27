@@ -4,7 +4,7 @@ $rol        = $_SESSION['rol'] ?? '';
 $roleAlias  = session_role_alias() ?? '';
 $allowedRol = ['superadministrador', 'administrador'];
 $allowed    = ['Superadministrador', 'Administrador'];
-$basePath = '/SISTEMA-COMPUTARIZADO-ISO-17025/public';
+$basePath = '/SBL_SISTEMA_INTERNO/public';
 $activeSection = 'clientes';
 
 ensure_portal_access('internal');

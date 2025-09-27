@@ -16,7 +16,7 @@ if (!in_array($roleAlias, $allowedRol, true)) {
 
 $nombre = $_SESSION['nombre'];
 
-$basePath     = '/SISTEMA-COMPUTARIZADO-ISO-17025/public';
+$basePath     = '/SBL_SISTEMA_INTERNO/public';
 $addUserPage  = $basePath . '/apps/internal/usuarios/add_user.html';
 $links        = [];
 

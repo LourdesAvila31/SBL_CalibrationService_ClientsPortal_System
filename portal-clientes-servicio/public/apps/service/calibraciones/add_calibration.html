@@ -701,7 +701,7 @@
         showTechnicianWarning('Validando competencias del equipo seleccionado...');
         const baseTechnicianUrl = typeof resolveAppUrl === 'function'
             ? resolveAppUrl('/backend/calibraciones/list_technicians.php')
-            : '/SISTEMA-COMPUTARIZADO-ISO-17025/public/backend/calibraciones/list_technicians.php';
+            : '/SBL_SISTEMA_INTERNO/public/backend/calibraciones/list_technicians.php';
         let url = baseTechnicianUrl;
         if (catalogoId) {
             const separator = url.includes('?') ? '&' : '?';
@@ -829,7 +829,7 @@
 
             const submitUrl = typeof resolveAppUrl === 'function'
                 ? resolveAppUrl('/backend/calibraciones/add_calibration.php')
-                : '/SISTEMA-COMPUTARIZADO-ISO-17025/public/backend/calibraciones/add_calibration.php';
+                : '/SBL_SISTEMA_INTERNO/public/backend/calibraciones/add_calibration.php';
 
             fetch(submitUrl, {
                 method: 'POST',
@@ -840,7 +840,7 @@
                 if (data.success) {
                     window.location.href = typeof resolveAppUrl === 'function'
                         ? resolveAppUrl('/apps/service/calibraciones/list_calibrations.html')
-                        : '/SISTEMA-COMPUTARIZADO-ISO-17025/public/apps/service/calibraciones/list_calibrations.html';
+                        : '/SBL_SISTEMA_INTERNO/public/apps/service/calibraciones/list_calibrations.html';
                 } else if (msgBox) {
                     msgBox.textContent = data.message || "Error al guardar la calibración.";
                 }
@@ -855,7 +855,7 @@
     // Cargar instrumentos programados
     const listCalibrationsUrl = typeof resolveAppUrl === 'function'
         ? resolveAppUrl('/backend/calibraciones/list_calibrations.php')
-        : '/SISTEMA-COMPUTARIZADO-ISO-17025/public/backend/calibraciones/list_calibrations.php';
+        : '/SBL_SISTEMA_INTERNO/public/backend/calibraciones/list_calibrations.php';
 
     fetch(listCalibrationsUrl)
         .then(r => r.json())
